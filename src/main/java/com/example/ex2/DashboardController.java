@@ -22,6 +22,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ro.ubbcluj.map.Service.NetworkService;
+import ro.ubbcluj.map.model.FriendshipRequestDTO;
 import ro.ubbcluj.map.model.FrienshipDto;
 import ro.ubbcluj.map.model.Tuple;
 import ro.ubbcluj.map.model.UserDto;
@@ -128,8 +129,16 @@ public class DashboardController {
                             controller.setData(userDto, 0);
                         }
                         else {
-                            if(service.existsPendingFriendshipRequest(new Tuple<String,String>(labelUsername.getText(),userDto.getUserID())))
-                            controller.setData(userDto, 1);
+                            FriendshipRequestDTO<String> friendshipRequestDTO = service.existsPendingFriendshipRequest(new Tuple<String,String>(labelUsername.getText(),userDto.getUserID()));
+                            if(friendshipRequestDTO != null)
+                            {
+                                if(friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
+                                        controller.setData(userDto, 1);
+                                else {
+                                    if (friendshipRequestDTO.getFrom().getUserID().equals(userDto.getUserID()))
+                                        controller.setData(userDto, 3);
+                                }
+                            }
                             else{
                                 controller.setData(userDto, 2);
                             }

@@ -45,8 +45,9 @@ public class UserDetailsBoxController {
      *
      * @param userDto UserDto<String>
      * @param descriptionImageFlag set to 0 if the user that is logged in is a friend of @param userDto
-     *                             ,1 if the friendship request between these users is pending
+     *                             ,1 if the user logged in  sent a friendship request(that is now pending) to the user with id equal to @param userDto id
      *                             ,2 if these users aren't friends
+     *                             ,3 if user logged in has a pending friendship request from userDto
      *
 
      */
