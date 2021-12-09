@@ -20,7 +20,7 @@
 
 .button1
 {
-    -fx-background-color: #FFE01F;
+    -fx-background-color: #76D7C4;/*#FFE01F*/
     -fx-text-fill: #7F7F7F   ;
 }
 .button1:hover
@@ -36,7 +36,7 @@
     -fx-border-radius: 5;
 }
 .button2:hover{
-    -fx-background-color: #FFE01F;
+    -fx-background-color:  #76D7C4;
     -fx-text-fill: #7F7F7F;
     -fx-background-radius: 5;
 }
