@@ -58,20 +58,23 @@ public class UserDetailsBoxController {
 
             Image imgFriendshipStatus;
 
-            if ( descriptionImageFlag == 0) {
-                imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
-
-            }
-            else {
-                if(descriptionImageFlag == 1 )
-                {
+            switch (descriptionImageFlag){
+                case 0:
+                    imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
+                    break;
+                case 1:
                     imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
-                }
-            else{
+                    break;
+                case 2:
                     imgFriendshipStatus = new LocatedImage("icons/icons8_friends_30px_2.png");
-
-                }
+                    break;
+                case 3:
+                    imgFriendshipStatus = new LocatedImage();
+                    break;
+                default:
+                    break;
             }
+
             imgSendFriendshipRequest.setImage(imgFriendshipStatus);
 
     }
