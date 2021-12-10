@@ -63,6 +63,7 @@ public class UserDetailsBoxController {
             case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
             default -> {
             }
+
         }
             if(imgFriendshipStatus != null) {
                 imgSendFriendshipRequest.setImage(imgFriendshipStatus);
