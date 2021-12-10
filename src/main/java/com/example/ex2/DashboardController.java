@@ -122,25 +122,24 @@ public class DashboardController {
                         UserDetailsBoxController controller = fxmlLoader.getController();
                         controller.setService(service);
                         controller.setLoggedInUserEmail(labelUsername.getText());
-                        Predicate<FrienshipDto> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
-                                                                        ||  frienshipDto.getUser2().getUserID().equals(userDto.getUserID());
+                        if(!userDto.getUserID().equals(labelUsername.getText())) {
+                            Predicate<FrienshipDto> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
+                                    || frienshipDto.getUser2().getUserID().equals(userDto.getUserID());
 
-                        if(userFriends.stream().anyMatch(isBetweenUsersFriends)) {
-                            controller.setData(userDto, 0);
-                        }
-                        else {
-                            FriendshipRequestDTO<String> friendshipRequestDTO = service.existsPendingFriendshipRequest(new Tuple<String,String>(labelUsername.getText(),userDto.getUserID()));
-                            if(friendshipRequestDTO != null)
-                            {
-                                if(friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
+                            if (userFriends.stream().anyMatch(isBetweenUsersFriends)) {
+                                controller.setData(userDto, 0);
+                            } else {
+                                FriendshipRequestDTO<String> friendshipRequestDTO = service.existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
+                                if (friendshipRequestDTO != null) {
+                                    if (friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
                                         controller.setData(userDto, 1);
-                                else {
-                                    if (friendshipRequestDTO.getFrom().getUserID().equals(userDto.getUserID()))
-                                        controller.setData(userDto, 3);
+                                    else {
+                                        if (friendshipRequestDTO.getFrom().getUserID().equals(userDto.getUserID()))
+                                            controller.setData(userDto, 3);
+                                    }
+                                } else {
+                                    controller.setData(userDto, 2);
                                 }
-                            }
-                            else{
-                                controller.setData(userDto, 2);
                             }
                         }
                         vboxSearchResult.getChildren().add(hBox);
