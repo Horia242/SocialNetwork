@@ -1,5 +1,4 @@
 package com.example.ex2;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -12,7 +11,6 @@ import ro.ubbcluj.map.model.UserDto;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
-
 import java.util.Objects;
 
 public class UserDetailsBoxController {
@@ -21,7 +19,6 @@ public class UserDetailsBoxController {
     private String loggedInUserEmail ;
     @FXML
     private HBox hboxUserDetails;
-
     @FXML
     private Label labelEmail;
 

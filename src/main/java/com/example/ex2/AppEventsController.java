@@ -1,5 +1,4 @@
 package com.example.ex2;
-
 import com.dlsc.formsfx.model.event.FieldEvent;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,8 +14,6 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import ro.ubbcluj.map.Service.FriendshipService;
 import ro.ubbcluj.map.Service.UserService;
 import ro.ubbcluj.map.model.*;
-import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
-import ro.ubbcluj.map.myException.RepoError;
 import ro.ubbcluj.map.repository.FriendshipRequestRepository;
 import ro.ubbcluj.map.repository.MessageRepository;
 import ro.ubbcluj.map.repository.Repository;
@@ -38,15 +35,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.util.List;
 
 public class AppEventsController {
-
-
-
-
     @FXML
     private HBox btnClose;
     @FXML
@@ -63,16 +55,12 @@ public class AppEventsController {
     private TextField txtFieldEmail;
     @FXML
     private TextField txtFieldPassword;
-
     private Parent root;
     private Stage stage;
     private Scene scene;
 
-
     @FXML
     private final DashboardController dashboardController = new DashboardController();
-
-
     @FXML
     private void handleButtonAction(ActionEvent event){
                 if(event.getSource().equals(btnSignUp)) {
@@ -83,7 +71,6 @@ public class AppEventsController {
                     repoUser.save(new ApplicationUser());*/
                 }
     }
-
     @FXML
     private void onLoginButton(ActionEvent event) throws IOException{
         Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
@@ -111,13 +98,9 @@ public class AppEventsController {
             e.printStackTrace();
         }
     }
-
     @FXML
     private void handleButtonGetStarted(ActionEvent event){
-
-
     }
-
     @FXML
     private void handleMouseEvent(MouseEvent event){
             if(event.getSource() .equals( btnClose)){
@@ -126,7 +109,5 @@ public class AppEventsController {
             if(event.getSource().equals(btnBack)){
                     pnlLogIn.toFront();
             }
-
     }
-
 }
