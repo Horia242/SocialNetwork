@@ -57,6 +57,8 @@ public class DashboardController {
     private TextField textFieldSearchUser;
     @FXML
     private VBox vboxSearchResult;
+    @FXML
+    private HBox hboxFriends;
 
 
     private Parent root;
@@ -83,7 +85,7 @@ public class DashboardController {
 
     @FXML
     private void handleMouseEvent(MouseEvent event){
-        if(event.getSource().equals(btnShowFriends)){
+        if(event.getSource().equals(btnShowFriends) || event.getSource().equals(hboxFriends)){
                 displayUserFriends(labelUsername.getText());
         }
         if(event.getSource().equals(textFieldSearchUser)){

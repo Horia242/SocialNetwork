@@ -1,10 +1,20 @@
 package com.example.ex2;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
 import ro.ubbcluj.map.model.FriendshipRequestDTO;
 import ro.ubbcluj.map.model.FriendshipRequestStatus;
 import ro.ubbcluj.map.model.UserDto;
@@ -12,6 +22,7 @@ import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
 import java.util.Objects;
+
 
 public class UserDetailsBoxController {
 
@@ -29,6 +40,8 @@ public class UserDetailsBoxController {
     private Label labelLastName;
     @FXML
     private ImageView imgSendFriendshipRequest;
+    @FXML
+    private AnchorPane anchorDashboardRootPane;
 
     public void setService(NetworkService service) {
         this.service = service;
@@ -90,6 +103,12 @@ public class UserDetailsBoxController {
                   //Users are already friends
                 }
             }
+        }
+        else
+        { if(url.compareTo("icons/icons8_paper_plane_30px.png") == 0){
+
+            //Scene scene = new Scene(new Group(pane), 595, 250, Color.BEIGE);
+        }
         }
     }
 

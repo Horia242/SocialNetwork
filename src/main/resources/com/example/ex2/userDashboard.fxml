@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -15,9 +16,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
+<AnchorPane fx:id="anchorDashboardRootPane" prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
-      <BorderPane prefHeight="589.0" prefWidth="1033.0">
+      <BorderPane prefHeight="589.0" prefWidth="1043.0">
          <left>
             <Pane prefHeight="761.0" prefWidth="279.0" styleClass="linear-grad2" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>
@@ -30,7 +31,7 @@
                         </Label>
                      </children>
                   </Pane>
-                  <HBox layoutX="-1.0" layoutY="74.0" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxFriends" layoutX="-1.0" layoutY="74.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fx:id="btnShowFriends" fitHeight="23.0" fitWidth="22.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -60,24 +61,30 @@
             </Pane>
          </left>
          <center>
-            <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <StackPane prefHeight="589.0" prefWidth="771.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane fx:id="pnlAccount" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <Label alignment="TOP_CENTER" layoutX="267.0" layoutY="55.0" prefHeight="42.0" prefWidth="227.0" text="Account details" />
-                     </children>
-                  </Pane>
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
-                        <VBox fx:id="vboxSearchResult" layoutX="426.0" layoutY="44.0" prefHeight="48.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
-                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                        <ScrollPane layoutX="415.0" layoutY="44.0" prefHeight="104.0" prefWidth="349.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <content>
+                              <VBox fx:id="vboxSearchResult" prefHeight="102.0" prefWidth="333.0" style="-fx-background-color: #E1E1DF;">
+                                 <opaqueInsets>
+                                    <Insets right="3.0" />
+                                 </opaqueInsets>
+                              </VBox>
+                           </content>
+                        </ScrollPane>
+                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="159.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
                           <columns>
                             <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
                             <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
                               <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
                           </columns>
                         </TableView>
-                        <HBox layoutX="388.0" layoutY="5.0" prefHeight="48.0" prefWidth="281.0">
+                        <HBox layoutX="377.0" layoutY="5.0" prefHeight="48.0" prefWidth="281.0">
                            <children>
                               <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -87,9 +94,9 @@
                                     <Insets left="12.0" top="10.0" />
                                  </HBox.margin>
                               </ImageView>
-                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="203.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
+                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="28.0" prefWidth="203.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
                                  <HBox.margin>
-                                    <Insets left="1.0" top="10.0" />
+                                    <Insets left="4.0" top="10.0" />
                                  </HBox.margin>
                                  <font>
                                     <Font size="13.0" />
@@ -97,7 +104,7 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="130.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../icons/icons8_delete_bin_48px.png" />
                            </image>
@@ -107,6 +114,11 @@
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
                         </ImageView>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="pnlAccount" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <Label alignment="TOP_CENTER" layoutX="267.0" layoutY="55.0" prefHeight="42.0" prefWidth="227.0" text="Account details" />
                      </children>
                   </Pane>
                </children>
