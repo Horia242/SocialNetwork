@@ -142,6 +142,9 @@ public class DashboardController {
                                 }
                             }
                         }
+                        else{
+                            controller.setData(userDto,4);
+                        }
                         vboxSearchResult.getChildren().add(hBox);
                     }catch(IOException e){
                         e.printStackTrace();

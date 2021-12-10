@@ -45,7 +45,7 @@ public class UserDetailsBoxController {
      *                             ,1 if the user logged in  sent a friendship request(that is now pending) to the user with id equal to @param userDto id
      *                             ,2 if these users aren't friends
      *                             ,3 if user logged in has a pending friendship request from userDto
-     *
+     *                             ,4 if the userDto it's the logged-in user himself
 
      */
     public void setData(UserDto<String> userDto, int  descriptionImageFlag){
@@ -60,10 +60,13 @@ public class UserDetailsBoxController {
             case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
             case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
             case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_30px_blue.png");
+            case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
             default -> {
             }
         }
-            imgSendFriendshipRequest.setImage(imgFriendshipStatus);
+            if(imgFriendshipStatus != null) {
+                imgSendFriendshipRequest.setImage(imgFriendshipStatus);
+            }
 
     }
 
