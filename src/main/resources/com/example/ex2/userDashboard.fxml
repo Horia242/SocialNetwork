@@ -62,8 +62,14 @@
          <center>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
+                  <Pane fx:id="pnlAccount" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <Label alignment="TOP_CENTER" layoutX="267.0" layoutY="55.0" prefHeight="42.0" prefWidth="227.0" text="Account details" />
+                     </children>
+                  </Pane>
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
+                        <VBox fx:id="vboxSearchResult" layoutX="426.0" layoutY="44.0" prefHeight="48.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
                           <columns>
                             <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
@@ -96,17 +102,11 @@
                               <Image url="@../../../icons/icons8_delete_bin_48px.png" />
                            </image>
                         </ImageView>
-                        <VBox fx:id="vboxSearchResult" layoutX="421.0" layoutY="44.0" prefHeight="45.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
                         <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
                         </ImageView>
-                     </children>
-                  </Pane>
-                  <Pane fx:id="pnlAccount" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <Label alignment="TOP_CENTER" layoutX="267.0" layoutY="55.0" prefHeight="42.0" prefWidth="227.0" text="Account details" />
                      </children>
                   </Pane>
                </children>
