@@ -94,3 +94,9 @@
 .table-view1 .table-row-cell:empty .table-cell {
     -fx-border-width: 0px;
 }
+.box1{
+
+}
+.box1:hover{
+    -fx-background-color:  #E1E1DF;
+}

@@ -17,7 +17,7 @@
 
 <AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
-      <BorderPane prefHeight="589.0" prefWidth="992.0">
+      <BorderPane prefHeight="589.0" prefWidth="1033.0">
          <left>
             <Pane prefHeight="761.0" prefWidth="279.0" styleClass="linear-grad2" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>
@@ -30,7 +30,7 @@
                         </Label>
                      </children>
                   </Pane>
-                  <HBox layoutX="-1.0" layoutY="74.0" prefHeight="42.0" prefWidth="281.0">
+                  <HBox layoutX="-1.0" layoutY="74.0" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fx:id="btnShowFriends" fitHeight="23.0" fitWidth="22.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -69,14 +69,14 @@
                   </Pane>
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
-                        <TableView fx:id="tabviewFriends" layoutX="7.0" layoutY="126.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
                           <columns>
                             <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
                             <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
                               <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
                           </columns>
                         </TableView>
-                        <HBox layoutX="275.0" layoutY="5.0" prefHeight="48.0" prefWidth="281.0">
+                        <HBox layoutX="388.0" layoutY="5.0" prefHeight="48.0" prefWidth="281.0">
                            <children>
                               <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
@@ -96,13 +96,13 @@
                               </TextField>
                            </children>
                         </HBox>
-                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="14.0" layoutY="98.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../icons/icons8_delete_bin_48px.png" />
                            </image>
                         </ImageView>
-                        <VBox fx:id="vboxSearchResult" layoutX="311.0" layoutY="44.0" prefHeight="45.0" prefWidth="323.0" style="-fx-background-color: #E1E1DF;" />
-                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="669.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
+                        <VBox fx:id="vboxSearchResult" layoutX="421.0" layoutY="44.0" prefHeight="45.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
+                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
