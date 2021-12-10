@@ -95,7 +95,7 @@ public class DashboardController {
 
     @FXML
     private void handleSignOutEvent(MouseEvent event){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
             try {
                 root = loader.load();
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

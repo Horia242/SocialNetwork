@@ -80,7 +80,7 @@ public class AppEventsController {
                 }
                 if(event.getSource().equals(btnGetStarted)){
                     /*Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
-                    repoUser.save(new ApplicationUser("test1", "test1*", "getStarted@gmail.com"));*/
+                    repoUser.save(new ApplicationUser());*/
                 }
     }
 
