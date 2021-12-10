@@ -56,25 +56,16 @@ public class UserDetailsBoxController {
         labelLastName.setText(userDto.getLastName());
         labelEmail.setText(userDto.getUserID());
 
-            Image imgFriendshipStatus;
+            Image imgFriendshipStatus = null;
 
-            switch (descriptionImageFlag){
-                case 0:
-                    imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
-                    break;
-                case 1:
-                    imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
-                    break;
-                case 2:
-                    imgFriendshipStatus = new LocatedImage("icons/icons8_friends_30px_2.png");
-                    break;
-                case 3:
-                    imgFriendshipStatus = new LocatedImage();
-                    break;
-                default:
-                    break;
+        switch (descriptionImageFlag) {
+            case 0 -> imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
+            case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
+            case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
+            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_30px_blue.png");
+            default -> {
             }
-
+        }
             imgSendFriendshipRequest.setImage(imgFriendshipStatus);
 
     }
@@ -88,7 +79,7 @@ public class UserDetailsBoxController {
     @FXML
     private void handleRequestImage(){
         String url = getImagePath(imgSendFriendshipRequest.getImage());
-        if(url.compareTo("icons/icons8_friends_30px_2.png") == 0)
+        if(url.compareTo("icons/icons8_plus30px.png") == 0)
         {
             if(service != null){
                 try {
