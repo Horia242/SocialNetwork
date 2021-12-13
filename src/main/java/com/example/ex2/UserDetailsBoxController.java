@@ -72,7 +72,7 @@ public class UserDetailsBoxController {
             case 0 -> imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
             case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
             case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
-            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_30px_blue.png");
+            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
             case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
             default -> {
             }
@@ -107,7 +107,6 @@ public class UserDetailsBoxController {
         else
         { if(url.compareTo("icons/icons8_paper_plane_30px.png") == 0){
 
-            //Scene scene = new Scene(new Group(pane), 595, 250, Color.BEIGE);
         }
         }
     }
