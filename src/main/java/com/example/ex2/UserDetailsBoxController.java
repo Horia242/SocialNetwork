@@ -22,18 +22,16 @@ import ro.ubbcluj.map.model.UserDto;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
-
-import java.lang.reflect.Field;
 import java.time.LocalDate;
-import java.util.Objects;
 
 
-public class UserDetailsBoxController {
+
+
+public class UserDetailsBoxController  {
 
     private NetworkService service;
     private String loggedInUserEmail ;
     private RootService rootService;
-
     @FXML
     private HBox hboxUserDetails;
     @FXML
@@ -120,6 +118,7 @@ public class UserDetailsBoxController {
                         new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
                 imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
                 //notify() - pentru main window;
+
 
             } catch (InsufficientDataToExecuteTaskException | RepoError e) {
                 e.printStackTrace();
