@@ -21,6 +21,8 @@ import ro.ubbcluj.map.model.UserDto;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
+
+import java.time.LocalDate;
 import java.util.Objects;
 
 
@@ -97,7 +99,7 @@ public class UserDetailsBoxController {
             if(service != null){
                 try {
                     service.sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
-                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING));
+                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
                     imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
                 } catch (InsufficientDataToExecuteTaskException | RepoError e) {
                   //Users are already friends
@@ -105,8 +107,15 @@ public class UserDetailsBoxController {
             }
         }
         else
-        { if(url.compareTo("icons/icons8_paper_plane_30px.png") == 0){
-
+        { if(url.compareTo("icons/icons8_handshake_orange.png") == 0){
+            try {
+                service.updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
+                        new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
+                imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
+                //notify() - pentru main window;
+            } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+                e.printStackTrace();
+            }
         }
         }
     }

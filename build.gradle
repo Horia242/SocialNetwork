@@ -43,7 +43,7 @@ dependencies {
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
 
     implementation( files('D:\\FACULTATE\\MAP-Lab\\curs3_generics\\out\\artifacts\\SocialNetworkBackend_jar\\SocialNetworkBackend.jar'))
-  // implementation(files('D:\\FACULTATE\\MAP-Lab\\ArtifactTest\\out\\artifacts\\ArtifactTest_jar\\ArtifactTest.jar'))
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 

@@ -6,7 +6,7 @@ module com.example.ex2 {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
 
-    requires SocialNetworkBackend;
+    requires socialnetwork;
     requires java.sql;
 
     opens com.example.ex2 to javafx.fxml;
