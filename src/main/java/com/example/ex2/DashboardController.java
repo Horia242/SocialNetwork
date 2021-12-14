@@ -1,5 +1,6 @@
 package com.example.ex2;
 
+import com.example.ex2.rootService.RootService;
 import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,8 +37,9 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    NetworkService service;
-    String loggedInUsername;
+    private NetworkService service;
+    private String loggedInUsername;
+    private RootService rootService;
 
     @FXML
     private ImageView btnShowFriends;

@@ -1,4 +1,5 @@
 package com.example.ex2;
+import com.example.ex2.rootService.RootService;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
@@ -31,6 +32,8 @@ public class UserDetailsBoxController {
 
     private NetworkService service;
     private String loggedInUserEmail ;
+    private RootService rootService;
+
     @FXML
     private HBox hboxUserDetails;
     @FXML

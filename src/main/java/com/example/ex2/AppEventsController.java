@@ -1,5 +1,6 @@
 package com.example.ex2;
 import com.dlsc.formsfx.model.event.FieldEvent;
+import com.example.ex2.rootService.RootService;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,7 +44,7 @@ public class AppEventsController {
     private Parent root;
     private Stage stage;
     private Scene scene;
-    private
+    private RootService rootService;
 
     @FXML
     private HBox btnClose;
