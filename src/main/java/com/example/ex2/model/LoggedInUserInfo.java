@@ -5,4 +5,7 @@ package com.example.ex2.model;
  */
 public class LoggedInUserInfo {
 
+    private String userEmail;
+    private String password;
+
 }
