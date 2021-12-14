@@ -39,6 +39,12 @@ import java.io.IOException;
 import java.util.List;
 
 public class AppEventsController {
+
+    private Parent root;
+    private Stage stage;
+    private Scene scene;
+    private
+
     @FXML
     private HBox btnClose;
     @FXML
@@ -55,9 +61,9 @@ public class AppEventsController {
     private TextField txtFieldEmail;
     @FXML
     private TextField txtFieldPassword;
-    private Parent root;
-    private Stage stage;
-    private Scene scene;
+
+
+
 
     @FXML
     private final DashboardController dashboardController = new DashboardController();
