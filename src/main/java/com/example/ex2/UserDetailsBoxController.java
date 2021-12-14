@@ -38,16 +38,19 @@ public class UserDetailsBoxController {
     private HBox hboxUserDetails;
     @FXML
     private Label labelEmail;
-
     @FXML
     private Label labelFirstName;
-
     @FXML
     private Label labelLastName;
     @FXML
     private ImageView imgSendFriendshipRequest;
     @FXML
     private AnchorPane anchorDashboardRootPane;
+
+    public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
+        this.loggedInUserEmail = loggedInUserEmail;
+        this.rootService = rootService;
+    }
 
     public void setService(NetworkService service) {
         this.service = service;
