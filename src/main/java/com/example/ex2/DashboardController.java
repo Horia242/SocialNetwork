@@ -1,19 +1,11 @@
 package com.example.ex2;
 
-import com.example.ex2.rootService.RootService;
-import javafx.beans.Observable;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -21,7 +13,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
@@ -34,16 +25,23 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    private NetworkService service;
-    private String loggedInUsername;
-    private RootService rootService;
+    NetworkService service;
+    String loggedInUsername;
 
     @FXML
     private ImageView btnShowFriends;
     @FXML
+    private ImageView btnShowFriendRequests;
+    @FXML
     private Pane pnlFriends;
     @FXML
+    private Pane pnlFriendRequests;
+    @FXML
     private Label labelUsername;
+    @FXML
+    private Label labelFriends;
+    @FXML
+    private Label labelFriendRequests;
     @FXML
     private TableView<UserDto<String>> tabviewFriends;
     @FXML
@@ -57,7 +55,19 @@ public class DashboardController {
     @FXML
     private VBox vboxSearchResult;
     @FXML
-    private HBox hboxFriends;
+    private TableView<FriendshipRequestDTO<String>> tabviewRequests;
+    @FXML
+    private TableColumn <FriendshipRequest, String> tbl_nume;
+    @FXML
+    private TableColumn <FriendshipRequest, String> tbl_prenume;
+    @FXML
+    private TableColumn <FriendshipRequest, String> tbl_data;
+    @FXML
+    private TableColumn <FriendshipRequest, String> tbl_status;
+    @FXML
+    private Button btn_accept;
+    @FXML
+    private Button btn_decline;
 
 
     private Parent root;
@@ -84,8 +94,11 @@ public class DashboardController {
 
     @FXML
     private void handleMouseEvent(MouseEvent event){
-        if(event.getSource().equals(btnShowFriends) || event.getSource().equals(hboxFriends)){
-                displayUserFriends(labelUsername.getText());
+        if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
+            displayUserFriends(labelUsername.getText());
+        }
+        if(event.getSource().equals(btnShowFriendRequests) || event.getSource().equals(labelFriendRequests)){
+            displayUserFriendsRequests(labelUsername.getText());
         }
         if(event.getSource().equals(textFieldSearchUser)){
             vboxSearchResult.getChildren().clear();
@@ -96,26 +109,25 @@ public class DashboardController {
 
     @FXML
     private void handleSignOutEvent(MouseEvent event){
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
-            try {
-                root = loader.load();
-                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
+        try {
+            root = loader.load();
+            stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     private void handleSearchUser(){
-
         if(!textFieldSearchUser.getText().isEmpty()){
-                vboxSearchResult.getChildren().clear();
+            vboxSearchResult.getChildren().clear();
             try {
                 List<FrienshipDto> userFriends = service.getFriendshipList(labelUsername.getText());
-            for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
+                for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     fxmlLoader.setLocation(getClass().getResource("userDetailsBox.fxml"));
@@ -154,7 +166,7 @@ public class DashboardController {
                 }
                 vboxSearchResult.toFront();
             } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-            e.printStackTrace();
+                e.printStackTrace();
             }
 
         }
@@ -163,10 +175,30 @@ public class DashboardController {
     }
     @FXML
     private void handleDeleteUser(){
-                UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
-                service.deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
-                displayUserFriends(labelUsername.getText());
+        UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
+        service.deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
+        displayUserFriends(labelUsername.getText());
     }
+
+    @FXML
+    private void handleAcceptButton() throws RepoError, InsufficientDataToExecuteTaskException {
+        FriendshipRequestDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+        FriendshipRequestDTO friendshipRequestDTO = new FriendshipRequestDTO(selectedRequest.getFrom(),selectedRequest.getTo(),selectedRequest.getStatus(),selectedRequest.getDate());
+        friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
+        service.updateFriendshipRequestStatus(friendshipRequestDTO);
+        displayUserFriendsRequests(labelUsername.getText());
+    }
+
+    @FXML
+    private void handleDeclineButton() throws RepoError, InsufficientDataToExecuteTaskException {
+        FriendshipRequestDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+        FriendshipRequestDTO friendshipRequestDTO = new FriendshipRequestDTO(selectedRequest.getFrom(),selectedRequest.getTo(),selectedRequest.getStatus(),selectedRequest.getDate());
+
+        friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
+        service.updateFriendshipRequestStatus(friendshipRequestDTO);
+        displayUserFriendsRequests(labelUsername.getText());
+    }
+
     private void displayUserFriends(String userEmail){
         tabviewFriends.getItems().clear();
         tabcolEmail.setCellValueFactory(new PropertyValueFactory<>("userID"));
@@ -175,12 +207,12 @@ public class DashboardController {
         try {
 
             for(FrienshipDto friendshipDto: service.getFriendshipList(userEmail)){
-                    UserDto<String> userDto;
-                    if(friendshipDto.getUser1().getUserID().equals(userEmail))
-                        userDto = friendshipDto.getUser2();
-                    else
-                        userDto = friendshipDto.getUser1();
-                    tabviewFriends.getItems().add(new UserDto<String>(userDto.getUserID(), userDto.getFirstName(), userDto.getLastName()));
+                UserDto<String> userDto;
+                if(friendshipDto.getUser1().getUserID().equals(userEmail))
+                    userDto = friendshipDto.getUser2();
+                else
+                    userDto = friendshipDto.getUser1();
+                tabviewFriends.getItems().add(new UserDto<String>(userDto.getUserID(), userDto.getFirstName(), userDto.getLastName()));
             }
         } catch (InsufficientDataToExecuteTaskException | RepoError e) {
             e.printStackTrace();
@@ -188,12 +220,21 @@ public class DashboardController {
         pnlFriends.toFront();
     }
 
+    private void displayUserFriendsRequests(String userEmail) {
+        tabviewRequests.getItems().clear();
+        tbl_nume.setCellValueFactory(new PropertyValueFactory<>("name"));
+        tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
+        tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
+        tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
+        for (FriendshipRequestDTO friendshipRequestDTO : service.getAllPendingFriendshipRequestForOneUser(labelUsername.getText())) {
+            tabviewRequests.getItems().add(new FriendshipRequestDTO<String>(friendshipRequestDTO.getFrom(),friendshipRequestDTO.getTo(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate()));
+        }
+        pnlFriendRequests.toFront();
+    }
+
     private List<UserDto> getUserNamesStartingWith(String startsWith){
         Predicate<UserDto> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return service.getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
-/**
- * update()
- * DISPLAY user friends si display   vboxSearchResult.toBack();vboxSearchResult.toFront();
- */
+
 }

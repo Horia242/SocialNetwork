@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="hboxUserDetails" prefHeight="50.0" prefWidth="333.0" styleClass="box2" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.UserDetailsBoxController">
+<HBox fx:id="hboxUserDetails" prefHeight="50.0" prefWidth="314.0" styleClass="box2" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.UserDetailsBoxController">
    <children>
       <ImageView fitHeight="30.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
          <HBox.margin>
@@ -33,7 +33,7 @@
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="labelEmail" prefHeight="28.0" prefWidth="121.0" text="Label">
+      <Label fx:id="labelEmail" prefHeight="28.0" prefWidth="105.0" text="Label">
          <font>
             <Font size="14.0" />
          </font>
