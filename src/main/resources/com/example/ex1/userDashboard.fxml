@@ -3,7 +3,6 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -17,7 +16,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
+<AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex1.DashboardController">
    <children>
       <BorderPane prefHeight="589.0" prefWidth="1033.0">
          <left>
@@ -25,27 +24,14 @@
                <children>
                   <Pane prefHeight="73.0" prefWidth="281.0" styleClass="linear-grad3" stylesheets="@../../../css/styling.css">
                      <children>
-                        <Label fx:id="labelUsername" layoutX="127.0" layoutY="20.0" prefHeight="34.0" prefWidth="154.0">
-                           <font>
-                              <Font size="13.0" />
-                           </font>
-                           <padding>
-                              <Insets left="2.0" />
-                           </padding>
-                        </Label>
-                        <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="6.0" layoutY="23.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_user_24px_1.png" />
-                           </image>
-                        </ImageView>
-                        <Label layoutX="38.0" layoutY="20.0" prefHeight="34.0" prefWidth="92.0" text="Logged in as:">
+                        <Label fx:id="labelUsername" layoutX="127.0" layoutY="10.0" prefHeight="47.0" prefWidth="152.0">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
                      </children>
                   </Pane>
-                  <HBox fx:id="hboxFriends" layoutY="73.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox layoutY="73.0" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fx:id="btnShowFriends" fitHeight="23.0" fitWidth="22.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -55,7 +41,7 @@
                               <Insets left="12.0" top="10.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="labelFriends" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Friends">
+                        <Label prefHeight="42.0" prefWidth="203.0" text="Friends">
                            <HBox.margin>
                               <Insets left="10.0" />
                            </HBox.margin>
@@ -65,23 +51,23 @@
                         </Label>
                      </children>
                   </HBox>
+                  <ImageView fitHeight="25.0" fitWidth="30.0" layoutX="21.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../icons/icons8_user_24px_1.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="55.0" layoutY="16.0" prefHeight="34.0" prefWidth="92.0" text="Logged in as:" />
                   <HBox layoutX="7.0" layoutY="121.0" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
-                        <ImageView fx:id="btnShowFriendRequests" fitHeight="23.0" fitWidth="22.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                        <ImageView id="btnShowFriendRequest" fx:id="btnShowFriendRequests" fitHeight="49.0" fitWidth="37.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../icons/icons8_add_user_group_man_man_30px.png" />
+                              <Image url="@../../../icons/icons8-add-user-group-man-man-48.png" />
                            </image>
-                           <HBox.margin>
-                              <Insets left="5.0" top="10.0" />
-                           </HBox.margin>
                         </ImageView>
-                        <Label id="friend_request_menu_label" fx:id="labelFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Friend Requests">
+                        <Label id="friend_request_menu_label" prefHeight="42.0" prefWidth="203.0" text="Friend Requests">
                            <font>
                               <Font size="15.0" />
                            </font>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
                         </Label>
                      </children>
                   </HBox>
@@ -94,11 +80,11 @@
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
-                              <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
+                          <columns>
+                            <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
+                            <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
                               <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
-                           </columns>
+                          </columns>
                         </TableView>
                         <HBox layoutX="388.0" layoutY="5.0" prefHeight="48.0" prefWidth="281.0">
                            <children>
@@ -125,27 +111,23 @@
                               <Image url="@../../../icons/icons8_delete_bin_48px.png" />
                            </image>
                         </ImageView>
+                        <VBox fx:id="vboxSearchResult" layoutX="421.0" layoutY="44.0" prefHeight="45.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
                         <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
                         </ImageView>
-                        <ScrollPane layoutX="421.0" layoutY="44.0" prefHeight="101.0" prefWidth="333.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                           <content>
-                              <VBox fx:id="vboxSearchResult" prefHeight="95.0" prefWidth="317.0" style="-fx-background-color: #E1E1DF;" />
-                           </content>
-                        </ScrollPane>
                      </children>
                   </Pane>
                   <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewRequests" layoutY="103.0" prefHeight="488.0" prefWidth="756.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tbl_nume" prefWidth="137.59997862577438" text="First name" />
-                              <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="131.1999969482422" text="Last name" />
+                          <columns>
+                            <TableColumn fx:id="tbl_nume" prefWidth="137.59997862577438" text="First name" />
+                            <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="131.1999969482422" text="Last name" />
                               <TableColumn fx:id="tbl_data" minWidth="0.0" prefWidth="260.79998779296875" text="Status" />
                               <TableColumn fx:id="tbl_status" minWidth="0.0" prefWidth="217.59991455078125" text="Date" />
-                           </columns>
+                          </columns>
                         </TableView>
                         <ImageView fx:id="btnSignOut1" fitHeight="40.0" fitWidth="30.0" layoutX="689.0" layoutY="34.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
                            <image>

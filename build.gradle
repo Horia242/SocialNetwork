@@ -23,6 +23,10 @@ tasks.withType(JavaCompile) {
 }
 
 application {
+//<<<<<<< HEAD
+//    mainModule = 'com.example.ex1'
+//    mainClass = 'com.example.ex1.HelloApplication'
+//=======
     mainModule = 'com.example.ex2'
     mainClass = 'com.example.ex2.HelloApplication'
 }
@@ -42,8 +46,7 @@ dependencies {
     }
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
 
-    implementation( files('D:\\FACULTATE\\MAP-Lab\\curs3_generics\\out\\artifacts\\SocialNetworkBackend_jar\\SocialNetworkBackend.jar'))
-  // implementation(files('D:\\FACULTATE\\MAP-Lab\\ArtifactTest\\out\\artifacts\\ArtifactTest_jar\\ArtifactTest.jar'))
+    implementation( files('C:\\Users\\Horia\\socialnetwork\\out\\artifacts\\socialnetwork_jar\\socialnetwork.jar'))
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
@@ -52,5 +55,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-
 

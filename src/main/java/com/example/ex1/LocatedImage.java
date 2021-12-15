@@ -1,4 +1,4 @@
-package com.example.ex2;
+package com.example.ex1;
 
 import javafx.scene.image.Image;
 

@@ -1,55 +1,34 @@
-package com.example.ex2;
-import com.example.ex2.rootService.RootService;
+package com.example.ex1;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-
-import javafx.scene.control.*;
-import javafx.scene.effect.BoxBlur;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontPosture;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.Text;
 import ro.ubbcluj.map.model.FriendshipRequestDTO;
 import ro.ubbcluj.map.model.FriendshipRequestStatus;
 import ro.ubbcluj.map.model.UserDto;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
+
 import java.time.LocalDate;
 
-
-
-
-public class UserDetailsBoxController  {
+public class UserDetailsBoxController {
 
     private NetworkService service;
     private String loggedInUserEmail ;
-    private RootService rootService;
     @FXML
     private HBox hboxUserDetails;
     @FXML
     private Label labelEmail;
+
     @FXML
     private Label labelFirstName;
+
     @FXML
     private Label labelLastName;
     @FXML
     private ImageView imgSendFriendshipRequest;
-    @FXML
-    private AnchorPane anchorDashboardRootPane;
-
-    /*public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
-        this.loggedInUserEmail = loggedInUserEmail;
-        this.rootService = rootService;
-    }*/
 
     public void setService(NetworkService service) {
         this.service = service;
@@ -80,7 +59,7 @@ public class UserDetailsBoxController  {
             case 0 -> imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
             case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
             case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
-            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
+            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_30px_blue.png");
             case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
             default -> {
             }
@@ -105,26 +84,12 @@ public class UserDetailsBoxController  {
             if(service != null){
                 try {
                     service.sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
-                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
+                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING,LocalDate.now()));
                     imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
                 } catch (InsufficientDataToExecuteTaskException | RepoError e) {
                   //Users are already friends
                 }
             }
-        }
-        else
-        { if(url.compareTo("icons/icons8_handshake_orange.png") == 0){
-            try {
-                service.updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
-                        new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
-                imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
-                //notify() - pentru main window;
-
-
-            } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                e.printStackTrace();
-            }
-        }
         }
     }
 
