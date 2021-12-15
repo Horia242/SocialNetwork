@@ -23,10 +23,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import ro.ubbcluj.map.Service.NetworkService;
-import ro.ubbcluj.map.model.FriendshipRequestDTO;
-import ro.ubbcluj.map.model.FrienshipDto;
-import ro.ubbcluj.map.model.Tuple;
-import ro.ubbcluj.map.model.UserDto;
+import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
 
@@ -113,6 +110,7 @@ public class DashboardController {
 
     @FXML
     private void handleSearchUser(){
+
         if(!textFieldSearchUser.getText().isEmpty()){
                 vboxSearchResult.getChildren().clear();
             try {
@@ -194,5 +192,8 @@ public class DashboardController {
         Predicate<UserDto> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return service.getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
-
+/**
+ * update()
+ * DISPLAY user friends si display   vboxSearchResult.toBack();vboxSearchResult.toFront();
+ */
 }

@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+
 import javafx.scene.control.*;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
@@ -45,10 +46,10 @@ public class UserDetailsBoxController  {
     @FXML
     private AnchorPane anchorDashboardRootPane;
 
-    public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
+    /*public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
         this.loggedInUserEmail = loggedInUserEmail;
         this.rootService = rootService;
-    }
+    }*/
 
     public void setService(NetworkService service) {
         this.service = service;
