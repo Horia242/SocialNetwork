@@ -183,7 +183,7 @@ public class DashboardController {
 
     @FXML
     private void handleAcceptButton() throws RepoError, InsufficientDataToExecuteTaskException {
-        if(tabviewRequests.getSelectionModel().getSelectedItem() != null) {
+        if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
@@ -194,7 +194,7 @@ public class DashboardController {
 
     @FXML
     private void handleDeclineButton() throws RepoError, InsufficientDataToExecuteTaskException {
-        if(tabviewRequests.getSelectionModel().getSelectedItem() != null) {
+        if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
@@ -230,6 +230,8 @@ public class DashboardController {
         tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
         tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
         tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
+        //service.getAllFriendshipRequestsForUser(userEmail)
+        //service.getAllPendingFriendshipRequestForOneUser(userEmail)
         for (FriendshipRequestDTO<String> friendshipRequestDTO : service.getAllPendingFriendshipRequestForOneUser(userEmail)) {
             tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(),friendshipRequestDTO.getFrom().getLastName(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate(),friendshipRequestDTO));
         }

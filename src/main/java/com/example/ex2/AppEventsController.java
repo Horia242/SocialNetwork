@@ -63,9 +63,10 @@ public class AppEventsController {
     @FXML
     private TextField txtFieldPassword;
 
-
-
-
+   /* public AppEventsController(int testValueDeleteImediatly) {
+            this.testValueDeleteImediatly = testValueDeleteImediatly;
+    }
+*/
     @FXML
     private final DashboardController dashboardController = new DashboardController();
     @FXML
@@ -80,12 +81,13 @@ public class AppEventsController {
     }
     @FXML
     private void onLoginButton(ActionEvent event) throws IOException{
-        Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24", new UserStringIdValidator());
-        Repository<Tuple<String, String>, Friendship> repoFriendship = new FriendshipRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24", new FriendshipTupleIdValidator());
+
+        Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
+        Repository<Tuple<String, String>, Friendship> repoFriendship = new FriendshipRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new FriendshipTupleIdValidator());
         FriendshipService serviceFriendship = new FriendshipService(repoFriendship);
         UserService serviceUser = new UserService(repoUser);
-        MessageRepository<Long, Message> messageRepository = new MessageRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24");
-        FriendshipRequestRepository<Long, FriendshipRequest> RepoFriendshipRequest = new FriendshipRequestsDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24");
+        MessageRepository<Long, Message> messageRepository = new MessageRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123");
+        FriendshipRequestRepository<Long, FriendshipRequest> RepoFriendshipRequest = new FriendshipRequestsDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123");
         NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), RepoFriendshipRequest);
         try{
             String txtUsername = txtFieldEmail.getText();
