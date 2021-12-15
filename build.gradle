@@ -46,7 +46,7 @@ dependencies {
     }
     implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
 
-    implementation( files('C:\\Users\\Horia\\socialnetwork\\out\\artifacts\\socialnetwork_jar\\socialnetwork.jar'))
+    implementation( files('D:\\FACULTATE\\MAP-Lab\\curs3_generics\\out\\artifacts\\SocialNetworkBackend_jar\\SocialNetworkBackend.jar'))
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 
