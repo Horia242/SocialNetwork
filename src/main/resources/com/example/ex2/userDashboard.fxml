@@ -91,30 +91,6 @@
          <center>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <TableView fx:id="tabviewRequests" layoutY="103.0" prefHeight="488.0" prefWidth="756.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tbl_nume" prefWidth="137.59997862577438" text="First name" />
-                              <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="131.1999969482422" text="Last name" />
-                              <TableColumn fx:id="tbl_data" minWidth="0.0" prefWidth="260.79998779296875" text="Status" />
-                              <TableColumn fx:id="tbl_status" minWidth="0.0" prefWidth="217.59991455078125" text="Date" />
-                           </columns>
-                        </TableView>
-                        <ImageView fx:id="btnSignOut1" fitHeight="40.0" fitWidth="30.0" layoutX="689.0" layoutY="34.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_exit_30px.png" />
-                           </image>
-                        </ImageView>
-                        <HBox layoutX="81.0" layoutY="45.0" prefHeight="41.0" prefWidth="156.0">
-                           <children>
-                              <Button fx:id="btn_accept" mnemonicParsing="false" onMouseClicked="#handleAcceptButton" prefHeight="38.0" prefWidth="73.0" style="-fx-background-color: green;" text="Accept" />
-                              <Button fx:id="btn_decline" mnemonicParsing="false" onMouseClicked="#handleDeclineButton" prefHeight="39.0" prefWidth="77.0" style="-fx-background-color: red;" text="Decline" />
-                           </children>
-                        </HBox>
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -161,6 +137,30 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <TableView fx:id="tabviewRequests" layoutY="103.0" prefHeight="488.0" prefWidth="756.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                           <columns>
+                              <TableColumn fx:id="tbl_nume" prefWidth="137.59997862577438" text="First name" />
+                              <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="131.1999969482422" text="Last name" />
+                              <TableColumn fx:id="tbl_data" minWidth="0.0" prefWidth="260.79998779296875" text="Status" />
+                              <TableColumn fx:id="tbl_status" minWidth="0.0" prefWidth="217.59991455078125" text="Date" />
+                           </columns>
+                        </TableView>
+                        <ImageView fx:id="btnSignOut1" fitHeight="40.0" fitWidth="30.0" layoutX="689.0" layoutY="34.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_exit_30px.png" />
+                           </image>
+                        </ImageView>
+                        <HBox layoutX="81.0" layoutY="45.0" prefHeight="41.0" prefWidth="156.0">
+                           <children>
+                              <Button fx:id="btn_accept" mnemonicParsing="false" onMouseClicked="#handleAcceptButton" prefHeight="38.0" prefWidth="73.0" style="-fx-background-color: green;" text="Accept" />
+                              <Button fx:id="btn_decline" mnemonicParsing="false" onMouseClicked="#handleDeclineButton" prefHeight="39.0" prefWidth="77.0" style="-fx-background-color: red;" text="Decline" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>
