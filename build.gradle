@@ -23,8 +23,12 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.ex1'
-    mainClass = 'com.example.ex1.HelloApplication'
+//<<<<<<< HEAD
+//    mainModule = 'com.example.ex1'
+//    mainClass = 'com.example.ex1.HelloApplication'
+//=======
+    mainModule = 'com.example.ex2'
+    mainClass = 'com.example.ex2.HelloApplication'
 }
 
 javafx {
@@ -34,7 +38,7 @@ javafx {
 
 
 dependencies {
-    implementation('org.postgresql:postgresql:42.3.1')
+  implementation('org.postgresql:postgresql:42.3.1')
 
     implementation('org.controlsfx:controlsfx:11.1.0')
     implementation('com.dlsc.formsfx:formsfx-core:11.4.2') {
@@ -51,3 +55,4 @@ dependencies {
 test {
     useJUnitPlatform()
 }
+
