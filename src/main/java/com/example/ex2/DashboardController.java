@@ -58,13 +58,13 @@ public class DashboardController {
     @FXML
     private TableView<FriendshipRequestForDisplayUseDTO<String>> tabviewRequests;
     @FXML
-    private TableColumn <FriendshipRequest, String> tbl_nume;
+    private TableColumn <FriendshipRequestForDisplayUseDTO<String>, String> tbl_nume;
     @FXML
-    private TableColumn <FriendshipRequest, String> tbl_prenume;
+    private TableColumn <FriendshipRequestForDisplayUseDTO<String>, String> tbl_prenume;
     @FXML
-    private TableColumn <FriendshipRequest, String> tbl_data;
+    private TableColumn <FriendshipRequestForDisplayUseDTO<String>, String> tbl_data;
     @FXML
-    private TableColumn <FriendshipRequest, String> tbl_status;
+    private TableColumn <FriendshipRequestForDisplayUseDTO<String>, String> tbl_status;
     @FXML
     private Button btn_accept;
     @FXML
@@ -183,20 +183,24 @@ public class DashboardController {
 
     @FXML
     private void handleAcceptButton() throws RepoError, InsufficientDataToExecuteTaskException {
-        FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
-        FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
-        friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
-        service.updateFriendshipRequestStatus(friendshipRequestDTO);
-        displayUserFriendsRequests(labelUsername.getText());
+        if(tabviewRequests.getSelectionModel().getSelectedItem() != null) {
+            FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+            FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
+            friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
+            service.updateFriendshipRequestStatus(friendshipRequestDTO);
+            displayUserFriendsRequests(labelUsername.getText());
+        }
     }
 
     @FXML
     private void handleDeclineButton() throws RepoError, InsufficientDataToExecuteTaskException {
-        FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
-        FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
-        friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
-        service.updateFriendshipRequestStatus(friendshipRequestDTO);
-        displayUserFriendsRequests(labelUsername.getText());
+        if(tabviewRequests.getSelectionModel().getSelectedItem() != null) {
+            FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+            FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
+            friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
+            service.updateFriendshipRequestStatus(friendshipRequestDTO);
+            displayUserFriendsRequests(labelUsername.getText());
+        }
     }
 
     private void displayUserFriends(String userEmail){
@@ -226,7 +230,7 @@ public class DashboardController {
         tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
         tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
         tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
-        for (FriendshipRequestDTO friendshipRequestDTO : service.getAllPendingFriendshipRequestForOneUser(labelUsername.getText())) {
+        for (FriendshipRequestDTO<String> friendshipRequestDTO : service.getAllPendingFriendshipRequestForOneUser(userEmail)) {
             tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(),friendshipRequestDTO.getFrom().getLastName(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate(),friendshipRequestDTO));
         }
         pnlFriendRequests.toFront();

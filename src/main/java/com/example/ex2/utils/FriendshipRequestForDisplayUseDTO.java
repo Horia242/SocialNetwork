@@ -6,13 +6,13 @@ import ro.ubbcluj.map.model.FriendshipRequestStatus;
 import java.time.LocalDate;
 
 public class FriendshipRequestForDisplayUseDTO<userID> {
-    String name;
-    String surname;
-    FriendshipRequestStatus status;
-    LocalDate date;
-    FriendshipRequestDTO friendshipRequestDTO;
+    private String name;
+    private String surname;
+    private FriendshipRequestStatus status;
+    private LocalDate date;
+    private FriendshipRequestDTO<userID> friendshipRequestDTO;
 
-    public FriendshipRequestForDisplayUseDTO(String name, String surname, FriendshipRequestStatus status, LocalDate date,FriendshipRequestDTO friendshipRequestDTO) {
+    public FriendshipRequestForDisplayUseDTO(String name, String surname, FriendshipRequestStatus status, LocalDate date,FriendshipRequestDTO<userID> friendshipRequestDTO) {
         this.name = name;
         this.surname = surname;
         this.status = status;
@@ -20,11 +20,11 @@ public class FriendshipRequestForDisplayUseDTO<userID> {
         this.friendshipRequestDTO = friendshipRequestDTO;
     }
 
-    public FriendshipRequestDTO getFriendshipRequestDTO() {
+    public FriendshipRequestDTO<userID> getFriendshipRequestDTO() {
         return friendshipRequestDTO;
     }
 
-    public void setFriendshipRequestDTO(FriendshipRequestDTO friendshipRequestDTO) {
+    public void setFriendshipRequestDTO(FriendshipRequestDTO<userID> friendshipRequestDTO) {
         this.friendshipRequestDTO = friendshipRequestDTO;
     }
 

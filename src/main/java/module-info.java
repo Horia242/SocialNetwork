@@ -12,5 +12,6 @@ module com.example.ex2 {
     opens com.example.ex2 to javafx.fxml;
     exports com.example.ex2;
 
-
+    opens com.example.ex2.utils to javafx.base;
+    exports com.example.ex2.utils;
 }
