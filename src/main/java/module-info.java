@@ -27,4 +27,7 @@ module com.example.ex2 {
 
     opens com.example.ex2.utils to javafx.base;
     exports com.example.ex2.utils;
+
+    opens com.example.ex2.rootService to javafx.base;
+    exports com.example.ex2.rootService;
 }

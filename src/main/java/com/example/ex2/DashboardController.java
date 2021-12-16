@@ -1,6 +1,8 @@
 package com.example.ex2;
 
+import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -10,6 +12,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -26,9 +29,11 @@ import java.util.stream.Collectors;
 
 public class DashboardController {
 
-    NetworkService service;
+    RootService rootService;
     String loggedInUsername;
 
+    @FXML
+    private BorderPane borderPaneDashboard;
     @FXML
     private ImageView btnShowFriends;
     @FXML
@@ -74,23 +79,35 @@ public class DashboardController {
     private Parent root;
     private Stage stage;
     private Scene scene;
+    private double xOffset = 0;
+    private double yOffset = 0;
+    public void init(){
 
-    public DashboardController() {
-        init();
+        borderPaneDashboard.setOnMousePressed(new EventHandler<MouseEvent>() {
+
+            @Override
+            public void handle(MouseEvent event) {
+
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                    xOffset = stage.getX() - event.getScreenX();
+                    yOffset = stage.getY() - event.getScreenY();
+            }
+        });
+        borderPaneDashboard.setOnMouseDragged(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.setX(event.getScreenX() + xOffset);
+                stage.setY(event.getScreenY() + yOffset);
+            }
+        });
+
     }
-
-    private void init() {
-
+    public void setRootService(RootService rootService){
+        this.rootService = rootService;
     }
-
-
-    @FXML
-    public void displayUsername(String username){
+    public void setLoggedInUserEmail(String username){
         labelUsername.setText(username);
-    }
-
-    public void setService(NetworkService networkService){
-        this.service = networkService;
     }
 
     @FXML
@@ -105,7 +122,6 @@ public class DashboardController {
             vboxSearchResult.getChildren().clear();
             vboxSearchResult.toBack();
         }
-
     }
 
     @FXML
@@ -113,6 +129,8 @@ public class DashboardController {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
         try {
             root = loader.load();
+            AppEventsController appEventsController = loader.getController();
+            appEventsController.setRootService(this.rootService);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
@@ -127,7 +145,7 @@ public class DashboardController {
         if(!textFieldSearchUser.getText().isEmpty()){
             vboxSearchResult.getChildren().clear();
             try {
-                List<FrienshipDto> userFriends = service.getFriendshipList(labelUsername.getText());
+                List<FrienshipDto> userFriends = rootService.getNetworkService().getFriendshipList(labelUsername.getText());
                 for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader();
@@ -135,7 +153,7 @@ public class DashboardController {
                     try{
                         HBox hBox = fxmlLoader.load();
                         UserDetailsBoxController controller = fxmlLoader.getController();
-                        controller.setService(service);
+                        controller.setRootService(rootService);
                         controller.setLoggedInUserEmail(labelUsername.getText());
                         if(!userDto.getUserID().equals(labelUsername.getText())) {
                             Predicate<FrienshipDto> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
@@ -144,7 +162,7 @@ public class DashboardController {
                             if (userFriends.stream().anyMatch(isBetweenUsersFriends)) {
                                 controller.setData(userDto, 0);
                             } else {
-                                FriendshipRequestDTO<String> friendshipRequestDTO = service.existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
+                                FriendshipRequestDTO<String> friendshipRequestDTO = rootService.getNetworkService().existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
                                 if (friendshipRequestDTO != null) {
                                     if (friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
                                         controller.setData(userDto, 1);
@@ -177,7 +195,7 @@ public class DashboardController {
     @FXML
     private void handleDeleteUser(){
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
-        service.deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
+        rootService.getNetworkService().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
         displayUserFriends(labelUsername.getText());
     }
 
@@ -187,7 +205,7 @@ public class DashboardController {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
-            service.updateFriendshipRequestStatus(friendshipRequestDTO);
+            rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
         }
     }
@@ -198,7 +216,7 @@ public class DashboardController {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
-            service.updateFriendshipRequestStatus(friendshipRequestDTO);
+            rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
         }
     }
@@ -210,7 +228,7 @@ public class DashboardController {
         tabcolLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         try {
 
-            for(FrienshipDto friendshipDto: service.getFriendshipList(userEmail)){
+            for(FrienshipDto friendshipDto: rootService.getNetworkService().getFriendshipList(userEmail)){
                 UserDto<String> userDto;
                 if(friendshipDto.getUser1().getUserID().equals(userEmail))
                     userDto = friendshipDto.getUser2();
@@ -230,9 +248,7 @@ public class DashboardController {
         tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
         tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
         tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
-        //service.getAllFriendshipRequestsForUser(userEmail)
-        //service.getAllPendingFriendshipRequestForOneUser(userEmail)
-        for (FriendshipRequestDTO<String> friendshipRequestDTO : service.getAllPendingFriendshipRequestForOneUser(userEmail)) {
+        for (FriendshipRequestDTO<String> friendshipRequestDTO : rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(userEmail)) {
             tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(),friendshipRequestDTO.getFrom().getLastName(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate(),friendshipRequestDTO));
         }
         pnlFriendRequests.toFront();
@@ -240,7 +256,7 @@ public class DashboardController {
 
     private List<UserDto> getUserNamesStartingWith(String startsWith){
         Predicate<UserDto> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
-        return service.getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
+        return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
 
 }

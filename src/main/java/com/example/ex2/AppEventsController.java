@@ -1,6 +1,7 @@
 package com.example.ex2;
 import com.dlsc.formsfx.model.event.FieldEvent;
 import com.example.ex2.rootService.RootService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -63,10 +64,10 @@ public class AppEventsController {
     @FXML
     private TextField txtFieldPassword;
 
-   /* public AppEventsController(int testValueDeleteImediatly) {
-            this.testValueDeleteImediatly = testValueDeleteImediatly;
+   public void setRootService(RootService rootService) {
+         this. rootService =rootService;
     }
-*/
+
     @FXML
     private final DashboardController dashboardController = new DashboardController();
     @FXML
@@ -75,28 +76,21 @@ public class AppEventsController {
                     pnlSignUp.toFront();
                 }
                 if(event.getSource().equals(btnGetStarted)){
-                    /*Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
-                    repoUser.save(new ApplicationUser());*/
+                    //save a new user
+                  //  rootService.getNetworkService().addUser()
                 }
     }
     @FXML
     private void onLoginButton(ActionEvent event) throws IOException{
-
-        Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
-        Repository<Tuple<String, String>, Friendship> repoFriendship = new FriendshipRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new FriendshipTupleIdValidator());
-        FriendshipService serviceFriendship = new FriendshipService(repoFriendship);
-        UserService serviceUser = new UserService(repoUser);
-        MessageRepository<Long, Message> messageRepository = new MessageRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123");
-        FriendshipRequestRepository<Long, FriendshipRequest> RepoFriendshipRequest = new FriendshipRequestsDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123");
-        NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), RepoFriendshipRequest);
         try{
             String txtUsername = txtFieldEmail.getText();
-            if(service.loginUsername(txtUsername)){
+            if( rootService.getNetworkService().loginUsername(txtUsername)){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("userDashboard.fxml"));
                 root = loader.load();
                 DashboardController dashboardController = loader.getController();
-                dashboardController.displayUsername(txtUsername);
-                dashboardController.setService(service);
+                dashboardController.setLoggedInUserEmail(txtUsername);
+                dashboardController.setRootService(rootService);
+                dashboardController.init();
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setScene(scene);
@@ -113,7 +107,7 @@ public class AppEventsController {
     @FXML
     private void handleMouseEvent(MouseEvent event){
             if(event.getSource() .equals( btnClose)){
-                System.exit(0);
+               Platform.exit();
             }
             if(event.getSource().equals(btnBack)){
                     pnlLogIn.toFront();

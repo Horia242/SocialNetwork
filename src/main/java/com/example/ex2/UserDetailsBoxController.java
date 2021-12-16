@@ -30,9 +30,9 @@ import java.time.LocalDate;
 
 public class UserDetailsBoxController  {
 
-    private NetworkService service;
-    private String loggedInUserEmail ;
     private RootService rootService;
+    private String loggedInUserEmail ;
+
     @FXML
     private HBox hboxUserDetails;
     @FXML
@@ -46,13 +46,9 @@ public class UserDetailsBoxController  {
     @FXML
     private AnchorPane anchorDashboardRootPane;
 
-    /*public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
-        this.loggedInUserEmail = loggedInUserEmail;
-        this.rootService = rootService;
-    }*/
 
-    public void setService(NetworkService service) {
-        this.service = service;
+    public void setRootService(RootService rootService) {
+        this.rootService = rootService;
     }
 
     public void setLoggedInUserEmail(String loggedInUserEmail){
@@ -102,9 +98,9 @@ public class UserDetailsBoxController  {
         String url = getImagePath(imgSendFriendshipRequest.getImage());
         if(url.compareTo("icons/icons8_plus30px.png") == 0)
         {
-            if(service != null){
+            if(rootService.getNetworkService() != null){
                 try {
-                    service.sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
+                    rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
                             new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
                     imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
                 } catch (InsufficientDataToExecuteTaskException | RepoError e) {
@@ -115,7 +111,7 @@ public class UserDetailsBoxController  {
         else
         { if(url.compareTo("icons/icons8_handshake_orange.png") == 0){
             try {
-                service.updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
+                rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
                         new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
                 imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
                 //notify() - pentru main window;

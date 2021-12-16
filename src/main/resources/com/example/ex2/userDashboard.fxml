@@ -19,7 +19,7 @@
 
 <AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
-      <BorderPane prefHeight="589.0" prefWidth="1033.0">
+      <BorderPane fx:id="borderPaneDashboard" prefHeight="589.0" prefWidth="1033.0">
          <left>
             <Pane id="button_friend_request" prefHeight="761.0" prefWidth="279.0" styleClass="linear-grad2" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>
