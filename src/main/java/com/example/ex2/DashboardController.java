@@ -101,7 +101,6 @@ public class DashboardController {
                 stage.setY(event.getScreenY() + yOffset);
             }
         });
-
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
