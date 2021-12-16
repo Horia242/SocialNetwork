@@ -16,6 +16,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
@@ -32,6 +35,10 @@ public class DashboardController {
     RootService rootService;
     String loggedInUsername;
 
+    @FXML
+    private Text txtFrRequestCount;
+    @FXML
+    private Circle circleRequestsNumber;
     @FXML
     private BorderPane borderPaneDashboard;
     @FXML
@@ -76,13 +83,10 @@ public class DashboardController {
     private Button btn_decline;
 
 
-    private Parent root;
     private Stage stage;
-    private Scene scene;
     private double xOffset = 0;
     private double yOffset = 0;
     public void init(){
-
         borderPaneDashboard.setOnMousePressed(new EventHandler<MouseEvent>() {
 
             @Override
@@ -101,12 +105,22 @@ public class DashboardController {
                 stage.setY(event.getScreenY() + yOffset);
             }
         });
+        int requestsNumber = this.rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(labelUsername.getText()).size();
+        if(requestsNumber > 0){
+            circleRequestsNumber.setFill(Paint.valueOf("#c70909"));
+            txtFrRequestCount.setText(String.valueOf(requestsNumber));
+        }
+        else
+        {
+            circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+        }
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
     }
     public void setLoggedInUserEmail(String username){
         labelUsername.setText(username);
+        loggedInUsername = username;
     }
 
     @FXML
@@ -127,11 +141,11 @@ public class DashboardController {
     private void handleSignOutEvent(MouseEvent event){
         FXMLLoader loader = new FXMLLoader(getClass().getResource("loginPage.fxml"));
         try {
-            root = loader.load();
+            Parent root = loader.load();
             AppEventsController appEventsController = loader.getController();
             appEventsController.setRootService(this.rootService);
             stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            scene = new Scene(root);
+            Scene scene = new Scene(root);
             stage.setScene(scene);
             stage.show();
         } catch (IOException e) {

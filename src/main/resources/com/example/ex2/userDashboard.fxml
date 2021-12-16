@@ -15,7 +15,9 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
@@ -60,7 +62,7 @@
                         </ImageView>
                         <Label fx:id="labelFriends" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Friends">
                            <HBox.margin>
-                              <Insets left="10.0" />
+                              <Insets left="18.0" />
                            </HBox.margin>
                            <font>
                               <Font size="15.0" />
@@ -68,17 +70,37 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox layoutX="7.0" layoutY="121.0" prefHeight="42.0" prefWidth="281.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox layoutX="7.0" layoutY="121.0" prefHeight="42.0" prefWidth="272.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
-                        <ImageView fx:id="btnShowFriendRequests" fitHeight="23.0" fitWidth="22.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_add_user_group_man_man_30px.png" />
-                           </image>
+                        <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="36.0">
+                           <children>
+                              <ImageView fx:id="btnShowFriendRequests" fitHeight="22.0" fitWidth="31.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_add_user_group_man_man_30px.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets left="50.0" right="60.0" top="10.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                              <Circle fx:id="circleRequestsNumber" fill="#c70909" radius="10.0" stroke="#eaeae9" strokeType="INSIDE">
+                                 <StackPane.margin>
+                                    <Insets bottom="20.0" left="66.0" right="60.0" />
+                                 </StackPane.margin>
+                              </Circle>
+                              <Text fx:id="txtFrRequestCount" boundsType="LOGICAL_VERTICAL_CENTER" fill="#eaeae9" strokeWidth="0.0" text="66" textOrigin="CENTER" wrappingWidth="16.80340576171875">
+                                 <StackPane.margin>
+                                    <Insets bottom="20.0" left="80.0" right="67.0" />
+                                 </StackPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Text>
+                           </children>
                            <HBox.margin>
-                              <Insets left="5.0" top="10.0" />
+                              <Insets />
                            </HBox.margin>
-                        </ImageView>
-                        <Label id="friend_request_menu_label" fx:id="labelFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Friend Requests">
+                        </StackPane>
+                        <Label id="friend_request_menu_label" fx:id="labelFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="135.0" text="Friend Requests">
                            <font>
                               <Font size="15.0" />
                            </font>
