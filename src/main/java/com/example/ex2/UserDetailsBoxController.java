@@ -70,32 +70,31 @@ public class UserDetailsBoxController  {
         labelLastName.setText(userDto.getLastName());
         labelEmail.setText(userDto.getUserID());
         Tooltip imageViewTooltip = new Tooltip("");
-            Image imgFriendshipStatus = null;
-
+        Image imgFriendshipStatus = null;
         switch (descriptionImageFlag) {
-            case 0:
+            case 0 -> {
                 imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
                 imageViewTooltip.setText("This user is your friend");
-                break;
-            case 1:
+            }
+            case 1 -> {
                 imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
                 imageViewTooltip.setText("You sent a friendship request to this user");
-                break;
-            case 2:
+            }
+            case 2 -> {
                 imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
                 imageViewTooltip.setText("Add friend");
-                break;
-            case 3:
+            }
+            case 3 -> {
                 imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
                 imageViewTooltip.setText("You have a friendship request from this user");
-                break;
-            case 4:
+            }
+            case 4 -> {
                 imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
                 imageViewTooltip.setText("This is you");
-                break;
-            default:
-                break;
             }
+            default -> {
+            }
+        }
 
             if(imgFriendshipStatus != null) {
                 imgSendFriendshipRequest.setImage(imgFriendshipStatus);
