@@ -73,9 +73,9 @@
                      <children>
                         <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="36.0">
                            <children>
-                              <Circle fx:id="circleRequestsNumber" fill="#8a0b0b" radius="10.0" stroke="#eaeae9" strokeType="INSIDE">
+                              <Circle fx:id="circleRequestsNumber" fill="#f22015" radius="8.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0">
                                  <StackPane.margin>
-                                    <Insets bottom="20.0" left="68.0" right="60.0" />
+                                    <Insets bottom="16.0" left="73.0" right="60.0" />
                                  </StackPane.margin>
                               </Circle>
                               <ImageView fx:id="btnShowFriendRequests" fitHeight="22.0" fitWidth="31.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
@@ -88,11 +88,14 @@
                               </ImageView>
                               <Label fx:id="txtFrRequestCount" text="7" textFill="#eaeae9">
                                  <StackPane.margin>
-                                    <Insets bottom="20.0" left="8.0" />
+                                    <Insets bottom="15.0" left="14.0" />
                                  </StackPane.margin>
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                  </padding>
+                                 <font>
+                                    <Font size="10.0" />
+                                 </font>
                               </Label>
                            </children>
                            <HBox.margin>

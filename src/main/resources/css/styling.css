@@ -214,3 +214,10 @@
 .scroll-pane1:selected{
     -fx-border-color: #E1E1DF;
 }
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
