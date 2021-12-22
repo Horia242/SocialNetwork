@@ -166,6 +166,7 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewRequests" layoutX="17.0" layoutY="103.0" prefHeight="467.0" prefWidth="721.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -181,14 +182,14 @@
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
                         </ImageView>
-                        <HBox layoutX="17.0" layoutY="68.0" prefHeight="35.0" prefWidth="83.0">
+                        <HBox layoutX="17.0" layoutY="76.0" prefHeight="27.0" prefWidth="66.0">
                            <children>
-                              <ImageView fx:id="btn_accept" fitHeight="35.0" fitWidth="40.0" onMouseClicked="#handleAcceptImageView" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="btn_accept" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleAcceptImageView" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../icons/icons8_Done_30px.png" />
                                  </image>
                               </ImageView>
-                              <ImageView fx:id="btn_decline" fitHeight="35.0" fitWidth="40.0" onMouseClicked="#handleDeclineImageView" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="btn_decline" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleDeclineImageView" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../icons/icons8_Close_30px.png" />
                                  </image>
@@ -200,7 +201,6 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>

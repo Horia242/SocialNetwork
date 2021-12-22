@@ -81,20 +81,30 @@ public class DashboardController {
     private ImageView btn_accept;
     @FXML
     private ImageView btn_decline;
-
+    @FXML
+    private ImageView imgDeleteFriend;
+    @FXML
+    private ImageView btnSignOut;
+    @FXML
+    private ImageView btnSignOut1;
 
     private Stage stage;
     private double xOffset = 0;
     private double yOffset = 0;
     public void init(){
+        movableDashboard();
+        requestNotifyCircle();
+        toolTip();
+    }
+    private void movableDashboard(){
         borderPaneDashboard.setOnMousePressed(new EventHandler<MouseEvent>() {
 
             @Override
             public void handle(MouseEvent event) {
 
                 stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                    xOffset = stage.getX() - event.getScreenX();
-                    yOffset = stage.getY() - event.getScreenY();
+                xOffset = stage.getX() - event.getScreenX();
+                yOffset = stage.getY() - event.getScreenY();
             }
         });
         borderPaneDashboard.setOnMouseDragged(new EventHandler<MouseEvent>() {
@@ -105,6 +115,8 @@ public class DashboardController {
                 stage.setY(event.getScreenY() + yOffset);
             }
         });
+    }
+    private void requestNotifyCircle(){
         int requestsNumber = this.rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(labelUsername.getText()).size();
         if(requestsNumber > 0){
             circleRequestsNumber.setFill(Paint.valueOf("#ee0d06"));
@@ -115,6 +127,17 @@ public class DashboardController {
         {
             circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
         }
+    }
+    private void toolTip(){
+        //tooltipAcceptFriendshipRequest.setStyle("-fx-background-color:#E4E9E8; -fx-text-fill: black;");
+        Tooltip tooltipAcceptFriendshipRequest = new Tooltip("Accept request");
+        Tooltip tooltipDeclineFriendshipRequest = new Tooltip("Decline request");
+        Tooltip tooltipDeleteFriend = new Tooltip("Delete friend");
+        Tooltip.install(btn_accept,tooltipAcceptFriendshipRequest);
+        Tooltip.install(btn_decline,tooltipDeclineFriendshipRequest );
+        Tooltip.install(imgDeleteFriend,tooltipDeleteFriend);
+        Tooltip.install(btnSignOut,new Tooltip("Sign out"));
+        Tooltip.install(btnSignOut1,new Tooltip("Sign out"));
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
@@ -211,6 +234,7 @@ public class DashboardController {
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
         rootService.getNetworkService().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
         displayUserFriends(labelUsername.getText());
+
     }
 
     @FXML

@@ -69,22 +69,38 @@ public class UserDetailsBoxController  {
         labelFirstName.setText(userDto.getFirstName());
         labelLastName.setText(userDto.getLastName());
         labelEmail.setText(userDto.getUserID());
-
+        Tooltip imageViewTooltip = new Tooltip("");
             Image imgFriendshipStatus = null;
 
         switch (descriptionImageFlag) {
-            case 0 -> imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
-            case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
-            case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
-            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
-            case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
-            default -> {
-            }
-        }
-            if(imgFriendshipStatus != null) {
-                imgSendFriendshipRequest.setImage(imgFriendshipStatus);
+            case 0:
+                imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
+                imageViewTooltip.setText("This user is your friend");
+                break;
+            case 1:
+                imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
+                imageViewTooltip.setText("You sent a friendship request to this user");
+                break;
+            case 2:
+                imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
+                imageViewTooltip.setText("Add friend");
+                break;
+            case 3:
+                imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
+                imageViewTooltip.setText("You have a friendship request from this user");
+                break;
+            case 4:
+                imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
+                imageViewTooltip.setText("This is you");
+                break;
+            default:
+                break;
             }
 
+            if(imgFriendshipStatus != null) {
+                imgSendFriendshipRequest.setImage(imgFriendshipStatus);
+                Tooltip.install(imgSendFriendshipRequest,imageViewTooltip);
+            }
     }
 
     String getImagePath(Image currentImage){
@@ -106,6 +122,7 @@ public class UserDetailsBoxController  {
                         rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
                                 new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
                         imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
+                        Tooltip.install(imgSendFriendshipRequest,new Tooltip("Friendship request sent!Click to withdraw"));
                     } catch (InsufficientDataToExecuteTaskException | RepoError e) {
                         //Users are already friends
                     }
@@ -116,9 +133,8 @@ public class UserDetailsBoxController  {
                     rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
                             new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
                     imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
+                    Tooltip.install(imgSendFriendshipRequest,new Tooltip("This user is your friend now"));
                     //notify() - pentru main window;
-
-
                 } catch (InsufficientDataToExecuteTaskException | RepoError e) {
                     e.printStackTrace();
                 }
@@ -129,6 +145,7 @@ public class UserDetailsBoxController  {
                             new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"","")
                             ,new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, null))){
                         imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_plus30px.png"));
+                        Tooltip.install(imgSendFriendshipRequest,new Tooltip("Add friend"));
                     }
                 } catch (InsufficientDataToExecuteTaskException e) {
                     e.printStackTrace();

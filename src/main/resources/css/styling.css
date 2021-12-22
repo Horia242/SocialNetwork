@@ -221,3 +221,7 @@
     border-radius: 50%;
     display: inline-block;
 }
+.tooltip1{
+    -fx-background-color:linear-gradient(to bottom left, #EEEBD6,#B5F2EC) ;
+    -fx-text-fill: black;
+}
