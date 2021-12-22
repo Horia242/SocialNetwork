@@ -87,6 +87,11 @@ public class DashboardController {
     private ImageView btnSignOut;
     @FXML
     private ImageView btnSignOut1;
+    @FXML
+    private HBox hboxChat;
+    @FXML
+    private Pane pnlChat;
+
 
     private Stage stage;
     private double xOffset = 0;
@@ -138,6 +143,7 @@ public class DashboardController {
         Tooltip.install(imgDeleteFriend,tooltipDeleteFriend);
         Tooltip.install(btnSignOut,new Tooltip("Sign out"));
         Tooltip.install(btnSignOut1,new Tooltip("Sign out"));
+
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
@@ -158,6 +164,12 @@ public class DashboardController {
         if(event.getSource().equals(textFieldSearchUser)){
             vboxSearchResult.getChildren().clear();
             vboxSearchResult.toBack();
+        }
+        if(event.getSource().equals(hboxChat)){
+                pnlFriends.toBack();
+                pnlFriendRequests.toBack();
+                pnlChat.toFront();
+
         }
     }
 
