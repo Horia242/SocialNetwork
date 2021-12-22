@@ -15,7 +15,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="459.0" prefWidth="805.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.AppEventsController">
    <children>
-      <BorderPane layoutY="-2.0" prefHeight="462.0" prefWidth="803.0" style="-fx-background-color: #fff;">
+      <BorderPane layoutY="-2.0" prefHeight="462.0" prefWidth="811.0" style="-fx-background-color: #fff;">
          <left>
             <Pane prefHeight="485.0" prefWidth="378.0" styleClass="linear-grad" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>

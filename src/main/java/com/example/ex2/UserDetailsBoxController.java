@@ -96,31 +96,43 @@ public class UserDetailsBoxController  {
     @FXML
     private void handleRequestImage(){
         String url = getImagePath(imgSendFriendshipRequest.getImage());
-        if(url.compareTo("icons/icons8_plus30px.png") == 0)
-        {
-            if(rootService.getNetworkService() != null){
-                try {
-                    rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
-                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
-                    imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
-                } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                  //Users are already friends
+        switch(url){
+            case "icons/icons8_plus30px.png":
+                if(rootService.getNetworkService() != null){
+                    try {
+                        rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
+                                new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
+                        imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
+                    } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+                        //Users are already friends
+                    }
                 }
-            }
-        }
-        else
-        { if(url.compareTo("icons/icons8_handshake_orange.png") == 0){
-            try {
-                rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
-                        new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
-                imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
-                //notify() - pentru main window;
+                break;
+            case "icons/icons8_handshake_orange.png":
+                try {
+                    rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
+                            new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
+                    imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
+                    //notify() - pentru main window;
 
 
-            } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                e.printStackTrace();
-            }
-        }
+                } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "icons/icons8_paper_plane_30px.png":
+                try {
+                    if(rootService.getNetworkService().deletePendingFriendshipRequest(
+                            new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"","")
+                            ,new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, null))){
+                        imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_plus30px.png"));
+                    }
+                } catch (InsufficientDataToExecuteTaskException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
         }
     }
 
