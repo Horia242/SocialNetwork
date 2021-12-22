@@ -78,9 +78,9 @@ public class DashboardController {
     @FXML
     private TableColumn <FriendshipRequestForDisplayUseDTO<String>, String> tbl_status;
     @FXML
-    private Button btn_accept;
+    private ImageView btn_accept;
     @FXML
-    private Button btn_decline;
+    private ImageView btn_decline;
 
 
     private Stage stage;
@@ -107,8 +107,9 @@ public class DashboardController {
         });
         int requestsNumber = this.rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(labelUsername.getText()).size();
         if(requestsNumber > 0){
-            circleRequestsNumber.setFill(Paint.valueOf("#c70909"));
+            circleRequestsNumber.setFill(Paint.valueOf("#ee0d06"));
             txtFrRequestCount.setText(String.valueOf(requestsNumber));
+
         }
         else
         {
@@ -213,7 +214,7 @@ public class DashboardController {
     }
 
     @FXML
-    private void handleAcceptButton() throws RepoError, InsufficientDataToExecuteTaskException {
+    private void handleAcceptImageView() throws RepoError, InsufficientDataToExecuteTaskException {
         if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
@@ -224,7 +225,7 @@ public class DashboardController {
     }
 
     @FXML
-    private void handleDeclineButton() throws RepoError, InsufficientDataToExecuteTaskException {
+    private void handleDeclineImageView() throws RepoError, InsufficientDataToExecuteTaskException {
         if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
             FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
