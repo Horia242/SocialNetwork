@@ -36,7 +36,7 @@ public class DashboardController {
     String loggedInUsername;
 
     @FXML
-    private Text txtFrRequestCount;
+    private Label txtFrRequestCount;
     @FXML
     private Circle circleRequestsNumber;
     @FXML
