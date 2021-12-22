@@ -93,6 +93,9 @@ public class UserDetailsBoxController  {
                 : null;
     }
 
+    /**
+     * Controls the actions for a friendshipRequest for a user found using the searchBar
+     */
     @FXML
     private void handleRequestImage(){
         String url = getImagePath(imgSendFriendshipRequest.getImage());
