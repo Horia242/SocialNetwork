@@ -1,14 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.example.ex2.ConversationPartnerDetailsController"
-            prefHeight="400.0" prefWidth="600.0">
-
-</AnchorPane>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onMouseClicked="#handleOnMouseClicked" prefHeight="84.0" prefWidth="309.0" style="-fx-background-color: #FAF6D4;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.ConversationPartnerDetailsController">
+   <effect>
+      <DropShadow />
+   </effect>
+   <children>
+      <Label fx:id="labelFirstLastName" layoutX="49.0" prefHeight="28.0" prefWidth="185.0" text="Nume si prenume">
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="labelLastMessageText" layoutX="8.0" layoutY="47.0" prefHeight="35.0" prefWidth="302.0" text="Textul ultimului mesaj" />
+      <Label layoutX="8.0" layoutY="30.0" prefHeight="17.0" prefWidth="32.0" text="Email:" />
+      <Pane layoutX="246.0" layoutY="30.0" prefHeight="18.0" prefWidth="18.0" styleClass="notif-icon" stylesheets="@../../../css/styling.css">
+         <children>
+            <Label alignment="CENTER" contentDisplay="CENTER" ellipsisString="" layoutX="-3.0" layoutY="2.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" nodeOrientation="LEFT_TO_RIGHT" prefHeight="15.0" prefWidth="25.0" text="0" textAlignment="CENTER" textFill="WHITE" textOverrun="CENTER_ELLIPSIS">
+               <padding>
+                  <Insets left="4.0" right="4.0" />
+               </padding>
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Label fx:id="labelUserEmail" layoutX="40.0" layoutY="30.0" prefHeight="17.0" prefWidth="147.0" />
+   </children>
+</Pane>

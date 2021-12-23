@@ -1,9 +1,13 @@
 package com.example.ex2;
 import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -11,25 +15,28 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
+import ro.ubbcluj.map.utils.events.Event;
+import ro.ubbcluj.map.utils.observer.Observer;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DashboardController {
+public class DashboardController  {
 
     RootService rootService;
     String loggedInUsername;
@@ -92,7 +99,14 @@ public class DashboardController {
     private Pane pnlChat;
     @FXML
     private VBox vboxConversationPartners;
+    @FXML
+    private VBox vboxMessagesText;
+    @FXML
+    private TextField txtFieldTypeMessage;
+    @FXML
+    private ImageView imgSendMessage;
 
+    private String currentChatPartnerShowingId;
     private Stage stage;
     private double xOffset = 0;
     private double yOffset = 0;
@@ -166,10 +180,10 @@ public class DashboardController {
             vboxSearchResult.toBack();
         }
         if(event.getSource().equals(hboxChat)){
+                displayUserConversationPartners(loggedInUsername);
                 pnlFriends.toBack();
                 pnlFriendRequests.toBack();
                 pnlChat.toFront();
-                displayUserConversationPartners(loggedInUsername);
         }
     }
 
@@ -189,6 +203,16 @@ public class DashboardController {
         }
     }
 
+    @FXML
+    private void handleSendMessage(){
+       String message =  txtFieldTypeMessage.getText();
+       rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername,null,null)
+        ,List.of(new UserDto<String>(currentChatPartnerShowingId,null,null)),
+               message, LocalDateTime.now(),0L));
+       displayUserConversationMessages(currentChatPartnerShowingId);
+       txtFieldTypeMessage.clear();
+
+    }
     @FXML
     private void handleSearchUser(){
         if(!textFieldSearchUser.getText().isEmpty()){
@@ -241,6 +265,8 @@ public class DashboardController {
 
 
     }
+
+
     @FXML
     private void handleDeleteUser(){
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
@@ -306,9 +332,75 @@ public class DashboardController {
     }
 
     private void displayUserConversationPartners(String userEmail){
+            vboxConversationPartners.getChildren().clear();
+            vboxConversationPartners.setSpacing(7);
             for(UserDto<String> userDto:rootService.getNetworkService().getAllUserConversationPartners(userEmail)){
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("conversationPartnerDetails.fxml"));
+                try {
+                    Pane paneChatPartner = fxmlLoader.load();
+                    ConversationPartnerDetailsController partnerDetailsController = fxmlLoader.getController();
+                    partnerDetailsController.init(this.rootService,this.loggedInUsername,userDto,this);
+                    vboxConversationPartners.getChildren().add(paneChatPartner);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+    }
+
+    private Tuple<String,Integer> makeTextFitInTextArea(String originalText){
+        String finalString = "";
+        int rows = 0;
+        Matcher m = Pattern.compile(".{1,20}").matcher(originalText);
+        while(!m.hitEnd()) {
+            String s = m.find() ? originalText.substring(m.start(), m.end()) : "";
+            finalString = finalString + s + "\n";
+            rows = rows + 1;
+        }
+
+        return new Tuple<String,Integer>(finalString,rows);
+    }
+    public void displayUserConversationMessages(String conversationPartnerEmail){
+        this.currentChatPartnerShowingId = conversationPartnerEmail;
+        vboxMessagesText.getChildren().clear();
+        vboxMessagesText.setSpacing(8);
+            List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
+
+            for(MessageDTO messageDTO :conversation){
+                    TextField textField = new TextField();
+                    textField.setEditable(false);
+                    textField.setText(messageDTO.getMessage());
+                    textField.setFont(Font.font("System", 13));
+                    //textField.setMinWidth(50);
+                    //textField.setMaxWidth(500);
+                    //textField.setPrefWidth(50);
+                    textField.setPrefWidth(textField.getText().length() * 7);
+
+
+
+
+                    if(messageDTO.getFrom().getUserID().equals(loggedInUsername)){
+                            textField.setStyle("-fx-background-radius: 20px;" +
+                                    "-fx-background-color:#B5F2EC;" +
+                                    "-fx-text-fill: black;");
+                        HBox hBox = new HBox();
+                      //  textField.setAlignment(Pos.CENTER_RIGHT);
+                         hBox.getChildren().add(textField);
+                        hBox.setAlignment(Pos.BASELINE_RIGHT);//problem
+                        vboxMessagesText.getChildren().add(hBox);
+                    }
+                    else {
+                        textField.setStyle("-fx-background-radius: 20px;\n" +
+                                "    -fx-background-color: white;");
+                        HBox hBox = new HBox();
+                        hBox.getChildren().add(textField);
+                        hBox.setAlignment(Pos.BASELINE_LEFT);
+                        vboxMessagesText.getChildren().add(hBox);
+                    }
 
             }
+            vboxMessagesText.toFront();
+      /*Should we try text area?*/
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){

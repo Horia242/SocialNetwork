@@ -229,3 +229,17 @@
     -fx-border-color: #bcb3b3;
     -fx-border-width: 0px 0px 2px 0px;
 }
+.notif-icon{
+    -fx-background-color: red;
+    -fx-background-radius: 100%;
+}
+.text-fieldSender{
+-fx-background-radius: 20px;
+    -fx-background-color: white;
+
+}
+.text-fieldReceiver{
+    -fx-background-radius: 20px;
+    -fx-background-color:blue;
+    -fx-text-fill: white;
+}
