@@ -1,5 +1,4 @@
 package com.example.ex2;
-
 import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
 import javafx.event.EventHandler;
@@ -91,7 +90,8 @@ public class DashboardController {
     private HBox hboxChat;
     @FXML
     private Pane pnlChat;
-
+    @FXML
+    private VBox vboxConversationPartners;
 
     private Stage stage;
     private double xOffset = 0;
@@ -169,7 +169,7 @@ public class DashboardController {
                 pnlFriends.toBack();
                 pnlFriendRequests.toBack();
                 pnlChat.toFront();
-
+                displayUserConversationPartners(loggedInUsername);
         }
     }
 
@@ -194,7 +194,7 @@ public class DashboardController {
         if(!textFieldSearchUser.getText().isEmpty()){
             vboxSearchResult.getChildren().clear();
             try {
-                List<FrienshipDto> userFriends = rootService.getNetworkService().getFriendshipList(labelUsername.getText());
+                List<FriendshipDto<String>> userFriends = rootService.getNetworkService().getFriendshipList(labelUsername.getText());
                 for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader();
@@ -205,7 +205,7 @@ public class DashboardController {
                         controller.setRootService(rootService);
                         controller.setLoggedInUserEmail(labelUsername.getText());
                         if(!userDto.getUserID().equals(labelUsername.getText())) {
-                            Predicate<FrienshipDto> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
+                            Predicate<FriendshipDto<String>> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
                                     || frienshipDto.getUser2().getUserID().equals(userDto.getUserID());
 
                             if (userFriends.stream().anyMatch(isBetweenUsersFriends)) {
@@ -252,8 +252,8 @@ public class DashboardController {
     @FXML
     private void handleAcceptImageView() throws RepoError, InsufficientDataToExecuteTaskException {
         if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
-            FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
-            FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
+            FriendshipRequestForDisplayUseDTO<String> selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+            FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
             rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
@@ -263,13 +263,14 @@ public class DashboardController {
     @FXML
     private void handleDeclineImageView() throws RepoError, InsufficientDataToExecuteTaskException {
         if(tabviewRequests.getSelectionModel().getSelectedItem() != null && tabviewRequests.getSelectionModel().getSelectedItem().getStatus().equals(FriendshipRequestStatus.PENDING)) {
-            FriendshipRequestForDisplayUseDTO selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
-            FriendshipRequestDTO friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
+            FriendshipRequestForDisplayUseDTO<String> selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
+            FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
             rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
         }
     }
+
 
     private void displayUserFriends(String userEmail){
         tabviewFriends.getItems().clear();
@@ -278,7 +279,7 @@ public class DashboardController {
         tabcolLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         try {
 
-            for(FrienshipDto friendshipDto: rootService.getNetworkService().getFriendshipList(userEmail)){
+            for(FriendshipDto<String> friendshipDto: rootService.getNetworkService().getFriendshipList(userEmail)){
                 UserDto<String> userDto;
                 if(friendshipDto.getUser1().getUserID().equals(userEmail))
                     userDto = friendshipDto.getUser2();
@@ -304,9 +305,17 @@ public class DashboardController {
         pnlFriendRequests.toFront();
     }
 
-    private List<UserDto> getUserNamesStartingWith(String startsWith){
-        Predicate<UserDto> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
+    private void displayUserConversationPartners(String userEmail){
+            for(UserDto<String> userDto:rootService.getNetworkService().getAllUserConversationPartners(userEmail)){
+
+            }
+    }
+
+    private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
+        Predicate<UserDto<String>> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
+
+
 
 }

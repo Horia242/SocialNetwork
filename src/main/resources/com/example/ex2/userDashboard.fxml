@@ -222,13 +222,14 @@
                         </HBox>
                      </children>
                   </Pane>
+                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlChat" prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="329.0">
                            <children>
                               <ScrollPane layoutX="4.0" layoutY="99.0" prefHeight="479.0" prefWidth="321.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                                  <content>
-                                    <VBox prefHeight="472.0" prefWidth="309.0" style="-fx-background-color: #E1E1DF;" />
+                                    <VBox fx:id="vboxConversationPartners" prefHeight="472.0" prefWidth="309.0" style="-fx-background-color: #E1E1DF;" />
                                  </content>
                               </ScrollPane>
                               <HBox layoutX="14.0" layoutY="30.0" prefHeight="62.0" prefWidth="264.0" styleClass="searchicon" stylesheets="@../../../css/styling.css">
@@ -274,7 +275,6 @@
                         </Pane>
                      </children>
                   </Pane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>
