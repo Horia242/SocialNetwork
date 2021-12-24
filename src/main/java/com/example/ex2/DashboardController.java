@@ -188,7 +188,7 @@ public class DashboardController  {
     }
 
     @FXML
-    private void handleOnTextMessageFieldClick(){
+    private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
         scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight);
         vboxMessagesText.toFront();
@@ -201,6 +201,7 @@ public class DashboardController  {
         }
         if(event.getSource().equals(btnShowFriendRequests) || event.getSource().equals(labelFriendRequests)){
             displayUserFriendsRequests(labelUsername.getText());
+            requestNotifyCircle();
         }
         if(event.getSource().equals(textFieldSearchUser)){
             vboxSearchResult.getChildren().clear();
@@ -322,6 +323,7 @@ public class DashboardController  {
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
             rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
+            requestNotifyCircle();
         }
     }
 
@@ -333,6 +335,7 @@ public class DashboardController  {
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
             rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
+            requestNotifyCircle();
         }
     }
 
@@ -403,9 +406,10 @@ public class DashboardController  {
         this.currentChatPartnerShowingId = conversationPartnerEmail;
         vboxMessagesText.getChildren().clear();
         vboxMessagesText.setSpacing(8);
-            List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
+        List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
 
             for(MessageDTO messageDTO :conversation){
+                    HBox hBox = new HBox();
                     Label labelMessageId = new Label(messageDTO.getId().toString());
                     labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
                     TextField textField = new TextField();
@@ -428,29 +432,49 @@ public class DashboardController  {
                             }
                         }
                     });
+                Pane pane = new Pane();
+                MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+                if(messageRepliedTo != null){
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
+                    try {
+                        pane = fxmlLoader.load();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    pane.setStyle("-fx-border-radius: 20;\n" +
+                            "    -fx-background-radius: 20;\n" +
+                            "    -fx-background-color:#D4D4D4;");
+                    pane.setPrefWidth(textField.getPrefWidth() + 40);
+                    pane.getChildren().add(textField);
+                    textField.setLayoutX(20);
+                    textField.setLayoutY(29);
+                    TextField textRepliedTo = new TextField("Replies to:"+messageRepliedTo.getMessage());
+                    textRepliedTo.setPrefWidth(100);
+                    textRepliedTo.setPrefHeight(20);
+                    textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
+                    pane.getChildren().add(textRepliedTo);
+                    hBox.getChildren().add(pane);
+                }
+                else {
+                    hBox.getChildren().add(textField);
+                    hBox.getChildren().add(labelMessageId);
+                }
+
                     if(messageDTO.getFrom().getUserID().equals(loggedInUsername)){
                             textField.setStyle("-fx-background-radius: 20px;" +
                                     "-fx-background-color:#B5F2EC;" +
                                     "-fx-text-fill: black;");
-                        HBox hBox = new HBox();
-                      //  textField.setAlignment(Pos.CENTER_RIGHT);
-                         hBox.getChildren().add(textField);
-                        hBox.getChildren().add(labelMessageId);
-                        hBox.setAlignment(Pos.BASELINE_RIGHT);//problem
-                        vboxMessagesText.getChildren().add(hBox);
+                        hBox.setAlignment(Pos.BASELINE_RIGHT);
                     }
                     else {
                         textField.setStyle("-fx-background-radius: 20px;\n" +
                                 "    -fx-background-color: white;");
-                        HBox hBox = new HBox();
-                        hBox.getChildren().add(textField);
-                        hBox.getChildren().add(labelMessageId);
                         hBox.setAlignment(Pos.BASELINE_LEFT);
-                        vboxMessagesText.getChildren().add(hBox);
                     }
-
+                vboxMessagesText.getChildren().add(hBox);
             }
-            handleOnTextMessageFieldClick();
+            handleOnHboxTextMessageFieldClick();
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
