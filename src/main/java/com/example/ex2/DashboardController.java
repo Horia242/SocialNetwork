@@ -14,8 +14,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
@@ -105,7 +107,22 @@ public class DashboardController  {
     private TextField txtFieldTypeMessage;
     @FXML
     private ImageView imgSendMessage;
+    @FXML
+    private Pane paneReply;
+    @FXML
+    private ScrollPane scrollPaneMessages;
+    @FXML
+    private Label labelMessageRepliedTo;
+    @FXML
+    private Label labelSelectedMessageId;
+    @FXML
+    private Label labelSenderUserId;
+    @FXML
+    private Label labelMessageSenderUsername;
 
+
+    private final int scrollPaneMessagesHeight = 417;
+    private final int  vboxMessagesTextHeight = 413;
     private String currentChatPartnerShowingId;
     private Stage stage;
     private double xOffset = 0;
@@ -166,7 +183,17 @@ public class DashboardController  {
         labelUsername.setText(username);
         loggedInUsername = username;
     }
+    public  void setLabelMessageSenderUsername(String username){
+        labelMessageSenderUsername.setText(username);
+    }
 
+    @FXML
+    private void handleOnTextMessageFieldClick(){
+        vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
+        scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight);
+        vboxMessagesText.toFront();
+        scrollPaneMessages.toFront();
+    }
     @FXML
     private void handleMouseEvent(MouseEvent event){
         if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
@@ -206,9 +233,21 @@ public class DashboardController  {
     @FXML
     private void handleSendMessage(){
        String message =  txtFieldTypeMessage.getText();
-       rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername,null,null)
-        ,List.of(new UserDto<String>(currentChatPartnerShowingId,null,null)),
-               message, LocalDateTime.now(),0L));
+
+       if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight){
+          rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(),null,null)
+                                                                ,List.of(new UserDto<String>(loggedInUsername,null,null))
+                                                                ,labelMessageRepliedTo.getText()
+                                                                ,LocalDateTime.now()
+                                                                ,Long.parseLong(labelSelectedMessageId.getText()))
+                                                    ,loggedInUsername
+                                                    ,message);
+       }
+       else {
+           rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
+                   , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
+                   message, LocalDateTime.now(), 0L));
+       }
        displayUserConversationMessages(currentChatPartnerShowingId);
        txtFieldTypeMessage.clear();
 
@@ -367,18 +406,28 @@ public class DashboardController  {
             List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
 
             for(MessageDTO messageDTO :conversation){
+                    Label labelMessageId = new Label(messageDTO.getId().toString());
+                    labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
                     TextField textField = new TextField();
                     textField.setEditable(false);
                     textField.setText(messageDTO.getMessage());
                     textField.setFont(Font.font("System", 13));
-                    //textField.setMinWidth(50);
-                    //textField.setMaxWidth(500);
-                    //textField.setPrefWidth(50);
                     textField.setPrefWidth(textField.getText().length() * 7);
+                    textField.setOnMouseClicked(mouseEvent -> {
+                        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                            if(mouseEvent.getClickCount() == 2){
+                                labelMessageRepliedTo.setText(textField.getText());
+                                labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
+                                labelSelectedMessageId.setText(messageDTO.getId().toString());
+                                labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
+                                labelSenderUserId.setText(messageDTO.getFrom().getUserID());
+                                scrollPaneMessages.toBack();
+                                vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
+                                scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
 
-
-
-
+                            }
+                        }
+                    });
                     if(messageDTO.getFrom().getUserID().equals(loggedInUsername)){
                             textField.setStyle("-fx-background-radius: 20px;" +
                                     "-fx-background-color:#B5F2EC;" +
@@ -386,6 +435,7 @@ public class DashboardController  {
                         HBox hBox = new HBox();
                       //  textField.setAlignment(Pos.CENTER_RIGHT);
                          hBox.getChildren().add(textField);
+                        hBox.getChildren().add(labelMessageId);
                         hBox.setAlignment(Pos.BASELINE_RIGHT);//problem
                         vboxMessagesText.getChildren().add(hBox);
                     }
@@ -394,13 +444,13 @@ public class DashboardController  {
                                 "    -fx-background-color: white;");
                         HBox hBox = new HBox();
                         hBox.getChildren().add(textField);
+                        hBox.getChildren().add(labelMessageId);
                         hBox.setAlignment(Pos.BASELINE_LEFT);
                         vboxMessagesText.getChildren().add(hBox);
                     }
 
             }
-            vboxMessagesText.toFront();
-      /*Should we try text area?*/
+            handleOnTextMessageFieldClick();
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){

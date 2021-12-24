@@ -30,6 +30,7 @@ public class ConversationPartnerDetailsController {
         labelFirstLastName.setText(currentChatPartner.getFirstName()+" "+currentChatPartner.getLastName());
         List<MessageDTO> messageDTOList = rootService.getNetworkService().getConversationHistory(loggedInUsername,currentChatPartner.getUserID());
         labelLastMessageText.setText(messageDTOList.get(messageDTOList.size()-1).getMessage());
+
     }
     public void setRootService(RootService rootService){this.rootService = rootService;}
     public void setLoggedInUsername(String loggedInUsername){this.loggedInUsername = loggedInUsername;}
@@ -37,5 +38,6 @@ public class ConversationPartnerDetailsController {
     @FXML
     public void handleOnMouseClicked(){
         dashboardController.displayUserConversationMessages(currentChatPartner.getUserID());
+        dashboardController.setLabelMessageSenderUsername("From:"+currentChatPartner.getUserID());
     }
 }
