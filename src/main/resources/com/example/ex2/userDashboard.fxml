@@ -176,53 +176,6 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
-                              <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
-                              <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
-                           </columns>
-                        </TableView>
-                        <HBox layoutX="97.0" layoutY="5.0" prefHeight="48.0" prefWidth="545.0">
-                           <children>
-                              <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/icons8_search_30px.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets left="12.0" top="10.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="496.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
-                                 <HBox.margin>
-                                    <Insets left="1.0" top="10.0" />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_delete_bin_48px.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_exit_30px.png" />
-                           </image>
-                        </ImageView>
-                        <ScrollPane layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                           <content>
-                              <VBox fx:id="vboxSearchResult" prefHeight="98.0" prefWidth="493.0" style="-fx-background-color: #E1E1DF;" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </Pane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlChat" prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="329.0">
@@ -295,6 +248,53 @@
                         </Pane>
                      </children>
                   </Pane>
+                  <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                           <columns>
+                              <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
+                              <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
+                              <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
+                           </columns>
+                        </TableView>
+                        <HBox layoutX="97.0" layoutY="5.0" prefHeight="48.0" prefWidth="545.0">
+                           <children>
+                              <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_search_30px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="12.0" top="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="496.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
+                                 <HBox.margin>
+                                    <Insets left="1.0" top="10.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_delete_bin_48px.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_exit_30px.png" />
+                           </image>
+                        </ImageView>
+                        <ScrollPane layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                           <content>
+                              <VBox fx:id="vboxSearchResult" prefHeight="98.0" prefWidth="493.0" style="-fx-background-color: #E1E1DF;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>

@@ -119,7 +119,8 @@ public class DashboardController  {
     private Label labelSenderUserId;
     @FXML
     private Label labelMessageSenderUsername;
-
+    @FXML
+    private Pane paneAccountPage;
 
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
@@ -209,9 +210,9 @@ public class DashboardController  {
         }
         if(event.getSource().equals(hboxChat)){
                 displayUserConversationPartners(loggedInUsername);
-                pnlFriends.toBack();
-                pnlFriendRequests.toBack();
-                pnlChat.toFront();
+            pnlFriends.toBack();
+            pnlFriendRequests.toBack();
+            pnlChat.toFront();
         }
     }
 
@@ -251,7 +252,6 @@ public class DashboardController  {
        }
        displayUserConversationMessages(currentChatPartnerShowingId);
        txtFieldTypeMessage.clear();
-
     }
     @FXML
     private void handleSearchUser(){
@@ -390,18 +390,7 @@ public class DashboardController  {
             }
     }
 
-    private Tuple<String,Integer> makeTextFitInTextArea(String originalText){
-        String finalString = "";
-        int rows = 0;
-        Matcher m = Pattern.compile(".{1,20}").matcher(originalText);
-        while(!m.hitEnd()) {
-            String s = m.find() ? originalText.substring(m.start(), m.end()) : "";
-            finalString = finalString + s + "\n";
-            rows = rows + 1;
-        }
 
-        return new Tuple<String,Integer>(finalString,rows);
-    }
     public void displayUserConversationMessages(String conversationPartnerEmail){
         this.currentChatPartnerShowingId = conversationPartnerEmail;
         vboxMessagesText.getChildren().clear();
