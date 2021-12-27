@@ -194,7 +194,7 @@
                                     </DropShadow>
                                  </effect>
                               </Pane>
-                              <Pane fx:id="paneReply" layoutX="62.0" layoutY="443.0" prefHeight="80.0" prefWidth="303.0" style="-fx-background-color: #EAEAE9;">
+                              <Pane fx:id="paneReply" layoutX="62.0" layoutY="443.0" prefHeight="80.0" prefWidth="303.0" styleClass="paneRepliesTo" stylesheets="@../../../css/styling.css">
                                  <children>
                                     <Label fx:id="labelForReplies" layoutX="8.0" layoutY="5.0" prefHeight="27.0" prefWidth="133.0" text="Reply to:">
                                        <font>
@@ -207,7 +207,7 @@
                               </Pane>
                               <ScrollPane fx:id="scrollPaneMessages" layoutX="54.0" layoutY="106.0" prefHeight="417.0" prefWidth="344.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                                  <content>
-                                    <VBox fx:id="vboxMessagesText" prefHeight="413.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
+                                    <VBox fx:id="vboxMessagesText" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="413.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
                                  </content>
                               </ScrollPane>
                            </children>

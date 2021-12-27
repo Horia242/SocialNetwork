@@ -389,15 +389,17 @@ public class DashboardController  {
             vboxConversationPartners.getChildren().clear();
             vboxConversationPartners.setSpacing(7);
             for(UserDto<String> userDto:rootService.getNetworkService().getAllUserConversationPartners(userEmail)){
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("conversationPartnerDetails.fxml"));
-                try {
-                    Pane paneChatPartner = fxmlLoader.load();
-                    ConversationPartnerDetailsController partnerDetailsController = fxmlLoader.getController();
-                    partnerDetailsController.init(this.rootService,this.loggedInUsername,userDto,this);
-                    vboxConversationPartners.getChildren().add(paneChatPartner);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if(!userDto.getUserID().equals(loggedInUsername)) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("conversationPartnerDetails.fxml"));
+                    try {
+                        Pane paneChatPartner = fxmlLoader.load();
+                        ConversationPartnerDetailsController partnerDetailsController = fxmlLoader.getController();
+                        partnerDetailsController.init(this.rootService, this.loggedInUsername, userDto, this);
+                        vboxConversationPartners.getChildren().add(paneChatPartner);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
     }
@@ -409,7 +411,7 @@ public class DashboardController  {
         vboxMessagesText.setSpacing(8);
         List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
 
-            for(MessageDTO messageDTO :conversation){
+            for(MessageDTO messageDTO :conversation) {
                     HBox hBox = new HBox();
                     Label labelMessageId = new Label(messageDTO.getId().toString());
                     labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
@@ -419,8 +421,7 @@ public class DashboardController  {
                     textField.setFont(Font.font("System", 13));
                     textField.setPrefWidth(textField.getText().length() * 7);
                     textField.setOnMouseClicked(mouseEvent -> {
-
-                        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                             labelMessageRepliedTo.setText(textField.getText());
                             labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
                             labelSelectedMessageId.setText(messageDTO.getId().toString());
@@ -429,57 +430,55 @@ public class DashboardController  {
                             scrollPaneMessages.toBack();
                             vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
                             scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
-                            if(mouseEvent.getClickCount() == 2){
+                            if (mouseEvent.getClickCount() == 2) {
                                 labelForReplies.setText("Reply All:");
-                            }
-                            else if(mouseEvent.getClickCount() == 1){
+                            } else if (mouseEvent.getClickCount() == 1) {
                                 labelForReplies.setText("Reply To:");
                             }
                         }
                     });
-                Pane pane = new Pane();
-                MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
-                if(messageRepliedTo != null){
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
-                    try {
-                        pane = fxmlLoader.load();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    Pane pane = new Pane();
+                    MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+                    if (messageRepliedTo != null) {
+                        FXMLLoader fxmlLoader = new FXMLLoader();
+                        fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
+                        try {
+                            pane = fxmlLoader.load();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        pane.setStyle("-fx-border-radius: 20;\n" +
+                                "    -fx-background-radius: 20;\n" +
+                                "    -fx-background-color:#D4D4D4;");
+                        pane.setPrefWidth(textField.getPrefWidth() + 40);
+                        pane.getChildren().add(textField);
+                        textField.setLayoutX(20);
+                        textField.setLayoutY(29);
+                        TextField textRepliedTo = new TextField("Replies to:" + messageRepliedTo.getMessage());
+                        textRepliedTo.setPrefWidth(100);
+                        textRepliedTo.setPrefHeight(20);
+                        textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
+                        pane.getChildren().add(textRepliedTo);
+                        hBox.getChildren().add(pane);
+                    } else {
+                        hBox.getChildren().add(textField);
+                        hBox.getChildren().add(labelMessageId);
                     }
-                    pane.setStyle("-fx-border-radius: 20;\n" +
-                            "    -fx-background-radius: 20;\n" +
-                            "    -fx-background-color:#D4D4D4;");
-                    pane.setPrefWidth(textField.getPrefWidth() + 40);
-                    pane.getChildren().add(textField);
-                    textField.setLayoutX(20);
-                    textField.setLayoutY(29);
-                    TextField textRepliedTo = new TextField("Replies to:"+messageRepliedTo.getMessage());
-                    textRepliedTo.setPrefWidth(100);
-                    textRepliedTo.setPrefHeight(20);
-                    textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
-                    pane.getChildren().add(textRepliedTo);
-                    hBox.getChildren().add(pane);
-                }
-                else {
-                    hBox.getChildren().add(textField);
-                    hBox.getChildren().add(labelMessageId);
-                }
 
-                    if(messageDTO.getFrom().getUserID().equals(loggedInUsername)){
-                            textField.setStyle("-fx-background-radius: 20px;" +
-                                    "-fx-background-color:#B5F2EC;" +
-                                    "-fx-text-fill: black;");
+                    if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
+                        textField.setStyle("-fx-background-radius: 15px;" +
+                                "-fx-background-color:#B5F2EC;" +
+                                "-fx-text-fill: black;");
                         hBox.setAlignment(Pos.BASELINE_RIGHT);
-                    }
-                    else {
-                        textField.setStyle("-fx-background-radius: 20px;\n" +
+                    } else {
+                        textField.setStyle("-fx-background-radius: 15px;\n" +
                                 "    -fx-background-color: white;");
                         hBox.setAlignment(Pos.BASELINE_LEFT);
                     }
-                vboxMessagesText.getChildren().add(hBox);
+                    vboxMessagesText.getChildren().add(hBox);
+
+                    handleOnHboxTextMessageFieldClick();
             }
-            handleOnHboxTextMessageFieldClick();
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){

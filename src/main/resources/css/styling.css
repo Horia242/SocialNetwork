@@ -244,7 +244,7 @@
     -fx-text-fill: white;
 }
 .paneRepliesTo {
-    -fx-border-radius: 20;
-    -fx-background-radius: 20;
-    -fx-background-color:blue;
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: #EAEAE9;
 }
