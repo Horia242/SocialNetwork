@@ -385,7 +385,7 @@ public class DashboardController  {
         pnlFriendRequests.toFront();
     }
 
-    private void displayUserConversationPartners(String userEmail){
+    public void displayUserConversationPartners(String userEmail){
             vboxConversationPartners.getChildren().clear();
             vboxConversationPartners.setSpacing(7);
             for(UserDto<String> userDto:rootService.getNetworkService().getAllUserConversationPartners(userEmail)){
