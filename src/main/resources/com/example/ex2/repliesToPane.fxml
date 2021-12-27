@@ -5,6 +5,6 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="188.0" style="-fx-background-color: pink;" styleClass="paneRepliesTo" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Label layoutX="14.0" text="Replies to:" />
+      <Label fx:id="labelRepliesTo" layoutX="14.0" text="Replies to:" />
    </children>
 </Pane>

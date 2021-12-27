@@ -13,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -121,6 +122,8 @@ public class DashboardController  {
     private Label labelMessageSenderUsername;
     @FXML
     private Pane paneAccountPage;
+    @FXML
+    private Label labelForReplies;
 
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
@@ -236,20 +239,29 @@ public class DashboardController  {
     private void handleSendMessage(){
        String message =  txtFieldTypeMessage.getText();
 
-       if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight){
-          rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(),null,null)
-                                                                ,List.of(new UserDto<String>(loggedInUsername,null,null))
-                                                                ,labelMessageRepliedTo.getText()
-                                                                ,LocalDateTime.now()
-                                                                ,Long.parseLong(labelSelectedMessageId.getText()))
-                                                    ,loggedInUsername
-                                                    ,message);
+       if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight ){
+           if(labelForReplies.getText().equals("Reply To:")) {
+               rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
+                               , List.of(new UserDto<String>(loggedInUsername, null, null))
+                               , labelMessageRepliedTo.getText()
+                               , LocalDateTime.now()
+                               , Long.parseLong(labelSelectedMessageId.getText()))
+                       , loggedInUsername
+                       , message);
+           }
+           else{
+               if(labelForReplies.getText().equals("Reply All:")){
+                   MessageDTO original = rootService.getNetworkService().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
+                   rootService.getNetworkService().replyAll(original,labelSenderUserId.getText(),message);
+               }
+           }
        }
        else {
            rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
                    , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
                    message, LocalDateTime.now(), 0L));
        }
+
        displayUserConversationMessages(currentChatPartnerShowingId);
        txtFieldTypeMessage.clear();
     }
@@ -407,17 +419,21 @@ public class DashboardController  {
                     textField.setFont(Font.font("System", 13));
                     textField.setPrefWidth(textField.getText().length() * 7);
                     textField.setOnMouseClicked(mouseEvent -> {
-                        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                            if(mouseEvent.getClickCount() == 2){
-                                labelMessageRepliedTo.setText(textField.getText());
-                                labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
-                                labelSelectedMessageId.setText(messageDTO.getId().toString());
-                                labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
-                                labelSenderUserId.setText(messageDTO.getFrom().getUserID());
-                                scrollPaneMessages.toBack();
-                                vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
-                                scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
 
+                        if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
+                            labelMessageRepliedTo.setText(textField.getText());
+                            labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
+                            labelSelectedMessageId.setText(messageDTO.getId().toString());
+                            labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
+                            labelSenderUserId.setText(messageDTO.getFrom().getUserID());
+                            scrollPaneMessages.toBack();
+                            vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
+                            scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
+                            if(mouseEvent.getClickCount() == 2){
+                                labelForReplies.setText("Reply All:");
+                            }
+                            else if(mouseEvent.getClickCount() == 1){
+                                labelForReplies.setText("Reply To:");
                             }
                         }
                     });
