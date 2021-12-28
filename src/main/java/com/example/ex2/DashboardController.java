@@ -252,7 +252,7 @@ public class DashboardController  {
            else{
                if(labelForReplies.getText().equals("Reply All:")){
                    MessageDTO original = rootService.getNetworkService().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
-                   rootService.getNetworkService().replyAll(original,labelSenderUserId.getText(),message);
+                   rootService.getNetworkService().replyAll(original,loggedInUsername,message);
                }
            }
        }
@@ -405,80 +405,85 @@ public class DashboardController  {
     }
 
 
+    private void resizeTextArea(TextArea textArea){
+
+    }
+
+
     public void displayUserConversationMessages(String conversationPartnerEmail){
         this.currentChatPartnerShowingId = conversationPartnerEmail;
         vboxMessagesText.getChildren().clear();
         vboxMessagesText.setSpacing(8);
         List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
 
-            for(MessageDTO messageDTO :conversation) {
-                    HBox hBox = new HBox();
-                    Label labelMessageId = new Label(messageDTO.getId().toString());
-                    labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
-                    TextField textField = new TextField();
-                    textField.setEditable(false);
-                    textField.setText(messageDTO.getMessage());
-                    textField.setFont(Font.font("System", 13));
-                    textField.setPrefWidth(textField.getText().length() * 7);
-                    textField.setOnMouseClicked(mouseEvent -> {
-                        if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-                            labelMessageRepliedTo.setText(textField.getText());
-                            labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
-                            labelSelectedMessageId.setText(messageDTO.getId().toString());
-                            labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
-                            labelSenderUserId.setText(messageDTO.getFrom().getUserID());
-                            scrollPaneMessages.toBack();
-                            vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
-                            scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
-                            if (mouseEvent.getClickCount() == 2) {
-                                labelForReplies.setText("Reply All:");
-                            } else if (mouseEvent.getClickCount() == 1) {
-                                labelForReplies.setText("Reply To:");
-                            }
-                        }
-                    });
-                    Pane pane = new Pane();
-                    MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
-                    if (messageRepliedTo != null) {
-                        FXMLLoader fxmlLoader = new FXMLLoader();
-                        fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
-                        try {
-                            pane = fxmlLoader.load();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        pane.setStyle("-fx-border-radius: 20;\n" +
-                                "    -fx-background-radius: 20;\n" +
-                                "    -fx-background-color:#D4D4D4;");
-                        pane.setPrefWidth(textField.getPrefWidth() + 40);
-                        pane.getChildren().add(textField);
-                        textField.setLayoutX(20);
-                        textField.setLayoutY(29);
-                        TextField textRepliedTo = new TextField("Replies to:" + messageRepliedTo.getMessage());
-                        textRepliedTo.setPrefWidth(100);
-                        textRepliedTo.setPrefHeight(20);
-                        textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
-                        pane.getChildren().add(textRepliedTo);
-                        hBox.getChildren().add(pane);
-                    } else {
-                        hBox.getChildren().add(textField);
-                        hBox.getChildren().add(labelMessageId);
+        for(MessageDTO messageDTO :conversation) {
+            HBox hBox = new HBox();
+            Label labelMessageId = new Label(messageDTO.getId().toString());
+            labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
+            TextField textField = new TextField();
+            textField.setEditable(false);
+            textField.setText(messageDTO.getMessage());
+            textField.setFont(Font.font("System", 13));
+            textField.setPrefWidth(textField.getText().length() * 6);
+            textField.setOnMouseClicked(mouseEvent -> {
+                if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                    labelMessageRepliedTo.setText(textField.getText());
+                    labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
+                    labelSelectedMessageId.setText(messageDTO.getId().toString());
+                    labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
+                    labelSenderUserId.setText(messageDTO.getFrom().getUserID());
+                    scrollPaneMessages.toBack();
+                    vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
+                    scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
+                    if (mouseEvent.getClickCount() == 2) {
+                        labelForReplies.setText("Reply All:");
+                    } else if (mouseEvent.getClickCount() == 1) {
+                        labelForReplies.setText("Reply To:");
                     }
-
-                    if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
-                        textField.setStyle("-fx-background-radius: 15px;" +
-                                "-fx-background-color:#B5F2EC;" +
-                                "-fx-text-fill: black;");
-                        hBox.setAlignment(Pos.BASELINE_RIGHT);
-                    } else {
-                        textField.setStyle("-fx-background-radius: 15px;\n" +
-                                "    -fx-background-color: white;");
-                        hBox.setAlignment(Pos.BASELINE_LEFT);
-                    }
-                    vboxMessagesText.getChildren().add(hBox);
-
-                    handleOnHboxTextMessageFieldClick();
+                }
+            });
+            Pane pane = new Pane();
+            MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+            if (messageRepliedTo != null) {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
+                try {
+                    pane = fxmlLoader.load();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                pane.setStyle("-fx-border-radius: 20;\n" +
+                        "    -fx-background-radius: 20;\n" +
+                        "    -fx-background-color:#D4D4D4;");
+                pane.setPrefWidth(textField.getPrefWidth() + 40);
+                pane.getChildren().add(textField);
+                textField.setLayoutX(20);
+                textField.setLayoutY(29);
+                TextField textRepliedTo = new TextField("Replies to:" + messageRepliedTo.getMessage());
+                textRepliedTo.setPrefWidth(100);
+                textRepliedTo.setPrefHeight(20);
+                textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
+                pane.getChildren().add(textRepliedTo);
+                hBox.getChildren().add(pane);
+            } else {
+                hBox.getChildren().add(textField);
+                hBox.getChildren().add(labelMessageId);
             }
+
+            if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
+                textField.setStyle("-fx-background-radius: 15px;" +
+                        "-fx-background-color:#B5F2EC;" +
+                        "-fx-text-fill: black;");
+                hBox.setAlignment(Pos.BASELINE_RIGHT);
+            } else {
+                textField.setStyle("-fx-background-radius: 15px;\n" +
+                        "    -fx-background-color: white;");
+                hBox.setAlignment(Pos.BASELINE_LEFT);
+            }
+            vboxMessagesText.getChildren().add(hBox);
+
+            handleOnHboxTextMessageFieldClick();
+        }
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
