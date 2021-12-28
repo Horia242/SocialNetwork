@@ -98,7 +98,7 @@
 
 }
 .box1:hover{
-    -fx-background-color:  #E1E1DF;
+    -fx-background-color: #E5E5E5  ;
 }
 .box2{
 -fx-background-color:  #EAEAE9;
@@ -213,4 +213,38 @@
 }
 .scroll-pane1:selected{
     -fx-border-color: #E1E1DF;
+}
+.dot {
+    height: 25px;
+    width: 25px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+.tooltip1{
+    -fx-background-color:linear-gradient(to bottom left, #EEEBD6,#B5F2EC) ;
+    -fx-text-fill: black;
+}
+.searchicon{
+    -fx-border-color: #bcb3b3;
+    -fx-border-width: 0px 0px 2px 0px;
+}
+.notif-icon{
+    -fx-background-color: red;
+    -fx-background-radius: 100%;
+}
+.text-fieldSender{
+-fx-background-radius: 20px;
+    -fx-background-color: white;
+
+}
+.text-fieldReceiver{
+    -fx-background-radius: 20px;
+    -fx-background-color:blue;
+    -fx-text-fill: white;
+}
+.paneRepliesTo {
+    -fx-border-radius: 10;
+    -fx-background-radius: 10;
+    -fx-background-color: #EAEAE9;
 }

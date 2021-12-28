@@ -30,9 +30,9 @@ import java.time.LocalDate;
 
 public class UserDetailsBoxController  {
 
-    private NetworkService service;
-    private String loggedInUserEmail ;
     private RootService rootService;
+    private String loggedInUserEmail ;
+
     @FXML
     private HBox hboxUserDetails;
     @FXML
@@ -46,13 +46,9 @@ public class UserDetailsBoxController  {
     @FXML
     private AnchorPane anchorDashboardRootPane;
 
-    /*public UserDetailsBoxController(String loggedInUserEmail, RootService rootService) {
-        this.loggedInUserEmail = loggedInUserEmail;
-        this.rootService = rootService;
-    }*/
 
-    public void setService(NetworkService service) {
-        this.service = service;
+    public void setRootService(RootService rootService) {
+        this.rootService = rootService;
     }
 
     public void setLoggedInUserEmail(String loggedInUserEmail){
@@ -73,22 +69,37 @@ public class UserDetailsBoxController  {
         labelFirstName.setText(userDto.getFirstName());
         labelLastName.setText(userDto.getLastName());
         labelEmail.setText(userDto.getUserID());
-
-            Image imgFriendshipStatus = null;
-
+        Tooltip imageViewTooltip = new Tooltip("");
+        Image imgFriendshipStatus = null;
         switch (descriptionImageFlag) {
-            case 0 -> imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
-            case 1 -> imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
-            case 2 -> imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
-            case 3 -> imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
-            case 4 -> imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
+            case 0 -> {
+                imgFriendshipStatus = new LocatedImage("icons/icons8_ok_30px.png");
+                imageViewTooltip.setText("This user is your friend");
+            }
+            case 1 -> {
+                imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
+                imageViewTooltip.setText("You sent a friendship request to this user");
+            }
+            case 2 -> {
+                imgFriendshipStatus = new LocatedImage("icons/icons8_plus30px.png");
+                imageViewTooltip.setText("Add friend");
+            }
+            case 3 -> {
+                imgFriendshipStatus = new LocatedImage("icons/icons8_handshake_orange.png");
+                imageViewTooltip.setText("You have a friendship request from this user");
+            }
+            case 4 -> {
+                imgFriendshipStatus = new LocatedImage("icons/icons8_adobe_media_encoder_30px_1.png");
+                imageViewTooltip.setText("This is you");
+            }
             default -> {
             }
         }
+
             if(imgFriendshipStatus != null) {
                 imgSendFriendshipRequest.setImage(imgFriendshipStatus);
+                Tooltip.install(imgSendFriendshipRequest,imageViewTooltip);
             }
-
     }
 
     String getImagePath(Image currentImage){
@@ -97,34 +108,50 @@ public class UserDetailsBoxController  {
                 : null;
     }
 
+    /**
+     * Controls the actions for a friendshipRequest for a user found using the searchBar
+     */
     @FXML
     private void handleRequestImage(){
         String url = getImagePath(imgSendFriendshipRequest.getImage());
-        if(url.compareTo("icons/icons8_plus30px.png") == 0)
-        {
-            if(service != null){
-                try {
-                    service.sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
-                            new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
-                    imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
-                } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                  //Users are already friends
+        switch(url){
+            case "icons/icons8_plus30px.png":
+                if(rootService.getNetworkService() != null){
+                    try {
+                        rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
+                                new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
+                        imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
+                        Tooltip.install(imgSendFriendshipRequest,new Tooltip("Friendship request sent!Click to withdraw"));
+                    } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+                        //Users are already friends
+                    }
                 }
-            }
-        }
-        else
-        { if(url.compareTo("icons/icons8_handshake_orange.png") == 0){
-            try {
-                service.updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
-                        new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
-                imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
-                //notify() - pentru main window;
-
-
-            } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                e.printStackTrace();
-            }
-        }
+                break;
+            case "icons/icons8_handshake_orange.png":
+                try {
+                    rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
+                            new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
+                    imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
+                    Tooltip.install(imgSendFriendshipRequest,new Tooltip("This user is your friend now"));
+                    //notify() - pentru main window;
+                } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "icons/icons8_paper_plane_30px.png":
+                try {
+                    if(rootService.getNetworkService().deletePendingFriendshipRequest(
+                            new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"","")
+                            ,new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, null))){
+                        imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_plus30px.png"));
+                        Tooltip.install(imgSendFriendshipRequest,new Tooltip("Add friend"));
+                    }
+                } catch (InsufficientDataToExecuteTaskException e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
         }
     }
 
