@@ -16,6 +16,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import ro.ubbcluj.map.Service.FriendshipService;
 import ro.ubbcluj.map.Service.UserService;
 import ro.ubbcluj.map.model.*;
+import ro.ubbcluj.map.myException.IDisAlreadyTakenException;
 import ro.ubbcluj.map.repository.FriendshipRequestRepository;
 import ro.ubbcluj.map.repository.MessageRepository;
 import ro.ubbcluj.map.repository.Repository;
@@ -63,8 +64,17 @@ public class AppEventsController {
     private TextField txtFieldEmail;
     @FXML
     private PasswordField passFieldPassword;
+    @FXML
+    private TextField fieldEmailSignUp;
+    @FXML
+    private TextField fieldFirstNameSignUp;
+    @FXML
+    private TextField fieldLastNameSignUp;
+    @FXML
+    private TextField fieldPasswordSignUp;
 
-   public void setRootService(RootService rootService) {
+
+    public void setRootService(RootService rootService) {
          this. rootService =rootService;
     }
 
@@ -77,7 +87,22 @@ public class AppEventsController {
                 }
                 if(event.getSource().equals(btnGetStarted)){
                     //save a new user
-                  //  rootService.getNetworkService().addUser()
+                    String firstName = fieldFirstNameSignUp.getText();
+                    String lastName = fieldLastNameSignUp.getText();
+                    String userEmail = fieldEmailSignUp.getText();
+                    String password = fieldPasswordSignUp.getText();
+                    if(userEmail.length() != 0 && firstName.length() != 0 && lastName.length() != 0 && password.length() != 0) {
+                        try {
+                            rootService.getNetworkService().addUser(new UserDto<String>(userEmail,firstName,lastName),password);
+                            fieldFirstNameSignUp.clear();
+                            fieldLastNameSignUp.clear();
+                            fieldEmailSignUp.clear();
+                            fieldPasswordSignUp.clear();
+                            pnlLogIn.toFront();
+                        } catch (IDisAlreadyTakenException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
     }
     @FXML
@@ -111,7 +136,12 @@ public class AppEventsController {
                Platform.exit();
             }
             if(event.getSource().equals(btnBack)){
+                    fieldFirstNameSignUp.clear();
+                    fieldLastNameSignUp.clear();
+                    fieldEmailSignUp.clear();
+                    fieldPasswordSignUp.clear();
                     pnlLogIn.toFront();
+
             }
     }
 
