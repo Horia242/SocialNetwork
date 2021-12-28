@@ -443,7 +443,9 @@ public class DashboardController  {
             textField.setEditable(false);
             textField.setText(messageDTO.getMessage());
             textField.setFont(Font.font("System", 13));
-            textField.setPrefWidth(textField.getText().length() * 6);
+            //textField.setPrefWidth(textField.getPrefWidth() + messageDTO.getMessage().length());
+           // textField.setPrefWidth(messageDTO.getMessage().length()*8);
+            textField.setPrefWidth(80);
             textField.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     labelMessageRepliedTo.setText(textField.getText());
@@ -488,7 +490,6 @@ public class DashboardController  {
                 hBox.getChildren().add(textField);
                 hBox.getChildren().add(labelMessageId);
             }
-
             if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
                 textField.setStyle("-fx-background-radius: 15px;" +
                         "-fx-background-color:#B5F2EC;" +
