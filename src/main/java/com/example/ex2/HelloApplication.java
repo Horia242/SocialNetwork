@@ -10,6 +10,7 @@ import ro.ubbcluj.map.Service.FriendshipService;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.Service.UserService;
 import ro.ubbcluj.map.model.*;
+import ro.ubbcluj.map.repository.AppUserRepository;
 import ro.ubbcluj.map.repository.FriendshipRequestRepository;
 import ro.ubbcluj.map.repository.MessageRepository;
 import ro.ubbcluj.map.repository.Repository;
@@ -47,7 +48,7 @@ public class HelloApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setScene(scene);
-        Repository<String, ApplicationUser> repoUser = new UserRepoDbo(connection , new UserStringIdValidator());
+        AppUserRepository<String, ApplicationUser> repoUser = new UserRepoDbo(connection , new UserStringIdValidator());
         Repository<Tuple<String, String>, Friendship> repoFriendship = new FriendshipRepoDbo(connection, new FriendshipTupleIdValidator());
         FriendshipService serviceFriendship = new FriendshipService(repoFriendship);
         UserService serviceUser = new UserService(repoUser);

@@ -62,7 +62,7 @@ public class AppEventsController {
     @FXML
     private TextField txtFieldEmail;
     @FXML
-    private TextField txtFieldPassword;
+    private PasswordField passFieldPassword;
 
    public void setRootService(RootService rootService) {
          this. rootService =rootService;
@@ -84,7 +84,8 @@ public class AppEventsController {
     private void onLoginButton(ActionEvent event) throws IOException{
         try{
             String txtUsername = txtFieldEmail.getText();
-            if( rootService.getNetworkService().loginUsername(txtUsername)){
+            String password = passFieldPassword.getText();
+            if( rootService.getNetworkService().logIN(txtUsername,password) ){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("userDashboard.fxml"));
                 root = loader.load();
                 DashboardController dashboardController = loader.getController();
@@ -113,4 +114,5 @@ public class AppEventsController {
                     pnlLogIn.toFront();
             }
     }
+
 }
