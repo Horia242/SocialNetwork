@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox fx:id="hboxUserDetails" prefHeight="50.0" prefWidth="314.0" styleClass="box2" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.UserDetailsBoxController">
+<HBox fx:id="hboxUserDetails" prefHeight="50.0" prefWidth="478.0" styleClass="box2" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.UserDetailsBoxController">
    <children>
       <ImageView fitHeight="30.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
          <HBox.margin>
@@ -17,7 +17,7 @@
             <Image url="@../../../icons/icons8_user_male_30px.png" />
          </image>
       </ImageView>
-      <Label fx:id="labelFirstName" prefHeight="30.0" prefWidth="68.0" text="Label">
+      <Label fx:id="labelFirstName" prefHeight="30.0" prefWidth="86.0" text="Label">
          <HBox.margin>
             <Insets bottom="10.0" left="4.0" top="10.0" />
          </HBox.margin>
@@ -25,25 +25,25 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Label fx:id="labelLastName" prefHeight="30.0" prefWidth="67.0" text="Label">
+      <Label fx:id="labelLastName" maxWidth="-Infinity" prefHeight="30.0" prefWidth="87.0" text="Label">
          <font>
             <Font size="14.0" />
          </font>
          <HBox.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets bottom="10.0" left="20.0" top="10.0" />
          </HBox.margin>
       </Label>
-      <Label fx:id="labelEmail" prefHeight="28.0" prefWidth="105.0" text="Label">
+      <Label fx:id="labelEmail" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="28.0" prefWidth="122.0" text="Label">
          <font>
             <Font size="14.0" />
          </font>
          <HBox.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets bottom="10.0" left="40.0" top="10.0" />
          </HBox.margin>
       </Label>
       <ImageView fx:id="imgSendFriendshipRequest" fitHeight="30.0" fitWidth="28.0" onMouseClicked="#handleRequestImage" pickOnBounds="true" preserveRatio="true">
          <HBox.margin>
-            <Insets bottom="10.0" top="10.0" />
+            <Insets bottom="10.0" left="110.0" right="20.0" top="10.0" />
          </HBox.margin>
       </ImageView>
    </children>

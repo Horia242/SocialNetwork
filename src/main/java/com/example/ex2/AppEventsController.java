@@ -1,6 +1,7 @@
 package com.example.ex2;
 import com.dlsc.formsfx.model.event.FieldEvent;
 import com.example.ex2.rootService.RootService;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import org.kordamp.bootstrapfx.scene.layout.Panel;
 import ro.ubbcluj.map.Service.FriendshipService;
 import ro.ubbcluj.map.Service.UserService;
 import ro.ubbcluj.map.model.*;
+import ro.ubbcluj.map.myException.IDisAlreadyTakenException;
 import ro.ubbcluj.map.repository.FriendshipRequestRepository;
 import ro.ubbcluj.map.repository.MessageRepository;
 import ro.ubbcluj.map.repository.Repository;
@@ -61,10 +63,20 @@ public class AppEventsController {
     @FXML
     private TextField txtFieldEmail;
     @FXML
-    private TextField txtFieldPassword;
+    private PasswordField passFieldPassword;
+    @FXML
+    private TextField fieldEmailSignUp;
+    @FXML
+    private TextField fieldFirstNameSignUp;
+    @FXML
+    private TextField fieldLastNameSignUp;
+    @FXML
+    private TextField fieldPasswordSignUp;
 
 
-
+    public void setRootService(RootService rootService) {
+         this. rootService =rootService;
+    }
 
     @FXML
     private final DashboardController dashboardController = new DashboardController();
@@ -74,27 +86,37 @@ public class AppEventsController {
                     pnlSignUp.toFront();
                 }
                 if(event.getSource().equals(btnGetStarted)){
-                    /*Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetwork", "postgres", "polopolo123", new UserStringIdValidator());
-                    repoUser.save(new ApplicationUser());*/
+                    //save a new user
+                    String firstName = fieldFirstNameSignUp.getText();
+                    String lastName = fieldLastNameSignUp.getText();
+                    String userEmail = fieldEmailSignUp.getText();
+                    String password = fieldPasswordSignUp.getText();
+                    if(userEmail.length() != 0 && firstName.length() != 0 && lastName.length() != 0 && password.length() != 0) {
+                        try {
+                            rootService.getNetworkService().addUser(new UserDto<String>(userEmail,firstName,lastName),password);
+                            fieldFirstNameSignUp.clear();
+                            fieldLastNameSignUp.clear();
+                            fieldEmailSignUp.clear();
+                            fieldPasswordSignUp.clear();
+                            pnlLogIn.toFront();
+                        } catch (IDisAlreadyTakenException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
     }
     @FXML
     private void onLoginButton(ActionEvent event) throws IOException{
-        Repository<String, ApplicationUser> repoUser = new UserRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24", new UserStringIdValidator());
-        Repository<Tuple<String, String>, Friendship> repoFriendship = new FriendshipRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24", new FriendshipTupleIdValidator());
-        FriendshipService serviceFriendship = new FriendshipService(repoFriendship);
-        UserService serviceUser = new UserService(repoUser);
-        MessageRepository<Long, Message> messageRepository = new MessageRepoDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24");
-        FriendshipRequestRepository<Long, FriendshipRequest> RepoFriendshipRequest = new FriendshipRequestsDbo("jdbc:postgresql://localhost:5432/SocialNetworkDB", "postgres", "mateinfo24");
-        NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), RepoFriendshipRequest);
         try{
             String txtUsername = txtFieldEmail.getText();
-            if(service.loginUsername(txtUsername)){
+            String password = passFieldPassword.getText();
+            if( rootService.getNetworkService().logIN(txtUsername,password) ){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("userDashboard.fxml"));
                 root = loader.load();
                 DashboardController dashboardController = loader.getController();
-                dashboardController.displayUsername(txtUsername);
-                dashboardController.setService(service);
+                dashboardController.setLoggedInUserEmail(txtUsername);
+                dashboardController.setRootService(rootService);
+                dashboardController.init();
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
                 stage.setScene(scene);
@@ -111,10 +133,16 @@ public class AppEventsController {
     @FXML
     private void handleMouseEvent(MouseEvent event){
             if(event.getSource() .equals( btnClose)){
-                System.exit(0);
+               Platform.exit();
             }
             if(event.getSource().equals(btnBack)){
+                    fieldFirstNameSignUp.clear();
+                    fieldLastNameSignUp.clear();
+                    fieldEmailSignUp.clear();
+                    fieldPasswordSignUp.clear();
                     pnlLogIn.toFront();
+
             }
     }
+
 }
