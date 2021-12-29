@@ -510,7 +510,6 @@ public class DashboardController  {
                 }
             });
         }
-       // handleOnHboxTextMessageFieldClick();
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
