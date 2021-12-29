@@ -50,7 +50,7 @@ public class DashboardController  {
     private boolean currentDisplayedConversationFullLoaded = false;
     private ConversationPartnerDetailsController openedConversationController;
 
-
+private boolean ok=true;
     @FXML
     private Label txtFrRequestCount;
     @FXML
@@ -593,24 +593,26 @@ public class DashboardController  {
 
     @FXML
     private void scrollingStarted(){
-        scrollPaneMessages.setVvalue(scrollPaneMessages.getVmax());
         scrollPaneMessages.vvalueProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue.doubleValue() == 0 )
-            {scrollPaneMessages.setVvalue(scrollPaneMessages.getVmin());
+            {
                 handleOnMessagePaneScroll();
+
             }
         });
     }
 
-
     public void displayUserConversationMessages(String conversationPartnerEmail){
-
+        this.scrollTop = false;
         this.currentChatPartnerShowingId = conversationPartnerEmail;
         labelMessageSenderUsername.setText("From:"+currentChatPartnerShowingId);
         vboxMessagesText.getChildren().clear();
         currentDisplayedConversationFullLoaded = false;
         vboxMessagesText.setSpacing(8);
         handleOnMessagePaneScroll();
+
+        scrollPaneMessages.setVvalue(scrollPaneMessages.getVmax());
+        scrollPaneMessages.toFront();
         scrollPaneMessages.vvalueProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.doubleValue() == 1.0 && scrollBottom) {
                 System.out.println("Bottom!");
@@ -618,11 +620,17 @@ public class DashboardController  {
                 scrollingStarted();
             }
         });
-        vboxMessagesText.heightProperty().addListener(new ChangeListener() {
-            @Override
-            public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
 
-                scrollPaneMessages.setVvalue((Double) newValue);
+    /*    vboxMessagesText.heightProperty().addListener((ChangeListener) (observable, oldvalue, newValue) ->
+
+                scrollPaneMessages.setVvalue((Double) newValue));*/
+        vboxMessagesText.heightProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                if(!scrollTop) {
+                    scrollPaneMessages.setVvalue((Double) newValue);
+                    scrollTop = true;
+                }
             }
         });
     }
