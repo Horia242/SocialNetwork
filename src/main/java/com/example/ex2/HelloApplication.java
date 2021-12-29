@@ -6,9 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import ro.ubbcluj.map.Service.FriendshipService;
-import ro.ubbcluj.map.Service.NetworkService;
-import ro.ubbcluj.map.Service.UserService;
+import ro.ubbcluj.map.Service.*;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.repository.AppUserRepository;
 import ro.ubbcluj.map.repository.FriendshipRequestRepository;
@@ -55,8 +53,9 @@ public class HelloApplication extends Application {
         MessageRepository<Long, Message> messageRepository = new MessageRepoDbo(connection);
         FriendshipRequestRepository<Long, FriendshipRequest> RepoFriendshipRequest = new FriendshipRequestsDbo(connection);
         NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), RepoFriendshipRequest,new ConversationDbo(connection));
-       AppEventsController c = fxmlLoader.getController();
-        c.setRootService(new RootService(service));
+        NetworkServiceForPaginatedDbRepo service1 = new NetworkServiceForPaginatedDbRepo(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), new MessagesValidator(), RepoFriendshipRequest,new ConversationDbo(connection),new MessageService(new MessageRepoDboPaginated(connection)));
+        AppEventsController c = fxmlLoader.getController();
+        c.setRootService(new RootService(service,service1));
         stage.show();
 
     }

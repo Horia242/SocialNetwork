@@ -16,6 +16,9 @@ public class ConversationPartnerDetailsController {
     private String loggedInUsername;
     private UserDto<String> currentChatPartner;
     DashboardController dashboardController;
+    private int currentPage = -1;
+    private final int pageSize = 12;
+
     @FXML
     private Label labelFirstLastName;
     @FXML
@@ -44,6 +47,8 @@ public class ConversationPartnerDetailsController {
 
     @FXML
     public void handleOnMouseClicked(){
+        currentPage = 0;
+        dashboardController.setOpenedConversationController(this);
         dashboardController.displayUserConversationMessages(currentChatPartner.getUserID());
         dashboardController.setLabelMessageSenderUsername("From:"+currentChatPartner.getUserID());
         ConversationDTO conversationDTO = new ConversationDTO(
@@ -54,6 +59,10 @@ public class ConversationPartnerDetailsController {
 
         handleConversationUnreadMessagesNotifications();
     }
+
+    public void setCurrentPage(int value){currentPage = value;}
+    public int getCurrentPage(){return currentPage;}
+    public int getPageSize(){return pageSize;}
 
     private void handleConversationUnreadMessagesNotifications(){
         ConversationDTO conversationDTO = new ConversationDTO(

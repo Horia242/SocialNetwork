@@ -3,6 +3,7 @@ import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -28,6 +29,7 @@ import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
+import ro.ubbcluj.map.repository.paging.PageRequest;
 import ro.ubbcluj.map.utils.events.Event;
 import ro.ubbcluj.map.utils.observer.Observer;
 
@@ -43,6 +45,11 @@ public class DashboardController  {
 
     RootService rootService;
     String loggedInUsername;
+    private boolean scrollTop = false;
+    private boolean scrollBottom = true;
+    private boolean currentDisplayedConversationFullLoaded = false;
+    private ConversationPartnerDetailsController openedConversationController;
+
 
     @FXML
     private Label txtFrRequestCount;
@@ -136,6 +143,11 @@ public class DashboardController  {
         requestNotifyCircle();
         toolTip();
     }
+
+    public void setOpenedConversationController(ConversationPartnerDetailsController openedConversationController) {
+        this.openedConversationController = openedConversationController;
+    }
+
     private void movableDashboard(){
         borderPaneDashboard.setOnMousePressed(new EventHandler<MouseEvent>() {
 
@@ -236,6 +248,72 @@ public class DashboardController  {
         }
     }
 
+    private void dealWithTheLastMessageSent(MessageDTO messageDTO){
+        HBox hBox = new HBox();
+        Label labelMessageId = new Label(messageDTO.getId().toString());
+        labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
+        TextField textField = new TextField();
+        textField.setEditable(false);
+        textField.setText(messageDTO.getMessage());
+        textField.setFont(Font.font("System", 13));
+        textField.setPrefWidth(40 + messageDTO.getMessage().length() * 7);
+        textField.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                labelMessageRepliedTo.setText(textField.getText());
+                labelSelectedMessageId.setTextFill(Color.valueOf("#EAEAE9"));
+                labelSelectedMessageId.setText(messageDTO.getId().toString());
+                labelSenderUserId.setTextFill(Color.valueOf("#EAEAE9"));
+                labelSenderUserId.setText(messageDTO.getFrom().getUserID());
+                scrollPaneMessages.toBack();
+                vboxMessagesText.setMaxHeight(vboxMessagesTextHeight - 80);
+                scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight - 80);
+                if (mouseEvent.getClickCount() == 2) {
+                    labelForReplies.setText("Reply All:");
+                } else if (mouseEvent.getClickCount() == 1) {
+                    labelForReplies.setText("Reply To:");
+                }
+            }
+        });
+        Pane pane = new Pane();
+        MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+        if (messageRepliedTo != null) {
+            FXMLLoader fxmlLoader = new FXMLLoader();
+            fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
+            try {
+                pane = fxmlLoader.load();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            pane.setStyle("-fx-border-radius: 20;\n" +
+                    "    -fx-background-radius: 20;\n" +
+                    "    -fx-background-color:#D4D4D4;");
+            pane.setPrefWidth(textField.getPrefWidth() + 40);
+            pane.getChildren().add(textField);
+            textField.setLayoutX(20);
+            textField.setLayoutY(29);
+            TextField textRepliedTo = new TextField("Replies to:" + messageRepliedTo.getMessage());
+            textRepliedTo.setPrefWidth(100);
+            textRepliedTo.setPrefHeight(20);
+            textRepliedTo.setStyle("-fx-background-color: #D4D4D4;");
+            pane.getChildren().add(textRepliedTo);
+            hBox.getChildren().add(pane);
+        } else {
+            hBox.getChildren().add(textField);
+            hBox.getChildren().add(labelMessageId);
+        }
+        if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
+            textField.setStyle("-fx-background-radius: 15px;" +
+                    "-fx-background-color:#B5F2EC;" +
+                    "-fx-text-fill: black;");
+            hBox.setAlignment(Pos.BASELINE_RIGHT);
+        } else {
+            textField.setStyle("-fx-background-radius: 15px;\n" +
+                    "    -fx-background-color: white;");
+            hBox.setAlignment(Pos.BASELINE_LEFT);
+        }
+        vboxMessagesText.getChildren().add(hBox);
+        vboxMessagesText.toFront();
+    }
     @FXML
     private void handleSendMessage(){
        String message =  txtFieldTypeMessage.getText();
@@ -263,9 +341,13 @@ public class DashboardController  {
                    message, LocalDateTime.now(), 0L));
        }
 
-       displayUserConversationMessages(currentChatPartnerShowingId);
+       List<MessageDTO> lastMessageSent = rootService.getNetworkServicePag().getConversationHistory(loggedInUsername,currentChatPartnerShowingId,new PageRequest(0,1),SortingOrder.DESC);
+       dealWithTheLastMessageSent(lastMessageSent.get(0));
+
+       //displayUserConversationMessages(currentChatPartnerShowingId);
        txtFieldTypeMessage.clear();
     }
+
     @FXML
     private void handleSearchUser(){
         if(!textFieldSearchUser.getText().isEmpty()){
@@ -410,33 +492,25 @@ public class DashboardController  {
 
     }
 
+    private void updateScrollPaneView(String conversationPartnerEmail ,List<MessageDTO> messageDTOToAdd) {
 
-    public void displayUserConversationMessages(String conversationPartnerEmail){
-        this.currentChatPartnerShowingId = conversationPartnerEmail;
+        //am nevoie de ceva care sa imi returneze ulimul mesaj citit(id-ul lui)
         vboxMessagesText.getChildren().clear();
-        vboxMessagesText.setSpacing(8);
-        List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
-        ConversationDTO conversationDTO = new ConversationDTO(
-                new UserDto<String>(conversationPartnerEmail,null,null)
-                ,new UserDto<String>(loggedInUsername,null,null)
-                ,0L);
-        int nrOfUnreadMessages = rootService.getNetworkService().findOneConversationUnreadMessages(conversationDTO);
-        int conversationUnread = conversation.size();
-        int count = 0;
-        int unreadMessageSign = conversationUnread - nrOfUnreadMessages + 1;
-        for(MessageDTO messageDTO :conversation) {
-            count++;
-            if(nrOfUnreadMessages > 0 && count == unreadMessageSign){
+        Long lastReadMessageID = -1L;
+        boolean placeLine = false;
+        for (MessageDTO messageDTO : messageDTOToAdd) {
+            if (placeLine) {
                 VBox vboxUnreadSign = new VBox();
                 vboxUnreadSign.setStyle("-fx-border-color: #bcb3b3;\n" +
                         "    -fx-border-width: 0px 0px 2px 0px;");
                 Label unreadMessage = new Label("Unread messages");
                 unreadMessage.setAlignment(Pos.BOTTOM_CENTER);
-                VBox.setMargin(vboxUnreadSign,new Insets(0,20,0,20));
+                VBox.setMargin(vboxUnreadSign, new Insets(0, 20, 0, 20));
                 vboxUnreadSign.getChildren().add(unreadMessage);
                 vboxMessagesText.getChildren().add(vboxUnreadSign);
-
+                placeLine = false;
             }
+            if(messageDTO.getId().equals(lastReadMessageID))placeLine = true;
             HBox hBox = new HBox();
             Label labelMessageId = new Label(messageDTO.getId().toString());
             labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
@@ -444,8 +518,8 @@ public class DashboardController  {
             textField.setEditable(false);
             textField.setText(messageDTO.getMessage());
             textField.setFont(Font.font("System", 13));
-           // textField.setPrefWidth(messageDTO.getMessage().length()*7);
-            textField.setPrefWidth(40 + messageDTO.getMessage().length()*7);
+            // textField.setPrefWidth(messageDTO.getMessage().length()*7);
+            textField.setPrefWidth(40 + messageDTO.getMessage().length() * 7);
             textField.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     labelMessageRepliedTo.setText(textField.getText());
@@ -501,14 +575,56 @@ public class DashboardController  {
                 hBox.setAlignment(Pos.BASELINE_LEFT);
             }
             vboxMessagesText.getChildren().add(hBox);
-            vboxMessagesText.heightProperty().addListener(new ChangeListener() {
-                @Override
-                public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
-
-                    scrollPaneMessages.setVvalue((Double)newValue );
-                }
-            });
         }
+    }
+
+    @FXML
+    private void handleOnMessagePaneScroll(){
+        String[] pair= labelMessageSenderUsername.getText().split(":");
+        int pageNumber = openedConversationController.getCurrentPage() + 1;
+        openedConversationController.setCurrentPage(pageNumber);
+        int pageSize = (pageNumber+1) * openedConversationController.getPageSize();
+        List<MessageDTO> result = rootService.getNetworkServicePag().getConversationHistory(pair[1],loggedInUsername,new PageRequest(0,pageSize),SortingOrder.DESC);
+        if(result != null) {
+            updateScrollPaneView(pair[1], result);
+            currentDisplayedConversationFullLoaded = true;
+        }
+    }
+
+    @FXML
+    private void scrollingStarted(){
+        scrollPaneMessages.setVvalue(scrollPaneMessages.getVmax());
+        scrollPaneMessages.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.doubleValue() == 0 )
+            {scrollPaneMessages.setVvalue(scrollPaneMessages.getVmin());
+                handleOnMessagePaneScroll();
+            }
+        });
+    }
+
+
+    public void displayUserConversationMessages(String conversationPartnerEmail){
+
+        this.currentChatPartnerShowingId = conversationPartnerEmail;
+        labelMessageSenderUsername.setText("From:"+currentChatPartnerShowingId);
+        vboxMessagesText.getChildren().clear();
+        currentDisplayedConversationFullLoaded = false;
+        vboxMessagesText.setSpacing(8);
+        handleOnMessagePaneScroll();
+        scrollPaneMessages.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() == 1.0 && scrollBottom) {
+                System.out.println("Bottom!");
+                scrollBottom  = false;
+                scrollingStarted();
+            }
+        });
+        vboxMessagesText.heightProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
+
+                scrollPaneMessages.setVvalue((Double) newValue);
+            }
+        });
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
