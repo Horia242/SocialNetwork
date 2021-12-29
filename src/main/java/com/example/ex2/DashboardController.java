@@ -191,6 +191,7 @@ public class DashboardController  {
         labelMessageSenderUsername.setText(username);
     }
 
+    //Locul in care se afiseaza mesajele dintr-o conversatie revine la setarile initiale
     @FXML
     private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
@@ -415,8 +416,27 @@ public class DashboardController  {
         vboxMessagesText.getChildren().clear();
         vboxMessagesText.setSpacing(8);
         List<MessageDTO> conversation = rootService.getNetworkService().getConversationHistory(conversationPartnerEmail,loggedInUsername);
-
+        ConversationDTO conversationDTO = new ConversationDTO(
+                new UserDto<String>(conversationPartnerEmail,null,null)
+                ,new UserDto<String>(loggedInUsername,null,null)
+                ,0L);
+        int nrOfUnreadMessages = rootService.getNetworkService().findOneConversationUnreadMessages(conversationDTO);
+        int conversationUnread = conversation.size();
+        int count = 0;
+        int unreadMessageSign = conversationUnread - nrOfUnreadMessages + 1;
         for(MessageDTO messageDTO :conversation) {
+            count++;
+            if(nrOfUnreadMessages > 0 && count == unreadMessageSign){
+                VBox vboxUnreadSign = new VBox();
+                vboxUnreadSign.setStyle("-fx-border-color: #bcb3b3;\n" +
+                        "    -fx-border-width: 0px 0px 2px 0px;");
+                Label unreadMessage = new Label("Unread messages");
+                unreadMessage.setAlignment(Pos.BOTTOM_CENTER);
+                VBox.setMargin(vboxUnreadSign,new Insets(0,20,0,20));
+                vboxUnreadSign.getChildren().add(unreadMessage);
+                vboxMessagesText.getChildren().add(vboxUnreadSign);
+
+            }
             HBox hBox = new HBox();
             Label labelMessageId = new Label(messageDTO.getId().toString());
             labelMessageId.setTextFill(Color.valueOf("#E1E1DF"));
@@ -424,7 +444,8 @@ public class DashboardController  {
             textField.setEditable(false);
             textField.setText(messageDTO.getMessage());
             textField.setFont(Font.font("System", 13));
-            textField.setPrefWidth(textField.getText().length() * 6);
+           // textField.setPrefWidth(messageDTO.getMessage().length()*7);
+            textField.setPrefWidth(40 + messageDTO.getMessage().length()*7);
             textField.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     labelMessageRepliedTo.setText(textField.getText());
@@ -469,7 +490,6 @@ public class DashboardController  {
                 hBox.getChildren().add(textField);
                 hBox.getChildren().add(labelMessageId);
             }
-
             if (messageDTO.getFrom().getUserID().equals(loggedInUsername)) {
                 textField.setStyle("-fx-background-radius: 15px;" +
                         "-fx-background-color:#B5F2EC;" +
@@ -481,8 +501,14 @@ public class DashboardController  {
                 hBox.setAlignment(Pos.BASELINE_LEFT);
             }
             vboxMessagesText.getChildren().add(hBox);
+            vboxMessagesText.heightProperty().addListener(new ChangeListener() {
 
-            handleOnHboxTextMessageFieldClick();
+                @Override
+                public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
+
+                    scrollPaneMessages.setVvalue((Double)newValue );
+                }
+            });
         }
     }
 
@@ -490,7 +516,4 @@ public class DashboardController  {
         Predicate<UserDto<String>> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
-
-
-
 }
