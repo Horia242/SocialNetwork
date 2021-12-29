@@ -59,6 +59,10 @@ public class DashboardController  {
     @FXML
     private Pane pnlFriendRequests;
     @FXML
+    private Pane pnlConversation;
+    @FXML
+    private Pane pnlSendMsg;
+    @FXML
     private Label labelUsername;
     @FXML
     private Label labelFriends;
@@ -97,9 +101,13 @@ public class DashboardController  {
     @FXML
     private ImageView btnSignOut1;
     @FXML
+    private ImageView BtnSendMsg;
+    @FXML
     private HBox hboxChat;
     @FXML
     private Pane pnlChat;
+    @FXML
+    private Pane pane_for_new_msg;
     @FXML
     private VBox vboxConversationPartners;
     @FXML
@@ -217,6 +225,13 @@ public class DashboardController  {
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
             pnlChat.toFront();
+            pnlSendMsg.toBack();
+            pnlConversation.toFront();
+        }
+        if(event.getSource().equals(BtnSendMsg)){
+            pnlConversation.toBack();
+            pnlSendMsg.toFront();
+            //pnlFriends.toFront();
         }
     }
 
