@@ -502,7 +502,6 @@ public class DashboardController  {
             }
             vboxMessagesText.getChildren().add(hBox);
             vboxMessagesText.heightProperty().addListener(new ChangeListener() {
-
                 @Override
                 public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
 
