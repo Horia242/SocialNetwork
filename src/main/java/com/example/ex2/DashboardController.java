@@ -191,6 +191,7 @@ public class DashboardController  {
         labelMessageSenderUsername.setText(username);
     }
 
+    //Locul in care se afiseaza mesajele dintr-o conversatie revine la setarile initiale
     @FXML
     private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
@@ -443,9 +444,8 @@ public class DashboardController  {
             textField.setEditable(false);
             textField.setText(messageDTO.getMessage());
             textField.setFont(Font.font("System", 13));
-            //textField.setPrefWidth(textField.getPrefWidth() + messageDTO.getMessage().length());
-           // textField.setPrefWidth(messageDTO.getMessage().length()*8);
-            textField.setPrefWidth(80);
+           // textField.setPrefWidth(messageDTO.getMessage().length()*7);
+            textField.setPrefWidth(40 + messageDTO.getMessage().length()*7);
             textField.setOnMouseClicked(mouseEvent -> {
                 if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
                     labelMessageRepliedTo.setText(textField.getText());
@@ -501,16 +501,20 @@ public class DashboardController  {
                 hBox.setAlignment(Pos.BASELINE_LEFT);
             }
             vboxMessagesText.getChildren().add(hBox);
+            vboxMessagesText.heightProperty().addListener(new ChangeListener() {
 
-            handleOnHboxTextMessageFieldClick();
+                @Override
+                public void changed(ObservableValue observable, Object oldvalue, Object newValue) {
+
+                    scrollPaneMessages.setVvalue((Double)newValue );
+                }
+            });
         }
+       // handleOnHboxTextMessageFieldClick();
     }
 
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
         Predicate<UserDto<String>> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
     }
-
-
-
 }
