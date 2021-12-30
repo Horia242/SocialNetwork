@@ -275,7 +275,7 @@ private boolean ok=true;
             }
         });
         Pane pane = new Pane();
-        MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+        MessageDTO messageRepliedTo = rootService.getNetworkServicePag().repliesTo(messageDTO.getId());
         if (messageRepliedTo != null) {
             FXMLLoader fxmlLoader = new FXMLLoader();
             fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
@@ -320,7 +320,7 @@ private boolean ok=true;
 
        if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight ){
            if(labelForReplies.getText().equals("Reply To:")) {
-               rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
+               rootService.getNetworkServicePag().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
                                , List.of(new UserDto<String>(loggedInUsername, null, null))
                                , labelMessageRepliedTo.getText()
                                , LocalDateTime.now()
@@ -330,13 +330,13 @@ private boolean ok=true;
            }
            else{
                if(labelForReplies.getText().equals("Reply All:")){
-                   MessageDTO original = rootService.getNetworkService().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
-                   rootService.getNetworkService().replyAll(original,loggedInUsername,message);
+                   MessageDTO original = rootService.getNetworkServicePag().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
+                   rootService.getNetworkServicePag().replyAll(original,loggedInUsername,message);
                }
            }
        }
        else {
-           rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
+           rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
                    , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
                    message, LocalDateTime.now(), 0L));
        }
