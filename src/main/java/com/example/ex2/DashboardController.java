@@ -79,7 +79,11 @@ public class DashboardController  {
     @FXML
     private TextField textFieldSearchUser;
     @FXML
+    private TextField texfFieldSearchUserForNewMsg;
+    @FXML
     private VBox vboxSearchResult;
+    @FXML
+    private VBox vboxSearchResultForNewMsg;
     @FXML
     private TableView<FriendshipRequestForDisplayUseDTO<String>> tabviewRequests;
     @FXML
@@ -114,6 +118,8 @@ public class DashboardController  {
     private VBox vboxMessagesText;
     @FXML
     private TextField txtFieldTypeMessage;
+    @FXML
+    private TextField txtFieldTypeMessage1;
     @FXML
     private ImageView imgSendMessage;
     @FXML
@@ -231,7 +237,6 @@ public class DashboardController  {
         if(event.getSource().equals(BtnSendMsg)){
             pnlConversation.toBack();
             pnlSendMsg.toFront();
-            //pnlFriends.toFront();
         }
     }
 
@@ -249,6 +254,11 @@ public class DashboardController  {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @FXML
+    private void handleSendNewMessage(){
+        String message =  txtFieldTypeMessage1.getText();
     }
 
     @FXML
@@ -331,9 +341,25 @@ public class DashboardController  {
 
         }
 
+    }
+    @FXML
+    private void handleSearchUserForNewMsg() throws IOException {
+        if(!texfFieldSearchUserForNewMsg.getText().isEmpty()){
+            vboxSearchResultForNewMsg.getChildren().clear();
+            for(UserDto<String> userDto:getUserNamesStartingWith(texfFieldSearchUserForNewMsg.getText())){
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("userDetailsBoxForNewMsg.fxml"));
+                HBox hBox = fxmlLoader.load();
+                UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
+                controller.setRootService(rootService);
+                controller.setData(userDto);
+                vboxSearchResultForNewMsg.getChildren().add(hBox);
+            }
+
+
+        }
 
     }
-
 
     @FXML
     private void handleDeleteUser(){
