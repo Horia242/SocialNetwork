@@ -5,19 +5,9 @@ import ro.ubbcluj.map.Service.NetworkServiceForPaginatedDbRepo;
 
 public class RootService {
 
-    private NetworkService networkService;
     private NetworkServiceForPaginatedDbRepo networkServicePag;
-    public RootService(NetworkService networkService, NetworkServiceForPaginatedDbRepo networkServicePag) {
-        this.networkService = networkService;
+    public RootService( NetworkServiceForPaginatedDbRepo networkServicePag) {
         this.networkServicePag = networkServicePag;
-    }
-
-    public NetworkService getNetworkService() {
-        return networkService;
-    }
-
-    private void setNetworkService(NetworkService networkService) {
-        this.networkService = networkService;
     }
 
     public NetworkServiceForPaginatedDbRepo getNetworkServicePag() {

@@ -116,9 +116,9 @@ public class UserDetailsBoxController  {
         String url = getImagePath(imgSendFriendshipRequest.getImage());
         switch(url){
             case "icons/icons8_plus30px.png":
-                if(rootService.getNetworkService() != null){
+                if(rootService.getNetworkServicePag() != null){
                     try {
-                        rootService.getNetworkService().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
+                        rootService.getNetworkServicePag().sendFriendshipRequest(new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"",""),
                                 new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, LocalDate.now()));
                         imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_paper_plane_30px.png"));
                         Tooltip.install(imgSendFriendshipRequest,new Tooltip("Friendship request sent!Click to withdraw"));
@@ -129,7 +129,7 @@ public class UserDetailsBoxController  {
                 break;
             case "icons/icons8_handshake_orange.png":
                 try {
-                    rootService.getNetworkService().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
+                    rootService.getNetworkServicePag().updateFriendshipRequestStatus(new FriendshipRequestDTO<>(new UserDto<String>(labelEmail.getText(),"",""),
                             new UserDto<String>(loggedInUserEmail,"",""), FriendshipRequestStatus.APPROVED, null));
                     imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_ok_30px.png"));
                     Tooltip.install(imgSendFriendshipRequest,new Tooltip("This user is your friend now"));
@@ -140,7 +140,7 @@ public class UserDetailsBoxController  {
                 break;
             case "icons/icons8_paper_plane_30px.png":
                 try {
-                    if(rootService.getNetworkService().deletePendingFriendshipRequest(
+                    if(rootService.getNetworkServicePag().deletePendingFriendshipRequest(
                             new FriendshipRequestDTO<>(new UserDto<String>(loggedInUserEmail,"","")
                             ,new UserDto<String>(labelEmail.getText(),"",""), FriendshipRequestStatus.PENDING, null))){
                         imgSendFriendshipRequest.setImage(new LocatedImage("icons/icons8_plus30px.png"));

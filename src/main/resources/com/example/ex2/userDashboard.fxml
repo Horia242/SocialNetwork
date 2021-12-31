@@ -146,7 +146,7 @@
                      <children>
                         <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="347.0">
                            <children>
-                              <ScrollPane layoutX="4.0" layoutY="99.0" prefHeight="479.0" prefWidth="329.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                              <ScrollPane fx:id="scrollPaneConversations" layoutX="4.0" layoutY="99.0" prefHeight="479.0" prefWidth="329.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                                  <content>
                                     <VBox fx:id="vboxConversationPartners" prefHeight="472.0" prefWidth="309.0" style="-fx-background-color: #E1E1DF;" />
                                  </content>

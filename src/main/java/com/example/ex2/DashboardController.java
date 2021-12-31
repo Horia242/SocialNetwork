@@ -1,6 +1,7 @@
 package com.example.ex2;
 import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -18,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
@@ -49,8 +51,19 @@ public class DashboardController  {
     private boolean scrollBottom = true;
     private boolean currentDisplayedConversationFullLoaded = false;
     private ConversationPartnerDetailsController openedConversationController;
+    private int friendsDisplayCurrentPage = 0;
+    private int requestsDisplayCurrentPage = 0;
+    private int conversationsDisplayCurrentPage = 0;
+    private int conversationDisplayPageSize = 7;
+    private boolean initFriendsDisplay = true;
+    private boolean initFriendshipRequestDisplay = true;
+    private boolean initConvPartnersDisplay = true;
+    private boolean stopLoadingFriends = false;
+    private boolean stopLoadingRequests = false;
+    private boolean stopLoadingConversations = false;
 
-private boolean ok=true;
+
+    private boolean ok=true;
     @FXML
     private Label txtFrRequestCount;
     @FXML
@@ -131,6 +144,8 @@ private boolean ok=true;
     private Pane paneAccountPage;
     @FXML
     private Label labelForReplies;
+    @FXML
+    private ScrollPane scrollPaneConversations;
 
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
@@ -142,6 +157,32 @@ private boolean ok=true;
         movableDashboard();
         requestNotifyCircle();
         toolTip();
+        Platform.runLater(() -> {
+            ScrollBar tvScrollBar = (ScrollBar) tabviewFriends.lookup(".scroll-bar:vertical");
+            tvScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if ((Double) newValue == 1.0) {
+                    continueAddingFriendsWhenScrollReachesBottom();
+                }
+            });
+
+        });
+        Platform.runLater(() -> {
+            ScrollBar tvScrollBar = (ScrollBar) tabviewRequests.lookup(".scroll-bar:vertical");
+            tvScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
+                if ((Double) newValue == 1.0) {
+                    continueAddingRequestsWhenScrollReachesBottom();
+                }
+            });
+
+        });
+        scrollPaneConversations.vvalueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.doubleValue() == 1.0 ) {
+                System.out.println("Bottom!");
+                //scrollingStarted();
+                loadNextConversationPartners();
+            }
+        });
+
     }
 
     public void setOpenedConversationController(ConversationPartnerDetailsController openedConversationController) {
@@ -169,11 +210,10 @@ private boolean ok=true;
         });
     }
     private void requestNotifyCircle(){
-        int requestsNumber = this.rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(labelUsername.getText()).size();
+        int requestsNumber = this.rootService.getNetworkServicePag().getNumberOfAllPendingFriendshipRequestsForOneUser(labelUsername.getText());
         if(requestsNumber > 0){
             circleRequestsNumber.setFill(Paint.valueOf("#ee0d06"));
             txtFrRequestCount.setText(String.valueOf(requestsNumber));
-
         }
         else
         {
@@ -181,7 +221,6 @@ private boolean ok=true;
         }
     }
     private void toolTip(){
-        //tooltipAcceptFriendshipRequest.setStyle("-fx-background-color:#E4E9E8; -fx-text-fill: black;");
         Tooltip tooltipAcceptFriendshipRequest = new Tooltip("Accept request");
         Tooltip tooltipDeclineFriendshipRequest = new Tooltip("Decline request");
         Tooltip tooltipDeleteFriend = new Tooltip("Delete friend");
@@ -190,7 +229,6 @@ private boolean ok=true;
         Tooltip.install(imgDeleteFriend,tooltipDeleteFriend);
         Tooltip.install(btnSignOut,new Tooltip("Sign out"));
         Tooltip.install(btnSignOut1,new Tooltip("Sign out"));
-
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
@@ -353,7 +391,7 @@ private boolean ok=true;
         if(!textFieldSearchUser.getText().isEmpty()){
             vboxSearchResult.getChildren().clear();
             try {
-                List<FriendshipDto<String>> userFriends = rootService.getNetworkService().getFriendshipList(labelUsername.getText());
+                List<FriendshipDto<String>> userFriends = rootService.getNetworkServicePag().getFriendshipList(labelUsername.getText(),new PageRequest(friendsDisplayCurrentPage,20));
                 for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
                 {
                     FXMLLoader fxmlLoader = new FXMLLoader();
@@ -370,7 +408,7 @@ private boolean ok=true;
                             if (userFriends.stream().anyMatch(isBetweenUsersFriends)) {
                                 controller.setData(userDto, 0);
                             } else {
-                                FriendshipRequestDTO<String> friendshipRequestDTO = rootService.getNetworkService().existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
+                                FriendshipRequestDTO<String> friendshipRequestDTO = rootService.getNetworkServicePag().existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
                                 if (friendshipRequestDTO != null) {
                                     if (friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
                                         controller.setData(userDto, 1);
@@ -405,7 +443,7 @@ private boolean ok=true;
     @FXML
     private void handleDeleteUser(){
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
-        rootService.getNetworkService().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
+        rootService.getNetworkServicePag().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
         displayUserFriends(labelUsername.getText());
 
     }
@@ -416,7 +454,7 @@ private boolean ok=true;
             FriendshipRequestForDisplayUseDTO<String> selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
-            rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
+            rootService.getNetworkServicePag().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
             requestNotifyCircle();
         }
@@ -428,51 +466,89 @@ private boolean ok=true;
             FriendshipRequestForDisplayUseDTO<String> selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.REJECTED);
-            rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
+            rootService.getNetworkServicePag().updateFriendshipRequestStatus(friendshipRequestDTO);
             displayUserFriendsRequests(labelUsername.getText());
             requestNotifyCircle();
         }
     }
 
-
-    private void displayUserFriends(String userEmail){
-        tabviewFriends.getItems().clear();
-        tabcolEmail.setCellValueFactory(new PropertyValueFactory<>("userID"));
-        tabcolFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        tabcolLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+    private int friendsPageSize = 10;
+    private List<FriendshipDto<String>> getFriendsPage(){
         try {
-
-            for(FriendshipDto<String> friendshipDto: rootService.getNetworkService().getFriendshipList(userEmail)){
+            List<FriendshipDto<String>> all = rootService.getNetworkServicePag().getFriendshipList(loggedInUsername, new PageRequest(friendsDisplayCurrentPage, friendsPageSize));
+            if(all == null)return null;
+            friendsDisplayCurrentPage += 1;
+            return all;
+        } catch (InsufficientDataToExecuteTaskException | RepoError e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    private void continueAddingFriendsWhenScrollReachesBottom(){
+        List<FriendshipDto<String>> all = getFriendsPage();
+        if(all != null) {
+            for (FriendshipDto<String> friendshipDto : all) {
                 UserDto<String> userDto;
-                if(friendshipDto.getUser1().getUserID().equals(userEmail))
+                if (friendshipDto.getUser1().getUserID().equals(loggedInUsername))
                     userDto = friendshipDto.getUser2();
                 else
                     userDto = friendshipDto.getUser1();
                 tabviewFriends.getItems().add(new UserDto<String>(userDto.getUserID(), userDto.getFirstName(), userDto.getLastName()));
             }
-        } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-            e.printStackTrace();
         }
-        pnlFriends.toFront();
     }
 
+    private void displayUserFriends(String userEmail){
+        friendsDisplayCurrentPage = 0;
+        tabviewFriends.getItems().clear();
+        tabcolEmail.setCellValueFactory(new PropertyValueFactory<>("userID"));
+        tabcolFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        tabcolLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        continueAddingFriendsWhenScrollReachesBottom();
+        pnlFriends.toFront();
+
+    }
+
+    private int requestsPageSize = 10;
+    private List<FriendshipRequestDTO<String>> getRequestsPage(){
+        List<FriendshipRequestDTO<String>> all  = rootService.getNetworkServicePag().getAllPendingFriendshipRequestForOneUser(loggedInUsername,new PageRequest(requestsDisplayCurrentPage,requestsPageSize));
+        if(all == null)return null;
+        requestsDisplayCurrentPage += 1;
+        return all;
+    }
+
+    private void continueAddingRequestsWhenScrollReachesBottom(){
+        List<FriendshipRequestDTO<String>> all = getRequestsPage();
+        if(all != null) {
+            for (FriendshipRequestDTO<String> friendshipRequestDTO : all) {
+                tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(), friendshipRequestDTO.getFrom().getLastName(), friendshipRequestDTO.getStatus(), friendshipRequestDTO.getDate(), friendshipRequestDTO));
+            }
+        }
+    }
     private void displayUserFriendsRequests(String userEmail) {
         tabviewRequests.getItems().clear();
-        tbl_nume.setCellValueFactory(new PropertyValueFactory<>("name"));
-        tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
-        tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
-        tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
-        for (FriendshipRequestDTO<String> friendshipRequestDTO : rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(userEmail)) {
-            tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(),friendshipRequestDTO.getFrom().getLastName(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate(),friendshipRequestDTO));
+        requestsDisplayCurrentPage = 0;
+        if(initFriendshipRequestDisplay) {
+            tbl_nume.setCellValueFactory(new PropertyValueFactory<>("name"));
+            tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
+            tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
+            tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
+            continueAddingRequestsWhenScrollReachesBottom();
+            pnlFriendRequests.toFront();
         }
-        pnlFriendRequests.toFront();
     }
 
-    public void displayUserConversationPartners(String userEmail){
-            vboxConversationPartners.getChildren().clear();
-            vboxConversationPartners.setSpacing(7);
-            for(UserDto<String> userDto:rootService.getNetworkService().getAllUserConversationPartners(userEmail)){
-                if(!userDto.getUserID().equals(loggedInUsername)) {
+    private List<UserDto<String>> getCurrentConversationPage(){
+        List<UserDto<String>> all =  rootService.getNetworkServicePag().getAllUserConversationPartners(loggedInUsername,new PageRequest(conversationsDisplayCurrentPage,conversationDisplayPageSize));
+        if(all == null){stopLoadingConversations = true;return null;}
+        conversationsDisplayCurrentPage += 1;
+        return all;
+    }
+    private void loadNextConversationPartners(){
+        List<UserDto<String>> all = getCurrentConversationPage();
+        if(all != null) {
+            for (UserDto<String> userDto : all) {
+                if (!userDto.getUserID().equals(loggedInUsername)) {
                     FXMLLoader fxmlLoader = new FXMLLoader();
                     fxmlLoader.setLocation(getClass().getResource("conversationPartnerDetails.fxml"));
                     try {
@@ -485,11 +561,14 @@ private boolean ok=true;
                     }
                 }
             }
+        }
+
     }
-
-
-    private void resizeTextArea(TextArea textArea){
-
+    public void displayUserConversationPartners(String userEmail){
+               conversationsDisplayCurrentPage = 0;
+               vboxConversationPartners.getChildren().clear();
+               vboxConversationPartners.setSpacing(7);
+               loadNextConversationPartners();
     }
 
     private void updateScrollPaneView(String conversationPartnerEmail ,List<MessageDTO> messageDTOToAdd) {
@@ -538,7 +617,7 @@ private boolean ok=true;
                 }
             });
             Pane pane = new Pane();
-            MessageDTO messageRepliedTo = rootService.getNetworkService().repliesTo(messageDTO.getId());
+            MessageDTO messageRepliedTo = rootService.getNetworkServicePag().repliesTo(messageDTO.getId());
             if (messageRepliedTo != null) {
                 FXMLLoader fxmlLoader = new FXMLLoader();
                 fxmlLoader.setLocation(getClass().getResource("repliesToPane.fxml"));
@@ -620,10 +699,6 @@ private boolean ok=true;
                 scrollingStarted();
             }
         });
-
-    /*    vboxMessagesText.heightProperty().addListener((ChangeListener) (observable, oldvalue, newValue) ->
-
-                scrollPaneMessages.setVvalue((Double) newValue));*/
         vboxMessagesText.heightProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -635,8 +710,8 @@ private boolean ok=true;
         });
     }
 
+
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
-        Predicate<UserDto<String>> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
-        return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
+        return rootService.getNetworkServicePag().getUsersForWhichNameStartsWith(startsWith);
     }
 }
