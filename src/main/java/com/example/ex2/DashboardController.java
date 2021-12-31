@@ -259,6 +259,7 @@ public class DashboardController  {
     @FXML
     private void handleSendNewMessage(){
         String message =  txtFieldTypeMessage1.getText();
+        vboxSearchResultForNewMsg.getChildren().get(0);
     }
 
     @FXML
@@ -352,7 +353,7 @@ public class DashboardController  {
                 HBox hBox = fxmlLoader.load();
                 UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
                 controller.setRootService(rootService);
-                controller.setData(userDto);
+                controller.setData(userDto,0,txtFieldTypeMessage1.getText());
                 vboxSearchResultForNewMsg.getChildren().add(hBox);
             }
 

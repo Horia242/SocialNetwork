@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.image.ImageView?>
 
 <HBox fx:id="hboxUserDetailsForNewMsg" prefHeight="50.0" prefWidth="478.0" styleClass="box2" stylesheets="@../../../css/styling.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.UserDetailsBoxForNewMsgController">
    <children>
@@ -32,6 +32,10 @@
             <Insets bottom="10.0" left="40.0" top="10.0" />
          </HBox.margin>
       </Label>
-      <CheckBox mnemonicParsing="false" prefHeight="50.0" prefWidth="18.0" />
+      <ImageView fx:id="imgSendNewMsg" fitHeight="30.0" fitWidth="28.0" onMouseClicked="#handleSendNewMsg" pickOnBounds="true" preserveRatio="true">
+         <HBox.margin>
+            <Insets bottom="10.0" left="110.0" right="20.0" top="10.0" />
+         </HBox.margin>
+      </ImageView>
    </children>
 </HBox>
