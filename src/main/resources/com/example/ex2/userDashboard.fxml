@@ -248,6 +248,7 @@
                         </HBox>
                      </children>
                   </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -287,14 +288,13 @@
                               <Image url="@../../../icons/icons8_exit_30px.png" />
                            </image>
                         </ImageView>
-                        <ScrollPane layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                        <ScrollPane fx:id="scrollPaneSearch" layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                            <content>
                               <VBox fx:id="vboxSearchResult" prefHeight="98.0" prefWidth="493.0" style="-fx-background-color: #E1E1DF;" />
                            </content>
                         </ScrollPane>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>
