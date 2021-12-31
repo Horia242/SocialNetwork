@@ -390,49 +390,44 @@ public class DashboardController  {
     private void handleSearchUser(){
         if(!textFieldSearchUser.getText().isEmpty()){
             vboxSearchResult.getChildren().clear();
-            try {
-                List<FriendshipDto<String>> userFriends = rootService.getNetworkServicePag().getFriendshipList(labelUsername.getText(),new PageRequest(friendsDisplayCurrentPage,20));
-                for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
-                {
-                    FXMLLoader fxmlLoader = new FXMLLoader();
-                    fxmlLoader.setLocation(getClass().getResource("userDetailsBox.fxml"));
-                    try{
-                        HBox hBox = fxmlLoader.load();
-                        UserDetailsBoxController controller = fxmlLoader.getController();
-                        controller.setRootService(rootService);
-                        controller.setLoggedInUserEmail(labelUsername.getText());
-                        if(!userDto.getUserID().equals(labelUsername.getText())) {
-                            Predicate<FriendshipDto<String>> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
-                                    || frienshipDto.getUser2().getUserID().equals(userDto.getUserID());
+            for(UserDto<String> userDto:getUserNamesStartingWith(textFieldSearchUser.getText()))
+            {
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("userDetailsBox.fxml"));
+                try{
+                    HBox hBox = fxmlLoader.load();
+                    UserDetailsBoxController controller = fxmlLoader.getController();
+                    controller.setRootService(rootService);
+                    controller.setLoggedInUserEmail(labelUsername.getText());
+                    if(!userDto.getUserID().equals(labelUsername.getText())) {
+                        Predicate<FriendshipDto<String>> isBetweenUsersFriends = frienshipDto -> frienshipDto.getUser1().getUserID().equals(userDto.getUserID())
+                                || frienshipDto.getUser2().getUserID().equals(userDto.getUserID());
 
-                            if (userFriends.stream().anyMatch(isBetweenUsersFriends)) {
-                                controller.setData(userDto, 0);
-                            } else {
-                                FriendshipRequestDTO<String> friendshipRequestDTO = rootService.getNetworkServicePag().existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
-                                if (friendshipRequestDTO != null) {
-                                    if (friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
-                                        controller.setData(userDto, 1);
-                                    else {
-                                        if (friendshipRequestDTO.getFrom().getUserID().equals(userDto.getUserID()))
-                                            controller.setData(userDto, 3);
-                                    }
-                                } else {
-                                    controller.setData(userDto, 2);
+                        if (rootService.getNetworkServicePag().areFriends(userDto.getUserID(),loggedInUsername)) {
+                            controller.setData(userDto, 0);
+                        } else {
+                            FriendshipRequestDTO<String> friendshipRequestDTO = rootService.getNetworkServicePag().existsPendingFriendshipRequest(new Tuple<String, String>(labelUsername.getText(), userDto.getUserID()));
+                            if (friendshipRequestDTO != null) {
+                                if (friendshipRequestDTO.getFrom().getUserID().equals(labelUsername.getText()))
+                                    controller.setData(userDto, 1);
+                                else {
+                                    if (friendshipRequestDTO.getFrom().getUserID().equals(userDto.getUserID()))
+                                        controller.setData(userDto, 3);
                                 }
+                            } else {
+                                controller.setData(userDto, 2);
                             }
                         }
-                        else{
-                            controller.setData(userDto,4);
-                        }
-                        vboxSearchResult.getChildren().add(hBox);
-                    }catch(IOException e){
-                        e.printStackTrace();
                     }
+                    else{
+                        controller.setData(userDto,4);
+                    }
+                    vboxSearchResult.getChildren().add(hBox);
+                }catch(IOException e){
+                    e.printStackTrace();
                 }
-                vboxSearchResult.toFront();
-            } catch (InsufficientDataToExecuteTaskException | RepoError e) {
-                e.printStackTrace();
             }
+            vboxSearchResult.toFront();
 
         }
 
