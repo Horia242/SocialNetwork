@@ -38,6 +38,7 @@ public class UserDetailsBoxForNewMsgController {
     @FXML
     private AnchorPane anchorDashboardRootPane;
     private String message;
+    private DashboardController dashboardController;
 
     public void setRootService(RootService rootService) {
         this.rootService = rootService;
@@ -49,32 +50,35 @@ public class UserDetailsBoxForNewMsgController {
         labelLastName.setText(userDto.getLastName());
         labelEmail.setText(userDto.getUserID());
         Tooltip imageViewTooltip = new Tooltip("");
-        Image imgFriendshipStatus = null;
+        Image imgMsgStatus = null;
         this.message = message;
         switch (descriptionImageFlag) {
             case 0 -> {
-                imgFriendshipStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
+                imgMsgStatus = new LocatedImage("icons/icons8_paper_plane_30px.png");
                 imageViewTooltip.setText("You didn't sent the message to this user");
             }
             case 1 -> {
-                imgFriendshipStatus = new LocatedImage("icons/accept.png");
+                imgMsgStatus = new LocatedImage("icons/accept.png");
                 imageViewTooltip.setText("You sent the message to this user");
             }
             default -> {
             }
         }
-        if(imgFriendshipStatus != null) {
-            imgSendNewMsg.setImage(imgFriendshipStatus);
+        if(imgMsgStatus != null) {
+            imgSendNewMsg.setImage(imgMsgStatus);
             Tooltip.install(imgSendNewMsg,imageViewTooltip);
         }
     }
 
+    public void setDashboardController(DashboardController dashboardController){
+        this.dashboardController = dashboardController;
+    }
+
     @FXML
     private void handleSendNewMsg()  {
-        if(rootService.getNetworkService() != null){
-                List<UserDto<String>> recipients = new ArrayList<>();
-                recipients.add(new UserDto<>(labelEmail.getText(), "", ""));
-                rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<>("ex@ex.com", "", ""), recipients, message, LocalDateTime.now(), 0L));
+        if(dashboardController != null){
+                UserDto<String> userDto = new UserDto<String>(labelEmail.getText(), "", "");
+                dashboardController.addRecipient(userDto);
                 imgSendNewMsg.setImage(new LocatedImage("icons/accept.png"));
                 Tooltip.install(imgSendNewMsg, new Tooltip("You sent the message to this user"));
         }

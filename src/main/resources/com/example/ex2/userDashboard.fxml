@@ -163,9 +163,9 @@
                                     </Label>
                                  </children>
                               </HBox>
-                              <ImageView fx:id="BtnSendMsg" fitHeight="29.0" fitWidth="28.0" layoutX="285.0" layoutY="20.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="BtnSendMsg" fitHeight="26.0" fitWidth="30.0" layoutX="245.0" layoutY="59.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../../../icons/icons8_people_30px.png" />
+                                    <Image url="@../../../icons/plus.png" />
                                  </image>
                               </ImageView>
                            </children>

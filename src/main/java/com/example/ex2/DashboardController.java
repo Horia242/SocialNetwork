@@ -4,6 +4,7 @@ import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -32,14 +33,16 @@ import ro.ubbcluj.map.utils.events.Event;
 import ro.ubbcluj.map.utils.observer.Observer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DashboardController  {
+public class DashboardController  implements Observer{
 
     RootService rootService;
     String loggedInUsername;
@@ -138,6 +141,7 @@ public class DashboardController  {
     private Pane paneAccountPage;
     @FXML
     private Label labelForReplies;
+    private List<UserDto<String>> recipientsList;
 
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
@@ -149,6 +153,7 @@ public class DashboardController  {
         movableDashboard();
         requestNotifyCircle();
         toolTip();
+        recipientsList = new ArrayList<>();
     }
     private void movableDashboard(){
         borderPaneDashboard.setOnMousePressed(new EventHandler<MouseEvent>() {
@@ -196,6 +201,7 @@ public class DashboardController  {
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
+        rootService.getNetworkService().addObserver(this);
     }
     public void setLoggedInUserEmail(String username){
         labelUsername.setText(username);
@@ -210,16 +216,22 @@ public class DashboardController  {
     private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
         scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight);
+//        pnlConversation.toFront();
         vboxMessagesText.toFront();
         scrollPaneMessages.toFront();
     }
+
+    private boolean composeMessageMode = false;
+
     @FXML
     private void handleMouseEvent(MouseEvent event){
         if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
             displayUserFriends(labelUsername.getText());
+            pnlFriends.toFront();
         }
         if(event.getSource().equals(btnShowFriendRequests) || event.getSource().equals(labelFriendRequests)){
             displayUserFriendsRequests(labelUsername.getText());
+            pnlFriendRequests.toFront();
             requestNotifyCircle();
         }
         if(event.getSource().equals(textFieldSearchUser)){
@@ -231,12 +243,13 @@ public class DashboardController  {
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
             pnlChat.toFront();
-            pnlSendMsg.toBack();
+//            pnlSendMsg.toBack();
             pnlConversation.toFront();
         }
         if(event.getSource().equals(BtnSendMsg)){
             pnlConversation.toBack();
             pnlSendMsg.toFront();
+            composeMessageMode = true;
         }
     }
 
@@ -265,32 +278,39 @@ public class DashboardController  {
     @FXML
     private void handleSendMessage(){
        String message =  txtFieldTypeMessage.getText();
+        if (composeMessageMode){
+            //labelForReplies.toBack();
+            rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername,"",""),recipientsList,txtFieldTypeMessage1.getText(),LocalDateTime.now(),0L));
+            recipientsList.clear();
+            displayUserConversationPartners(loggedInUsername);
+        }
+        else {
+            if (scrollPaneMessages.getHeight() < scrollPaneMessagesHeight) {
+                if (labelForReplies.getText().equals("Reply To:")) {
+                    rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
+                                    , List.of(new UserDto<String>(loggedInUsername, null, null))
+                                    , labelMessageRepliedTo.getText()
+                                    , LocalDateTime.now()
+                                    , Long.parseLong(labelSelectedMessageId.getText()))
+                            , loggedInUsername
+                            , message);
+                } else {
+                    if (labelForReplies.getText().equals("Reply All:")) {
+                        MessageDTO original = rootService.getNetworkService().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
+                        rootService.getNetworkService().replyAll(original, loggedInUsername, message);
+                    }
+                }
+            } else {
+                rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
+                        , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
+                        message, LocalDateTime.now(), 0L));
+            }
 
-       if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight ){
-           if(labelForReplies.getText().equals("Reply To:")) {
-               rootService.getNetworkService().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
-                               , List.of(new UserDto<String>(loggedInUsername, null, null))
-                               , labelMessageRepliedTo.getText()
-                               , LocalDateTime.now()
-                               , Long.parseLong(labelSelectedMessageId.getText()))
-                       , loggedInUsername
-                       , message);
-           }
-           else{
-               if(labelForReplies.getText().equals("Reply All:")){
-                   MessageDTO original = rootService.getNetworkService().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
-                   rootService.getNetworkService().replyAll(original,loggedInUsername,message);
-               }
-           }
-       }
-       else {
-           rootService.getNetworkService().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
-                   , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
-                   message, LocalDateTime.now(), 0L));
-       }
+            displayUserConversationMessages(currentChatPartnerShowingId);
+        }
 
-       displayUserConversationMessages(currentChatPartnerShowingId);
-       txtFieldTypeMessage.clear();
+            txtFieldTypeMessage.clear();
+            txtFieldTypeMessage1.clear();
     }
     @FXML
     private void handleSearchUser(){
@@ -343,8 +363,12 @@ public class DashboardController  {
         }
 
     }
+    public void addRecipient(UserDto<String> userDto){
+        recipientsList.add(userDto);
+    }
+
     @FXML
-    private void handleSearchUserForNewMsg() throws IOException {
+    private void handleSearchUserForNewMsg() throws IOException, NoSuchFieldException, IllegalAccessException {
         if(!texfFieldSearchUserForNewMsg.getText().isEmpty()){
             vboxSearchResultForNewMsg.getChildren().clear();
             for(UserDto<String> userDto:getUserNamesStartingWith(texfFieldSearchUserForNewMsg.getText())){
@@ -352,7 +376,7 @@ public class DashboardController  {
                 fxmlLoader.setLocation(getClass().getResource("userDetailsBoxForNewMsg.fxml"));
                 HBox hBox = fxmlLoader.load();
                 UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
-                controller.setRootService(rootService);
+                controller.setDashboardController(this);
                 controller.setData(userDto,0,txtFieldTypeMessage1.getText());
                 vboxSearchResultForNewMsg.getChildren().add(hBox);
             }
@@ -366,7 +390,7 @@ public class DashboardController  {
     private void handleDeleteUser(){
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
         rootService.getNetworkService().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
-        displayUserFriends(labelUsername.getText());
+        //displayUserFriends(labelUsername.getText());
 
     }
 
@@ -377,7 +401,7 @@ public class DashboardController  {
             FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
             rootService.getNetworkService().updateFriendshipRequestStatus(friendshipRequestDTO);
-            displayUserFriendsRequests(labelUsername.getText());
+            //displayUserFriendsRequests(labelUsername.getText());
             requestNotifyCircle();
         }
     }
@@ -413,7 +437,7 @@ public class DashboardController  {
         } catch (InsufficientDataToExecuteTaskException | RepoError e) {
             e.printStackTrace();
         }
-        pnlFriends.toFront();
+        //pnlFriends.toFront();
     }
 
     private void displayUserFriendsRequests(String userEmail) {
@@ -425,7 +449,7 @@ public class DashboardController  {
         for (FriendshipRequestDTO<String> friendshipRequestDTO : rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(userEmail)) {
             tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(),friendshipRequestDTO.getFrom().getLastName(),friendshipRequestDTO.getStatus(),friendshipRequestDTO.getDate(),friendshipRequestDTO));
         }
-        pnlFriendRequests.toFront();
+        //pnlFriendRequests.toFront();
     }
 
     public void displayUserConversationPartners(String userEmail){
@@ -557,5 +581,13 @@ public class DashboardController  {
     private List<UserDto<String>> getUserNamesStartingWith(String startsWith){
         Predicate<UserDto<String>> userDtoPredicateStartsWith = stringUserDto -> stringUserDto.getFirstName().startsWith(startsWith) || stringUserDto.getLastName().startsWith(startsWith);
         return rootService.getNetworkService().getAllUsers().stream().filter(userDtoPredicateStartsWith).collect(Collectors.toList());
+    }
+
+    @Override
+    public void update(Event event) {
+        displayUserFriendsRequests(labelUsername.getText());
+        displayUserConversationPartners(loggedInUsername);
+        displayUserFriends(labelUsername.getText());
+
     }
 }
