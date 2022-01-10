@@ -252,12 +252,16 @@
 
 .boxHovered
 {
--fx-background-color: #CEEDD2
+-fx-background-color: #AFEFCC
+
+
 
 ;
 }
 .boxHovered:hover{
-    -fx-background-color: #CEEDD2
+    -fx-background-color: #AFEFCC
+
+
 
 ;
 }
