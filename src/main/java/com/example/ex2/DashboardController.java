@@ -149,6 +149,11 @@ public class DashboardController  {
     private ScrollPane scrollPaneConversations;
     @FXML
     private ScrollPane scrollPaneSearch;
+    @FXML
+    private HBox hboxFriends;
+    String hovered = "";
+    @FXML
+    private HBox hboxRequests;
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
     private String currentChatPartnerShowingId;
@@ -256,13 +261,52 @@ public class DashboardController  {
         vboxMessagesText.toFront();
         scrollPaneMessages.toFront();
     }
+
+
+    private void resetHover(int hboxNr){
+
+        switch (hboxNr){
+            case 0:
+                hboxFriends.getStyleClass().add("boxHovered");
+                hboxRequests.getStyleClass().add("box1");
+                hboxChat.getStyleClass().add("box1");
+                circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                break;
+            case 1:
+                hboxFriends.getStyleClass().add("box1");
+                hboxRequests.getStyleClass().add("boxHovered");
+                hboxRequests.getStyleClass().add("box1");
+                hboxChat.getStyleClass().add("box1");
+                circleRequestsNumber.setFill(Paint.valueOf("#e8e3b3"));
+                break;
+            case 2:
+                hboxFriends.getStyleClass().add("box1");
+                hboxRequests.getStyleClass().add("box1");
+                hboxChat.getStyleClass().add("boxHovered");
+                circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                break;
+            default:
+                break;
+        }
+    }
+   private void resetStyles(){
+        hboxRequests.getStyleClass().clear();
+        hboxFriends.getStyleClass().clear();
+        hboxChat.getStyleClass().clear();
+    }
     @FXML
     private void handleMouseEvent(MouseEvent event){
         if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
             displayUserFriends(labelUsername.getText());
+            resetStyles();
+            resetHover(0);
+
         }
         if(event.getSource().equals(btnShowFriendRequests) || event.getSource().equals(labelFriendRequests)){
             displayUserFriendsRequests(labelUsername.getText());
+            resetStyles();
+            resetHover(1);
+
             requestNotifyCircle();
         }
         if(event.getSource().equals(textFieldSearchUser)){
@@ -271,6 +315,8 @@ public class DashboardController  {
         }
         if(event.getSource().equals(hboxChat)){
                 displayUserConversationPartners(loggedInUsername);
+                resetStyles();
+                resetHover(2);
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
             pnlChat.toFront();

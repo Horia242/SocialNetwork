@@ -70,7 +70,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox layoutX="7.0" layoutY="121.0" prefHeight="42.0" prefWidth="278.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxRequests" layoutY="121.0" prefHeight="42.0" prefWidth="285.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="36.0">
                            <children>
@@ -84,7 +84,7 @@
                                     <Image url="@../../../icons/icons8_add_user_group_man_man_30px_4.png" />
                                  </image>
                                  <StackPane.margin>
-                                    <Insets left="50.0" right="60.0" top="10.0" />
+                                    <Insets left="60.0" right="60.0" top="10.0" />
                                  </StackPane.margin>
                               </ImageView>
                               <Label fx:id="txtFrRequestCount" text="0" textFill="#eaeae9">
@@ -108,7 +108,7 @@
                               <Font size="15.0" />
                            </font>
                            <HBox.margin>
-                              <Insets left="10.0" />
+                              <Insets left="14.0" />
                            </HBox.margin>
                            <padding>
                               <Insets top="10.0" />
