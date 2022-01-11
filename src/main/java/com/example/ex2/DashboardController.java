@@ -177,8 +177,16 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private HBox hboxRequests;
     @FXML
     private ScrollPane scrollPaneMessages1;
-
-
+    @FXML
+    private HBox hboxEvent;
+    @FXML
+    private ImageView imgEvent;
+    @FXML
+    private Label labelEvent;
+    @FXML
+    private Pane paneEvents;
+    @FXML
+    private Pane paneEventsDetails;
 
     private List<UserDto<String>> recipientsList = new ArrayList<>();
 
@@ -326,20 +334,20 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 hboxFriends.getStyleClass().add("boxHovered");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
-                circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                //circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
             }
             case 1 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("boxHovered");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
-                circleRequestsNumber.setFill(Paint.valueOf("#e8e3b3"));
+                //circleRequestsNumber.setFill(Paint.valueOf("#e8e3b3"));
             }
             case 2 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("boxHovered");
-                circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                //circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
             }
             default -> {
             }
@@ -383,8 +391,12 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 resetHover(2);
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
+            paneEvents.toBack();
             pnlChat.toFront();
             pnlConversation.toFront();
+        }
+        if(event.getSource().equals(hboxEvent) || event.getSource().equals(labelEvent) || event.getSource().equals(imgEvent)){
+            paneEvents.toFront();
         }
 
     }
