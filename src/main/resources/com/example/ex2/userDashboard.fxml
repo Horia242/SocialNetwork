@@ -254,7 +254,7 @@
                            <children>
                               <Pane fx:id="pnlSendMsg" prefHeight="582.0" prefWidth="417.0" style="-fx-background-color: #E1E1DF;">
                                  <children>
-                                    <Pane layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="82.0" prefWidth="404.0">
+                                    <Pane layoutX="6.0" layoutY="505.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="74.0" prefWidth="404.0">
                                        <children>
                                           <TextField fx:id="txtFieldTypeMessage1" layoutX="54.0" layoutY="18.0" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
                                           <ImageView fx:id="imgSendMessage1" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
@@ -271,9 +271,9 @@
                                           </DropShadow>
                                        </effect>
                                     </Pane>
-                                    <ScrollPane fx:id="scrollPaneMessages1" layoutX="1.0" layoutY="39.0" prefHeight="461.0" prefWidth="414.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                    <ScrollPane fx:id="scrollPaneMessages1" layoutX="1.0" layoutY="39.0" prefHeight="475.0" prefWidth="414.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                                        <content>
-                                          <VBox fx:id="vboxSearchResultForNewMsg" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="454.0" prefWidth="401.0" style="-fx-background-color: #E1E1DF;" />
+                                          <VBox fx:id="vboxSearchResultForNewMsg" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="472.0" prefWidth="401.0" style="-fx-background-color: #E1E1DF;" />
                                        </content>
                                     </ScrollPane>
                                     <HBox prefHeight="48.0" prefWidth="417.0">

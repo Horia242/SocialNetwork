@@ -175,7 +175,8 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     String hovered = "";
     @FXML
     private HBox hboxRequests;
-
+    @FXML
+    private ScrollPane scrollPaneMessages1;
 
 
 
@@ -188,6 +189,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private Stage stage;
     private double xOffset = 0;
     private double yOffset = 0;
+    private int sendMessagePlusSignClickCount = 0;
     public void init(){
         movableDashboard();
         requestNotifyCircle();
@@ -223,7 +225,27 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 continueDisplayingSearchResults();
             }
         });
-
+        btnSendMsg.setOnMouseClicked(mouseEvent ->
+                {
+                    if(sendMessagePlusSignClickCount == 0){
+                        pnlConversation.toBack();
+                        pnlSendMsg.toFront();
+                        composeMessageMode = true;
+                        this.recipientsList.clear();
+                        vboxSearchResultForNewMsg.getChildren().clear();
+                        txtFieldTypeMessage1.clear();
+                        texfFieldSearchUserForNewMsg.clear();
+                        sendMessagePlusSignClickCount = 1;
+                    }
+                    else{
+                        sendMessagePlusSignClickCount = 0;
+                        composeMessageMode = false;
+                        pnlConversation.toFront();
+                        this.recipientsList.clear();
+                        vboxMessagesText.toFront();
+                    }
+                }
+                );
     }
 
     public void setOpenedConversationController(ConversationPartnerDetailsController openedConversationController) {
@@ -272,6 +294,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         Tooltip.install(imgDeleteFriend,tooltipDeleteFriend);
         Tooltip.install(btnSignOut,new Tooltip("Sign out"));
         Tooltip.install(btnSignOut1,new Tooltip("Sign out"));
+        Tooltip.install(btnSendMsg,new Tooltip("Compose a new message"));
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
@@ -298,28 +321,28 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
 
     private void resetHover(int hboxNr){
 
-        switch (hboxNr){
-            case 0:
+        switch (hboxNr) {
+            case 0 -> {
                 hboxFriends.getStyleClass().add("boxHovered");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
                 circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
-                break;
-            case 1:
+            }
+            case 1 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("boxHovered");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
                 circleRequestsNumber.setFill(Paint.valueOf("#e8e3b3"));
-                break;
-            case 2:
+            }
+            case 2 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("boxHovered");
                 circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
-                break;
-            default:
-                break;
+            }
+            default -> {
+            }
         }
     }
    private void resetStyles(){
@@ -362,12 +385,6 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             pnlFriendRequests.toBack();
             pnlChat.toFront();
             pnlConversation.toFront();
-        }
-        if(event.getSource().equals(btnSendMsg)){
-            pnlConversation.toBack();
-            pnlSendMsg.toFront();
-            composeMessageMode = true;
-            this.recipientsList.clear();
         }
 
     }
@@ -464,10 +481,11 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                String message = txtFieldTypeMessage1.getText();
                if(message.length() > 0) {
                    rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, "", ""), recipientsList, txtFieldTypeMessage1.getText(), LocalDateTime.now(), 0L));
-                   pnlSendMsg.toBack();
-                   pnlConversation.toFront();
                    composeMessageMode = false;
-                   //  displayUserConversationPartners(loggedInUsername);
+                   pnlFriends.toBack();
+                   pnlFriendRequests.toBack();
+                   pnlChat.toFront();
+                   pnlConversation.toFront();
                }
            } else {
                String message =  txtFieldTypeMessage.getText();
