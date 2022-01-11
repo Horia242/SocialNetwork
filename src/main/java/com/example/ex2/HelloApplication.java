@@ -41,9 +41,9 @@ public class HelloApplication extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        String url = "jdbc:postgresql://localhost:5432/SocialNetwork";
+        String url = "jdbc:postgresql://localhost:5432/SocialNetworkDB";
         String username = "postgres";
-        String password = "polopolo123";
+        String password = "mateinfo24";
         setDataBaseConnection(url,username,password);
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("loginPage.fxml"));
         Scene scene = new Scene(fxmlLoader.load());

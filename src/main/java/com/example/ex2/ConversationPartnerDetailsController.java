@@ -56,7 +56,9 @@ public class ConversationPartnerDetailsController {
                 new UserDto<String>(currentChatPartner.getUserID(),null,null)
                 ,new UserDto<String>(loggedInUsername,null,null)
                 ,0L);
+
         rootService.getNetworkServicePag().setConversationLastReadMessage(conversationDTO);
+
 
         handleConversationUnreadMessagesNotifications();
     }

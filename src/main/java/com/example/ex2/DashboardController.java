@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -36,14 +37,16 @@ import ro.ubbcluj.map.utils.events.Event;
 import ro.ubbcluj.map.utils.observer.Observer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DashboardController  {
+public class DashboardController  implements Observer{
 
     RootService rootService;
     String loggedInUsername;
@@ -80,6 +83,10 @@ public class DashboardController  {
     @FXML
     private Pane pnlFriendRequests;
     @FXML
+    private Pane pnlConversation;
+    @FXML
+    private Pane pnlSendMsg;
+    @FXML
     private Label labelUsername;
     @FXML
     private Label labelFriends;
@@ -96,7 +103,11 @@ public class DashboardController  {
     @FXML
     private TextField textFieldSearchUser;
     @FXML
+    private TextField texfFieldSearchUserForNewMsg;
+    @FXML
     private VBox vboxSearchResult;
+    @FXML
+    private VBox vboxSearchResultForNewMsg;
     @FXML
     private TableView<FriendshipRequestForDisplayUseDTO<String>> tabviewRequests;
     @FXML
@@ -118,15 +129,21 @@ public class DashboardController  {
     @FXML
     private ImageView btnSignOut1;
     @FXML
+    private ImageView BtnSendMsg;
+    @FXML
     private HBox hboxChat;
     @FXML
     private Pane pnlChat;
+    @FXML
+    private Pane pane_for_new_msg;
     @FXML
     private VBox vboxConversationPartners;
     @FXML
     private VBox vboxMessagesText;
     @FXML
     private TextField txtFieldTypeMessage;
+    @FXML
+    private TextField txtFieldTypeMessage1;
     @FXML
     private ImageView imgSendMessage;
     @FXML
@@ -145,6 +162,7 @@ public class DashboardController  {
     private Pane paneAccountPage;
     @FXML
     private Label labelForReplies;
+
     @FXML
     private ScrollPane scrollPaneConversations;
     @FXML
@@ -154,6 +172,10 @@ public class DashboardController  {
     String hovered = "";
     @FXML
     private HBox hboxRequests;
+
+    private List<UserDto<String>> recipientsList;
+
+
     private final int scrollPaneMessagesHeight = 417;
     private final int  vboxMessagesTextHeight = 413;
     private String currentChatPartnerShowingId;
@@ -164,6 +186,7 @@ public class DashboardController  {
         movableDashboard();
         requestNotifyCircle();
         toolTip();
+
         Platform.runLater(() -> {
             ScrollBar tvScrollBar = (ScrollBar) tabviewFriends.lookup(".scroll-bar:vertical");
             tvScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -199,6 +222,8 @@ public class DashboardController  {
 
     public void setOpenedConversationController(ConversationPartnerDetailsController openedConversationController) {
         this.openedConversationController = openedConversationController;
+        recipientsList = new ArrayList<>();
+
     }
 
     private void movableDashboard(){
@@ -244,6 +269,7 @@ public class DashboardController  {
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
+        rootService.getNetworkServicePag().addObserver(this);
     }
     public void setLoggedInUserEmail(String username){
         labelUsername.setText(username);
@@ -258,6 +284,7 @@ public class DashboardController  {
     private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
         scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight);
+//        pnlConversation.toFront();
         vboxMessagesText.toFront();
         scrollPaneMessages.toFront();
     }
@@ -294,6 +321,10 @@ public class DashboardController  {
         hboxFriends.getStyleClass().clear();
         hboxChat.getStyleClass().clear();
     }
+
+    private boolean composeMessageMode = false;
+
+
     @FXML
     private void handleMouseEvent(MouseEvent event){
         if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
@@ -306,9 +337,11 @@ public class DashboardController  {
             displayUserFriendsRequests(labelUsername.getText());
             resetStyles();
             resetHover(1);
-
             requestNotifyCircle();
+            pnlFriendRequests.toFront();
+            pnlFriends.toFront();
         }
+
         if(event.getSource().equals(textFieldSearchUser)){
             vboxSearchResult.getChildren().clear();
             vboxSearchResult.toBack();
@@ -320,6 +353,13 @@ public class DashboardController  {
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
             pnlChat.toFront();
+//            pnlSendMsg.toBack();
+            pnlConversation.toFront();
+        }
+        if(event.getSource().equals(BtnSendMsg)){
+            pnlConversation.toBack();
+            pnlSendMsg.toFront();
+            composeMessageMode = true;
         }
     }
 
@@ -406,8 +446,21 @@ public class DashboardController  {
         vboxMessagesText.toFront();
     }
     @FXML
+    private void handleSendNewMessage(){
+        String message =  txtFieldTypeMessage1.getText();
+        vboxSearchResultForNewMsg.getChildren().get(0);
+    }
+
+    @FXML
     private void handleSendMessage(){
        String message =  txtFieldTypeMessage.getText();
+        if (composeMessageMode){
+            //labelForReplies.toBack();
+            rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername,"",""),recipientsList,txtFieldTypeMessage1.getText(),LocalDateTime.now(),0L));
+            recipientsList.clear();
+            displayUserConversationPartners(loggedInUsername);
+        }
+        else {
 
        if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight ){
            if(labelForReplies.getText().equals("Reply To:")) {
@@ -437,6 +490,12 @@ public class DashboardController  {
 
        //displayUserConversationMessages(currentChatPartnerShowingId);
        txtFieldTypeMessage.clear();
+          displayUserConversationMessages(currentChatPartnerShowingId);
+        }
+
+            txtFieldTypeMessage.clear();
+            txtFieldTypeMessage1.clear();
+
     }
 
 
@@ -500,13 +559,34 @@ public class DashboardController  {
             vboxSearchResult.toFront();
         }
     }
+    public void addRecipient(UserDto<String> userDto){
+        recipientsList.add(userDto);
+    }
 
+    @FXML
+    private void handleSearchUserForNewMsg() throws IOException, NoSuchFieldException, IllegalAccessException {
+        if(!texfFieldSearchUserForNewMsg.getText().isEmpty()){
+            vboxSearchResultForNewMsg.getChildren().clear();
+            for(UserDto<String> userDto:rootService.getNetworkServicePag().getUsersForWhichNameStartsWith(texfFieldSearchUserForNewMsg.getText(),new PageRequest(0,8))){
+                FXMLLoader fxmlLoader = new FXMLLoader();
+                fxmlLoader.setLocation(getClass().getResource("userDetailsBoxForNewMsg.fxml"));
+                HBox hBox = fxmlLoader.load();
+                UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
+                controller.setDashboardController(this);
+                controller.setData(userDto,0,txtFieldTypeMessage1.getText());
+                vboxSearchResultForNewMsg.getChildren().add(hBox);
+            }
+
+
+        }
+
+    }
 
     @FXML
     private void handleDeleteUser(){
         UserDto<String> selectedUser = tabviewFriends.getSelectionModel().getSelectedItem();
         rootService.getNetworkServicePag().deleteFriendship(selectedUser.getUserID(),labelUsername.getText());
-        displayUserFriends(labelUsername.getText());
+        //displayUserFriends(labelUsername.getText());
 
     }
 
@@ -516,8 +596,10 @@ public class DashboardController  {
             FriendshipRequestForDisplayUseDTO<String> selectedRequest = tabviewRequests.getSelectionModel().getSelectedItem();
             FriendshipRequestDTO<String> friendshipRequestDTO = selectedRequest.getFriendshipRequestDTO();
             friendshipRequestDTO.setStatus(FriendshipRequestStatus.APPROVED);
+
             rootService.getNetworkServicePag().updateFriendshipRequestStatus(friendshipRequestDTO);
-            displayUserFriendsRequests(labelUsername.getText());
+           // displayUserFriendsRequests(labelUsername.getText());
+
             requestNotifyCircle();
         }
     }
@@ -558,6 +640,7 @@ public class DashboardController  {
                 tabviewFriends.getItems().add(new UserDto<String>(userDto.getUserID(), userDto.getFirstName(), userDto.getLastName()));
             }
         }
+
     }
 
     private void displayUserFriends(String userEmail){
@@ -770,6 +853,16 @@ public class DashboardController  {
                 }
             }
         });
+    }
+
+
+    @Override
+    public void update(Event event) {
+
+        displayUserFriendsRequests(labelUsername.getText());
+        displayUserConversationPartners(loggedInUsername);
+        displayUserFriends(labelUsername.getText());
+
     }
 
 }
