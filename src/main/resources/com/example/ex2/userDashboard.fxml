@@ -142,133 +142,6 @@
          <center>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane fx:id="pnlChat" prefHeight="200.0" prefWidth="200.0">
-                     <children>
-                        <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="347.0">
-                           <children>
-                              <ScrollPane fx:id="scrollPaneConversations" layoutX="4.0" layoutY="99.0" prefHeight="479.0" prefWidth="329.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                                 <content>
-                                    <VBox fx:id="vboxConversationPartners" prefHeight="472.0" prefWidth="309.0" style="-fx-background-color: #E1E1DF;" />
-                                 </content>
-                              </ScrollPane>
-                              <HBox layoutX="14.0" layoutY="30.0" prefHeight="62.0" prefWidth="264.0" styleClass="searchicon" stylesheets="@../../../css/styling.css">
-                                 <children>
-                                    <Label text="Messages">
-                                       <font>
-                                          <Font name="System Bold" size="15.0" />
-                                       </font>
-                                       <HBox.margin>
-                                          <Insets left="10.0" top="30.0" />
-                                       </HBox.margin>
-                                    </Label>
-                                 </children>
-                              </HBox>
-                              <ImageView fx:id="BtnSendMsg" fitHeight="26.0" fitWidth="30.0" layoutX="245.0" layoutY="59.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/plus.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </Pane>
-                        <StackPane fx:id="stack_for_messages" layoutX="339.0" prefHeight="590.0" prefWidth="417.0">
-                           <children>
-                              <Pane fx:id="pnlSendMsg" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
-                                 <children>
-                                    <Pane layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="89.0" prefWidth="404.0">
-                                       <children>
-                                          <TextField fx:id="txtFieldTypeMessage1" layoutX="54.0" layoutY="18.0" onAction="#handleSendNewMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
-                                          <ImageView fx:id="imgSendMessage1" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../icons/icons8_email_send_30px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                       <effect>
-                                          <DropShadow>
-                                             <color>
-                                                <Color red="0.7372549176216125" green="0.7019608020782471" blue="0.7019608020782471" />
-                                             </color>
-                                          </DropShadow>
-                                       </effect>
-                                    </Pane>
-                                    <ScrollPane fx:id="scrollPaneMessages1" layoutX="1.0" layoutY="73.0" prefHeight="427.0" prefWidth="419.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                                       <content>
-                                          <VBox fx:id="vboxSearchResultForNewMsg" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="414.0" prefWidth="415.0" style="-fx-background-color: #E1E1DF;" />
-                                       </content>
-                                    </ScrollPane>
-                                    <HBox prefHeight="48.0" prefWidth="417.0">
-                                       <children>
-                                          <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../icons/icons8_search_30px.png" />
-                                             </image>
-                                             <HBox.margin>
-                                                <Insets left="12.0" top="10.0" />
-                                             </HBox.margin>
-                                          </ImageView>
-                                          <TextField fx:id="texfFieldSearchUserForNewMsg" onAction="#handleSearchUserForNewMsg" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="370.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
-                                             <HBox.margin>
-                                                <Insets left="1.0" top="10.0" />
-                                             </HBox.margin>
-                                             <font>
-                                                <Font size="13.0" />
-                                             </font>
-                                          </TextField>
-                                       </children>
-                                    </HBox>
-                                 </children></Pane>
-                              <Pane fx:id="pnlConversation" prefHeight="590.0" prefWidth="420.0" style="-fx-background-color: White;">
-                                 <children>
-                                    <Pane fx:id="paneReply" layoutX="62.0" layoutY="443.0" prefHeight="80.0" prefWidth="303.0" styleClass="paneRepliesTo" stylesheets="@../../../css/styling.css">
-                                       <children>
-                                          <Label fx:id="labelForReplies" layoutX="8.0" layoutY="5.0" prefHeight="27.0" prefWidth="133.0" text="Reply to:">
-                                             <font>
-                                                <Font name="System Bold" size="12.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="labelMessageRepliedTo" layoutX="14.0" layoutY="29.0" prefHeight="41.0" prefWidth="288.0" text="Textul mesajului la care se da reply" />
-                                          <Label fx:id="labelSelectedMessageId" layoutX="250.0" layoutY="5.0" prefHeight="17.0" prefWidth="39.0" text="selectedMessId" />
-                                          <Label fx:id="labelSenderUserId" layoutX="150.0" text="fromUserId" />
-                                       </children>
-                                    </Pane>
-                                    <VBox layoutX="35.0" layoutY="48.0" prefHeight="44.0" prefWidth="357.0" styleClass="searchicon" stylesheets="@../../../css/styling.css">
-                                       <children>
-                                          <Label text="Chat">
-                                             <font>
-                                                <Font name="System Bold" size="15.0" />
-                                             </font>
-                                          </Label>
-                                          <Label fx:id="labelMessageSenderUsername" prefHeight="17.0" prefWidth="289.0" text="From:" />
-                                       </children>
-                                    </VBox>
-                                    <Pane layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
-                                       <children>
-                                          <TextField fx:id="txtFieldTypeMessage" layoutX="54.0" layoutY="18.0" onAction="#handleSendMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
-                                          <ImageView fx:id="imgSendMessage" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
-                                             <image>
-                                                <Image url="@../../../icons/icons8_email_send_30px.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                       <effect>
-                                          <DropShadow>
-                                             <color>
-                                                <Color red="0.7372549176216125" green="0.7019608020782471" blue="0.7019608020782471" />
-                                             </color>
-                                          </DropShadow>
-                                       </effect>
-                                    </Pane>
-                                    <ScrollPane fx:id="scrollPaneMessages" layoutX="21.0" layoutY="41.0" prefHeight="465.0" prefWidth="377.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                                       <content>
-                                          <VBox fx:id="vboxMessagesText" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="413.0" prefWidth="328.0" style="-fx-background-color: #E1E1DF;" />
-                                       </content>
-                                    </ScrollPane>
-                                 </children>
-                              </Pane>
-                           </children>
-                        </StackPane>
-                     </children>
-                  </Pane>
                   <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewRequests" layoutX="17.0" layoutY="103.0" prefHeight="467.0" prefWidth="721.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -303,7 +176,6 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -350,6 +222,137 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <Pane fx:id="pnlChat" prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="347.0">
+                           <children>
+                              <ScrollPane fx:id="scrollPaneConversations" layoutX="4.0" layoutY="99.0" prefHeight="479.0" prefWidth="329.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                 <content>
+                                    <VBox fx:id="vboxConversationPartners" prefHeight="472.0" prefWidth="309.0" style="-fx-background-color: #E1E1DF;" />
+                                 </content>
+                              </ScrollPane>
+                              <HBox layoutX="14.0" layoutY="30.0" prefHeight="62.0" prefWidth="275.0" styleClass="searchicon" stylesheets="@../../../css/styling.css">
+                                 <children>
+                                    <Label text="Messages">
+                                       <font>
+                                          <Font name="System Bold" size="15.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="10.0" top="30.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <ImageView fx:id="btnSendMsg" fitHeight="25.0" fitWidth="25.0" layoutX="247.0" layoutY="59.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true" x="10.0">
+                                 <image>
+                                    <Image url="@../../../icons/plus.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                        <StackPane fx:id="stack_for_messages" layoutX="339.0" prefHeight="589.0" prefWidth="417.0">
+                           <children>
+                              <Pane fx:id="pnlSendMsg" prefHeight="582.0" prefWidth="417.0" style="-fx-background-color: #E1E1DF;">
+                                 <children>
+                                    <Pane layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="82.0" prefWidth="404.0">
+                                       <children>
+                                          <TextField fx:id="txtFieldTypeMessage1" layoutX="54.0" layoutY="18.0" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
+                                          <ImageView fx:id="imgSendMessage1" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../icons/icons8_email_send_30px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                       <effect>
+                                          <DropShadow>
+                                             <color>
+                                                <Color red="0.7372549176216125" green="0.7019608020782471" blue="0.7019608020782471" />
+                                             </color>
+                                          </DropShadow>
+                                       </effect>
+                                    </Pane>
+                                    <ScrollPane fx:id="scrollPaneMessages1" layoutX="1.0" layoutY="39.0" prefHeight="461.0" prefWidth="414.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                       <content>
+                                          <VBox fx:id="vboxSearchResultForNewMsg" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="454.0" prefWidth="401.0" style="-fx-background-color: #E1E1DF;" />
+                                       </content>
+                                    </ScrollPane>
+                                    <HBox prefHeight="48.0" prefWidth="417.0">
+                                       <children>
+                                          <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../icons/icons8_search_30px.png" />
+                                             </image>
+                                             <HBox.margin>
+                                                <Insets left="12.0" top="10.0" />
+                                             </HBox.margin>
+                                          </ImageView>
+                                          <TextField fx:id="texfFieldSearchUserForNewMsg" onAction="#handleSearchUserForNewMsg" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="370.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
+                                             <HBox.margin>
+                                                <Insets left="1.0" top="10.0" />
+                                             </HBox.margin>
+                                             <font>
+                                                <Font size="13.0" />
+                                             </font>
+                                          </TextField>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets></Pane>
+                              <Pane fx:id="pnlConversation" prefHeight="582.0" prefWidth="417.0" style="-fx-background-color: #E1E1DF;">
+                                 <children>
+                                    <Pane fx:id="paneReply" layoutX="62.0" layoutY="443.0" prefHeight="80.0" prefWidth="303.0" styleClass="paneRepliesTo" stylesheets="@../../../css/styling.css">
+                                       <children>
+                                          <Label fx:id="labelForReplies" layoutX="8.0" layoutY="5.0" prefHeight="27.0" prefWidth="133.0" text="Reply to:">
+                                             <font>
+                                                <Font name="System Bold" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="labelMessageRepliedTo" layoutX="14.0" layoutY="29.0" prefHeight="41.0" prefWidth="288.0" text="Textul mesajului la care se da reply" />
+                                          <Label fx:id="labelSelectedMessageId" layoutX="250.0" layoutY="5.0" prefHeight="17.0" prefWidth="39.0" text="selectedMessId" />
+                                          <Label fx:id="labelSenderUserId" layoutX="150.0" text="fromUserId" />
+                                       </children>
+                                    </Pane>
+                                    <VBox layoutX="35.0" layoutY="48.0" prefHeight="44.0" prefWidth="357.0" styleClass="searchicon" stylesheets="@../../../css/styling.css">
+                                       <children>
+                                          <Label text="Chat">
+                                             <font>
+                                                <Font name="System Bold" size="15.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="labelMessageSenderUsername" prefHeight="17.0" prefWidth="289.0" text="From:" />
+                                       </children>
+                                    </VBox>
+                                    <Pane layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
+                                       <children>
+                                          <TextField fx:id="txtFieldTypeMessage" layoutX="54.0" layoutY="18.0" onAction="#handleSendMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
+                                          <ImageView fx:id="imgSendMessage" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../../icons/icons8_email_send_30px.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                       <effect>
+                                          <DropShadow>
+                                             <color>
+                                                <Color red="0.7372549176216125" green="0.7019608020782471" blue="0.7019608020782471" />
+                                             </color>
+                                          </DropShadow>
+                                       </effect>
+                                    </Pane>
+                                    <ScrollPane fx:id="scrollPaneMessages" layoutX="62.0" layoutY="95.0" prefHeight="428.0" prefWidth="342.0" style="-fx-background-color: #E1E1DF;" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                       <content>
+                                          <VBox fx:id="vboxMessagesText" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="425.0" prefWidth="326.0" style="-fx-background-color: #E1E1DF;" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </Pane>
+                           </children>
+                        </StackPane>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>

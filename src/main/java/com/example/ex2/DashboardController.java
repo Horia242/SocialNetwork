@@ -6,7 +6,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
@@ -34,6 +33,8 @@ import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
 import ro.ubbcluj.map.repository.paging.PageRequest;
 import ro.ubbcluj.map.utils.events.Event;
+import ro.ubbcluj.map.utils.events.EventType;
+import ro.ubbcluj.map.utils.events.NetworkServiceTask;
 import ro.ubbcluj.map.utils.observer.Observer;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class DashboardController  implements Observer{
+public class DashboardController  implements Observer<NetworkServiceTask>{
 
     RootService rootService;
     String loggedInUsername;
@@ -129,7 +130,7 @@ public class DashboardController  implements Observer{
     @FXML
     private ImageView btnSignOut1;
     @FXML
-    private ImageView BtnSendMsg;
+    private ImageView btnSendMsg;
     @FXML
     private HBox hboxChat;
     @FXML
@@ -146,6 +147,8 @@ public class DashboardController  implements Observer{
     private TextField txtFieldTypeMessage1;
     @FXML
     private ImageView imgSendMessage;
+    @FXML
+    private ImageView imgSendMessage1;
     @FXML
     private Pane paneReply;
     @FXML
@@ -173,7 +176,10 @@ public class DashboardController  implements Observer{
     @FXML
     private HBox hboxRequests;
 
-    private List<UserDto<String>> recipientsList;
+
+
+
+    private List<UserDto<String>> recipientsList = new ArrayList<>();
 
 
     private final int scrollPaneMessagesHeight = 417;
@@ -331,6 +337,7 @@ public class DashboardController  implements Observer{
             displayUserFriends(labelUsername.getText());
             resetStyles();
             resetHover(0);
+            stopLoadingConversations = false;
 
         }
         if(event.getSource().equals(btnShowFriendRequests) || event.getSource().equals(labelFriendRequests)){
@@ -339,7 +346,8 @@ public class DashboardController  implements Observer{
             resetHover(1);
             requestNotifyCircle();
             pnlFriendRequests.toFront();
-            pnlFriends.toFront();
+            pnlFriends.toBack();
+            stopLoadingConversations = false;
         }
 
         if(event.getSource().equals(textFieldSearchUser)){
@@ -353,14 +361,15 @@ public class DashboardController  implements Observer{
             pnlFriends.toBack();
             pnlFriendRequests.toBack();
             pnlChat.toFront();
-//            pnlSendMsg.toBack();
             pnlConversation.toFront();
         }
-        if(event.getSource().equals(BtnSendMsg)){
+        if(event.getSource().equals(btnSendMsg)){
             pnlConversation.toBack();
             pnlSendMsg.toFront();
             composeMessageMode = true;
+            this.recipientsList.clear();
         }
+
     }
 
     @FXML
@@ -445,56 +454,56 @@ public class DashboardController  implements Observer{
         vboxMessagesText.getChildren().add(hBox);
         vboxMessagesText.toFront();
     }
-    @FXML
-    private void handleSendNewMessage(){
-        String message =  txtFieldTypeMessage1.getText();
-        vboxSearchResultForNewMsg.getChildren().get(0);
-    }
+
 
     @FXML
     private void handleSendMessage(){
-       String message =  txtFieldTypeMessage.getText();
-        if (composeMessageMode){
-            //labelForReplies.toBack();
-            rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername,"",""),recipientsList,txtFieldTypeMessage1.getText(),LocalDateTime.now(),0L));
-            recipientsList.clear();
-            displayUserConversationPartners(loggedInUsername);
-        }
-        else {
 
-       if( scrollPaneMessages.getHeight() < scrollPaneMessagesHeight ){
-           if(labelForReplies.getText().equals("Reply To:")) {
-               rootService.getNetworkServicePag().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
-                               , List.of(new UserDto<String>(loggedInUsername, null, null))
-                               , labelMessageRepliedTo.getText()
-                               , LocalDateTime.now()
-                               , Long.parseLong(labelSelectedMessageId.getText()))
-                       , loggedInUsername
-                       , message);
-           }
-           else{
-               if(labelForReplies.getText().equals("Reply All:")){
-                   MessageDTO original = rootService.getNetworkServicePag().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
-                   rootService.getNetworkServicePag().replyAll(original,loggedInUsername,message);
+
+           if (composeMessageMode) {
+               String message = txtFieldTypeMessage1.getText();
+               if(message.length() > 0) {
+                   rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, "", ""), recipientsList, txtFieldTypeMessage1.getText(), LocalDateTime.now(), 0L));
+                   pnlSendMsg.toBack();
+                   pnlConversation.toFront();
+                   composeMessageMode = false;
+                   //  displayUserConversationPartners(loggedInUsername);
                }
+           } else {
+               String message =  txtFieldTypeMessage.getText();
+
+               if (scrollPaneMessages.getHeight() < scrollPaneMessagesHeight) {
+                   if (labelForReplies.getText().equals("Reply To:")) {
+                       rootService.getNetworkServicePag().replyAll(new MessageDTO(new UserDto<String>(labelSenderUserId.getText(), null, null)
+                                       , List.of(new UserDto<String>(loggedInUsername, null, null))
+                                       , labelMessageRepliedTo.getText()
+                                       , LocalDateTime.now()
+                                       , Long.parseLong(labelSelectedMessageId.getText()))
+                               , loggedInUsername
+                               , message);
+                   } else {
+                       if (labelForReplies.getText().equals("Reply All:")) {
+                           MessageDTO original = rootService.getNetworkServicePag().findOneMessageById(Long.parseLong(labelSelectedMessageId.getText()));
+                           rootService.getNetworkServicePag().replyAll(original, loggedInUsername, message);
+                       }
+                   }
+               } else {
+                   rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
+                           , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
+                           message, LocalDateTime.now(), 0L));
+               }
+
+               List<MessageDTO> lastMessageSent = rootService.getNetworkServicePag().getConversationHistory(loggedInUsername, currentChatPartnerShowingId, new PageRequest(0, 1), SortingOrder.DESC);
+               dealWithTheLastMessageSent(lastMessageSent.get(0));
+
+               //displayUserConversationMessages(currentChatPartnerShowingId);
+               txtFieldTypeMessage.clear();
+               displayUserConversationMessages(currentChatPartnerShowingId);
            }
-       }
-       else {
-           rootService.getNetworkServicePag().sendMessage(new MessageDTO(new UserDto<String>(loggedInUsername, null, null)
-                   , List.of(new UserDto<String>(currentChatPartnerShowingId, null, null)),
-                   message, LocalDateTime.now(), 0L));
-       }
 
-       List<MessageDTO> lastMessageSent = rootService.getNetworkServicePag().getConversationHistory(loggedInUsername,currentChatPartnerShowingId,new PageRequest(0,1),SortingOrder.DESC);
-       dealWithTheLastMessageSent(lastMessageSent.get(0));
+           txtFieldTypeMessage.clear();
+           txtFieldTypeMessage1.clear();
 
-       //displayUserConversationMessages(currentChatPartnerShowingId);
-       txtFieldTypeMessage.clear();
-          displayUserConversationMessages(currentChatPartnerShowingId);
-        }
-
-            txtFieldTypeMessage.clear();
-            txtFieldTypeMessage1.clear();
 
     }
 
@@ -567,16 +576,18 @@ public class DashboardController  implements Observer{
     private void handleSearchUserForNewMsg() throws IOException, NoSuchFieldException, IllegalAccessException {
         if(!texfFieldSearchUserForNewMsg.getText().isEmpty()){
             vboxSearchResultForNewMsg.getChildren().clear();
-            for(UserDto<String> userDto:rootService.getNetworkServicePag().getUsersForWhichNameStartsWith(texfFieldSearchUserForNewMsg.getText(),new PageRequest(0,8))){
-                FXMLLoader fxmlLoader = new FXMLLoader();
-                fxmlLoader.setLocation(getClass().getResource("userDetailsBoxForNewMsg.fxml"));
-                HBox hBox = fxmlLoader.load();
-                UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
-                controller.setDashboardController(this);
-                controller.setData(userDto,0,txtFieldTypeMessage1.getText());
-                vboxSearchResultForNewMsg.getChildren().add(hBox);
+            List<UserDto<String>> users = rootService.getNetworkServicePag().getUsersForWhichNameStartsWith(texfFieldSearchUserForNewMsg.getText(),new PageRequest(0,8));
+            if(users != null) {
+                for (UserDto<String> userDto : users) {
+                    FXMLLoader fxmlLoader = new FXMLLoader();
+                    fxmlLoader.setLocation(getClass().getResource("userDetailsBoxForNewMsg.fxml"));
+                    HBox hBox = fxmlLoader.load();
+                    UserDetailsBoxForNewMsgController controller = fxmlLoader.getController();
+                    controller.setDashboardController(this);
+                    controller.setData(userDto, 0, txtFieldTypeMessage1.getText());
+                    vboxSearchResultForNewMsg.getChildren().add(hBox);
+                }
             }
-
 
         }
 
@@ -857,12 +868,16 @@ public class DashboardController  implements Observer{
 
 
     @Override
-    public void update(Event event) {
+    public void update(NetworkServiceTask event) {
 
-        displayUserFriendsRequests(labelUsername.getText());
-        displayUserConversationPartners(loggedInUsername);
-        displayUserFriends(labelUsername.getText());
-
+        switch (event.getEventType()) {
+            case MESSAGE -> displayUserConversationPartners(loggedInUsername);
+            case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
+            case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
+            default -> {
+            }
+        }
     }
+
 
 }
