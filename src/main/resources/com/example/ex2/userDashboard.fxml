@@ -384,7 +384,7 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </Label>
-                        <DatePicker layoutX="41.0" layoutY="193.0" prefHeight="32.0" prefWidth="288.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                        <DatePicker fx:id="datePickerEvents" layoutX="41.0" layoutY="193.0" prefHeight="32.0" prefWidth="288.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
                            <styleClass>
                               <String fx:value="date-picker1" />
                               <String fx:value="date-picker1-popup" />
@@ -394,8 +394,8 @@
                            </opaqueInsets>
                         </DatePicker>
                         <Separator layoutX="99.0" layoutY="387.0" prefHeight="3.0" prefWidth="151.0" style="-fx-background-color: #F7F6DE;" />
-                        <Button layoutX="113.0" layoutY="410.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="124.0" style="-fx-background-color: #76D7C4; -fx-background-radius: 5em;" text="Save event" />
-                        <TextField layoutX="41.0" layoutY="295.0" prefHeight="32.0" prefWidth="289.0" style="-fx-background-color: #F7F6DE;">
+                        <Button layoutX="113.0" layoutY="410.0" mnemonicParsing="false" onMouseClicked="#saveEvent" prefHeight="35.0" prefWidth="124.0" style="-fx-background-color: #76D7C4; -fx-background-radius: 5em;" text="Save event" />
+                        <TextField fx:id="txtFieldEventDescription" layoutX="41.0" layoutY="295.0" prefHeight="32.0" prefWidth="289.0" style="-fx-background-color: #F7F6DE;">
                            <font>
                               <Font name="Times New Roman" size="12.0" />
                            </font>

@@ -27,6 +27,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
@@ -39,9 +40,13 @@ import ro.ubbcluj.map.utils.observer.Observer;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -187,7 +192,31 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private Pane paneEvents;
     @FXML
     private Pane paneEventsDetails;
+    @FXML
+    private DatePicker datePickerEvents;
+    @FXML
+    private TextField txtFieldEventDescription;
 
+    private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+
+        @Override
+        public DateCell call(final DatePicker datePicker) {
+            return new DateCell() {
+                @Override public void updateItem(LocalDate item, boolean empty) {
+                    super.updateItem(item, empty);
+
+                    //if flag is true and date is within range, set style
+                    Optional<EventDTO> answer = rootService.getNetworkServicePag()
+                                .findAllEvents()
+                                .stream().filter(eventDTO -> item.isEqual(eventDTO.getEventDate()))
+                                .findFirst();
+                    if(answer.isPresent()){
+                        setStyle("-fx-background-color: #ffc0cb;");
+                    }
+                }
+            };
+        }
+    };
     private List<UserDto<String>> recipientsList = new ArrayList<>();
 
 
@@ -202,7 +231,19 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         movableDashboard();
         requestNotifyCircle();
         toolTip();
+       // datePickerEvents.getChronology().
 
+        System.out.println(datePickerEvents.getChronology().dateNow());
+           datePickerEvents.setDayCellFactory(dayCellFactory);
+        Platform.runLater(new Runnable() {
+
+            @Override
+            public void run() {
+                datePickerEvents.requestFocus();
+                datePickerEvents.getEditor().selectAll();
+               datePickerEvents.setValue(LocalDate.now());
+            }
+        });
         Platform.runLater(() -> {
             ScrollBar tvScrollBar = (ScrollBar) tabviewFriends.lookup(".scroll-bar:vertical");
             tvScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -907,6 +948,12 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             default -> {
             }
         }
+    }
+
+    @FXML
+    public void saveEvent(){
+        if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null)
+            rootService.getNetworkServicePag().saveEvent(new EventDTO(0L,txtFieldEventDescription.getText(),datePickerEvents.getValue(),new ArrayList<>()));
     }
 
 
