@@ -1,20 +1,20 @@
 package com.example.ex2.rootService;
 
 import ro.ubbcluj.map.Service.NetworkService;
+import ro.ubbcluj.map.Service.NetworkServiceForPaginatedDbRepo;
 
 public class RootService {
 
-    private NetworkService networkService;
-
-    public RootService(NetworkService networkService) {
-        this.networkService = networkService;
+    private NetworkServiceForPaginatedDbRepo networkServicePag;
+    public RootService( NetworkServiceForPaginatedDbRepo networkServicePag) {
+        this.networkServicePag = networkServicePag;
     }
 
-    public NetworkService getNetworkService() {
-        return networkService;
+    public NetworkServiceForPaginatedDbRepo getNetworkServicePag() {
+        return networkServicePag;
     }
 
-    private void setNetworkService(NetworkService networkService) {
-        this.networkService = networkService;
+    public void setNetworkServicePag(NetworkServiceForPaginatedDbRepo networkServicePag) {
+        this.networkServicePag = networkServicePag;
     }
 }

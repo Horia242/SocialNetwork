@@ -5,3 +5,4 @@ gradlew.bat
 ProjectToDo.txt
 build
 .gradle
+src/main/java/com/example/ex1

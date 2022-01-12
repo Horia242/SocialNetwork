@@ -93,7 +93,7 @@ public class AppEventsController {
                     String password = fieldPasswordSignUp.getText();
                     if(userEmail.length() != 0 && firstName.length() != 0 && lastName.length() != 0 && password.length() != 0) {
                         try {
-                            rootService.getNetworkService().addUser(new UserDto<String>(userEmail,firstName,lastName),password);
+                            rootService.getNetworkServicePag().addUser(new UserDto<String>(userEmail,firstName,lastName),password);
                             fieldFirstNameSignUp.clear();
                             fieldLastNameSignUp.clear();
                             fieldEmailSignUp.clear();
@@ -110,7 +110,7 @@ public class AppEventsController {
         try{
             String txtUsername = txtFieldEmail.getText();
             String password = passFieldPassword.getText();
-            if( rootService.getNetworkService().logIN(txtUsername,password) ){
+            if( rootService.getNetworkServicePag().logIN(txtUsername,password) ){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("userDashboard.fxml"));
                 root = loader.load();
                 DashboardController dashboardController = loader.getController();
@@ -119,6 +119,7 @@ public class AppEventsController {
                 dashboardController.init();
                 stage = (Stage)((Node)event.getSource()).getScene().getWindow();
                 scene = new Scene(root);
+                scene.getStylesheets().add("src/main/resources/css/styling.css");
                 stage.setScene(scene);
                 stage.show();
             }

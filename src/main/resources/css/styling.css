@@ -95,11 +95,12 @@
     -fx-border-width: 0px;
 }
 .box1{
-
+-fx-background-color: #EAEAE9;
 }
 .box1:hover{
     -fx-background-color: #E5E5E5  ;
 }
+
 .box2{
 -fx-background-color:  #EAEAE9;
 }
@@ -247,4 +248,20 @@
     -fx-border-radius: 10;
     -fx-background-radius: 10;
     -fx-background-color: #EAEAE9;
+}
+
+.boxHovered
+{
+-fx-background-color: #AFEFCC
+
+
+
+;
+}
+.boxHovered:hover{
+    -fx-background-color: #AFEFCC
+
+
+
+;
 }
