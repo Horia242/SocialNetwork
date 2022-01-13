@@ -196,7 +196,12 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private DatePicker datePickerEvents;
     @FXML
     private TextField txtFieldEventDescription;
-
+    @FXML
+    private ImageView imgCreateEvent;
+    @FXML
+    private ImageView imgGoBackEventsInfo;
+    @FXML
+    private Pane panePlanEvent;
     private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
 
         @Override
@@ -375,20 +380,27 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 hboxFriends.getStyleClass().add("boxHovered");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
-                //circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                hboxEvent.getStyleClass().add("box1");
             }
             case 1 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("boxHovered");
-                hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
-                //circleRequestsNumber.setFill(Paint.valueOf("#e8e3b3"));
+                hboxEvent.getStyleClass().add("box1");
+
             }
             case 2 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("boxHovered");
-                //circleRequestsNumber.setFill(Paint.valueOf("#eaeae9"));
+                hboxEvent.getStyleClass().add("box1");
+            }
+            case 3 -> {
+                hboxFriends.getStyleClass().add("box1");
+                hboxRequests.getStyleClass().add("box1");
+                hboxChat.getStyleClass().add("box1");
+                hboxEvent.getStyleClass().add("boxHovered");
+
             }
             default -> {
             }
@@ -398,6 +410,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         hboxRequests.getStyleClass().clear();
         hboxFriends.getStyleClass().clear();
         hboxChat.getStyleClass().clear();
+        hboxEvent.getStyleClass().clear();
     }
 
     private boolean composeMessageMode = false;
@@ -437,9 +450,17 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             pnlConversation.toFront();
         }
         if(event.getSource().equals(hboxEvent) || event.getSource().equals(labelEvent) || event.getSource().equals(imgEvent)){
+            resetStyles();
+            resetHover(3);
             paneEvents.toFront();
+            paneEventsDetails.toFront();
         }
-
+        if(event.getSource().equals(imgCreateEvent)){
+            panePlanEvent.toFront();
+        }
+        if(event.getSource().equals(imgGoBackEventsInfo)){
+            paneEventsDetails.toFront();
+        }
     }
 
     @FXML
