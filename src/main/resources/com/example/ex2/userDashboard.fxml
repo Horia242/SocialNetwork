@@ -435,7 +435,7 @@
                                     <Image url="@../../../images/Colors2.PNG" />
                                  </image>
                               </ImageView>
-                              <DatePicker fx:id="datePickerEventsInfo" layoutX="23.0" layoutY="231.0" prefHeight="30.0" prefWidth="284.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                              <DatePicker fx:id="datePickerEventsInfo" layoutX="23.0" layoutY="216.0" prefHeight="30.0" prefWidth="284.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
                                  <styleClass>
                                     <String fx:value="date-picker1" />
                                     <String fx:value="date-picker1-popup" />
@@ -444,7 +444,7 @@
                                     <Insets />
                                  </opaqueInsets>
                               </DatePicker>
-                              <Label layoutX="72.0" layoutY="190.0" prefHeight="34.0" prefWidth="172.0" text="Check your calendar" textFill="#806a6a">
+                              <Label layoutX="70.0" layoutY="175.0" prefHeight="34.0" prefWidth="172.0" text="Check your calendar" textFill="#806a6a">
                                  <font>
                                     <Font name="System Bold" size="18.0" />
                                  </font>
@@ -462,10 +462,20 @@
                               </ImageView>
                               <Pane fx:id="paneUserMessageEvents" layoutX="328.0" layoutY="-5.0" prefHeight="595.0" prefWidth="431.0" style="-fx-background-color: #E1E1DF;">
                                  <children>
-                                    <ScrollPane fx:id="paneDisplayEvents" layoutX="2.0" layoutY="11.0" prefHeight="579.0" prefWidth="429.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                    <ScrollPane fx:id="paneDisplayEvents" layoutX="1.0" layoutY="4.0" prefHeight="589.0" prefWidth="429.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
                                        <content>
-                                          <VBox fx:id="vboxEvents" prefHeight="571.0" prefWidth="418.0" />
+                                          <VBox fx:id="vboxEvents" alignment="TOP_CENTER" prefHeight="585.0" prefWidth="425.0">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets></VBox>
                                        </content>
+                                       <effect>
+                                          <DropShadow>
+                                             <color>
+                                                <Color red="0.6052631735801697" green="0.5996588468551636" blue="0.5996588468551636" />
+                                             </color>
+                                          </DropShadow>
+                                       </effect>
                                     </ScrollPane>
                                     <Label layoutX="155.0" layoutY="221.0" prefHeight="37.0" prefWidth="249.0" text="Pick a date" textFill="#989595">
                                        <font>

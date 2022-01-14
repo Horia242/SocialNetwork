@@ -370,6 +370,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         Tooltip.install(btnSignOut,new Tooltip("Sign out"));
         Tooltip.install(btnSignOut1,new Tooltip("Sign out"));
         Tooltip.install(btnSendMsg,new Tooltip("Compose a new message"));
+        Tooltip.install(circleUpcomingEventsNr,new Tooltip("You have some upcoming events"));
     }
     public void setRootService(RootService rootService){
         this.rootService = rootService;
