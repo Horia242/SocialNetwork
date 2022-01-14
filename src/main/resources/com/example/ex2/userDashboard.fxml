@@ -24,7 +24,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
+<AnchorPane fx:id="rootAnchorPane" prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
       <BorderPane fx:id="borderPaneDashboard" prefHeight="589.0" prefWidth="1033.0">
          <left>
@@ -393,41 +393,9 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="paneEvents" prefHeight="589.0" prefWidth="768.0" style="-fx-background-color: #E1E1DF;">
                      <children>
-                        <Pane fx:id="panePlanEvent" prefHeight="589.0" prefWidth="754.0" style="-fx-background-color: #E1E1DF;">
-                           <children>
-                              <Label layoutX="113.0" layoutY="89.0" prefHeight="26.0" prefWidth="236.0" text="Plan your event">
-                                 <font>
-                                    <Font name="System Bold" size="19.0" />
-                                 </font>
-                              </Label>
-                              <DatePicker fx:id="datePickerEvents" layoutX="245.0" layoutY="218.0" prefHeight="32.0" prefWidth="288.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
-                                 <styleClass>
-                                    <String fx:value="date-picker1" />
-                                    <String fx:value="date-picker1-popup" />
-                                 </styleClass>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </DatePicker>
-                              <Separator layoutX="199.0" layoutY="405.0" prefHeight="3.0" prefWidth="382.0" style="-fx-background-color: #F7F6DE;" />
-                              <Button layoutX="315.0" layoutY="458.0" mnemonicParsing="false" onMouseClicked="#saveEvent" prefHeight="35.0" prefWidth="124.0" style="-fx-background-color: #76D7C4; -fx-background-radius: 5em;" text="Save event" />
-                              <TextField fx:id="txtFieldEventDescription" layoutX="245.0" layoutY="311.0" prefHeight="32.0" prefWidth="289.0" style="-fx-background-color: #F7F6DE;">
-                                 <font>
-                                    <Font name="Times New Roman" size="12.0" />
-                                 </font>
-                              </TextField>
-                              <Text layoutX="245.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pick a date:" wrappingWidth="84.13671875" />
-                              <Text layoutX="245.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Event's title:" wrappingWidth="70.13671875" />
-                              <Text layoutX="576.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Dates marked with pink color " />
-                              <ImageView fx:id="imgGoBackEventsInfo" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/icons8_back_30px.png" />
-                                 </image>
-                              </ImageView>
-                           </children>
-                        </Pane>
                         <Pane fx:id="paneEventsDetails" layoutX="-2.0" prefHeight="589.0" prefWidth="759.0" style="-fx-background-color: #E1E1DF;">
                            <children>
                               <ImageView fitHeight="600.0" fitWidth="326.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
@@ -490,9 +458,41 @@
                                  </children>
                               </Pane>
                            </children></Pane>
+                        <Pane fx:id="panePlanEvent" prefHeight="589.0" prefWidth="754.0" style="-fx-background-color: #E1E1DF;">
+                           <children>
+                              <Label layoutX="113.0" layoutY="89.0" prefHeight="26.0" prefWidth="236.0" text="Plan your event">
+                                 <font>
+                                    <Font name="System Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="datePickerEvents" layoutX="245.0" layoutY="218.0" prefHeight="32.0" prefWidth="288.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                                 <styleClass>
+                                    <String fx:value="date-picker1" />
+                                    <String fx:value="date-picker1-popup" />
+                                 </styleClass>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </DatePicker>
+                              <Separator layoutX="199.0" layoutY="405.0" prefHeight="3.0" prefWidth="382.0" style="-fx-background-color: #F7F6DE;" />
+                              <Button layoutX="315.0" layoutY="458.0" mnemonicParsing="false" onMouseClicked="#saveEvent" prefHeight="35.0" prefWidth="124.0" styleClass="button3" stylesheets="@../../../css/styling.css" text="Save event" />
+                              <TextField fx:id="txtFieldEventDescription" layoutX="245.0" layoutY="311.0" prefHeight="32.0" prefWidth="289.0" style="-fx-background-color: #F7F6DE;">
+                                 <font>
+                                    <Font name="Times New Roman" size="12.0" />
+                                 </font>
+                              </TextField>
+                              <Text layoutX="245.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pick a date:" wrappingWidth="84.13671875" />
+                              <Text layoutX="245.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Event's title:" wrappingWidth="70.13671875" />
+                              <Text layoutX="576.0" layoutY="571.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*Dates marked with pink color " />
+                              <ImageView fx:id="imgGoBackEventsInfo" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_back_30px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>

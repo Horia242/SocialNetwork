@@ -1,10 +1,12 @@
 package com.example.ex2;
 import com.example.ex2.rootService.RootService;
 import com.example.ex2.utils.FriendshipRequestForDisplayUseDTO;
+import javafx.animation.Animation;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +17,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
@@ -28,6 +31,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.util.Duration;
+import org.controlsfx.control.Notifications;
 import ro.ubbcluj.map.Service.NetworkService;
 import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
@@ -979,12 +984,26 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             }
         });
     }
-
+    @FXML
+    private AnchorPane rootAnchorPane;
 
     @FXML
     public void saveEvent(){
-        if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null)
-            rootService.getNetworkServicePag().saveEvent(new EventDTO(0L,txtFieldEventDescription.getText(),datePickerEvents.getValue(),new ArrayList<>()));
+        if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null) {
+            rootService.getNetworkServicePag().saveEvent(new EventDTO(0L, txtFieldEventDescription.getText(), datePickerEvents.getValue(), new ArrayList<>()));
+            txtFieldEventDescription.clear();
+            datePickerEvents.getEditor().clear();
+            LocatedImage img = new LocatedImage("icons/icons8_Done_30px.png");
+            Notifications succesNotif = Notifications.create()
+                    .title("Notification")
+                    .text("You successfully planned an event")
+                    .graphic(new ImageView(img))
+                    .hideAfter(Duration.seconds(6))
+                    .position(Pos.CENTER);
+
+            succesNotif.show();
+
+        }
     }
 
     private boolean userSubscribedToEvent(EventDTO event){

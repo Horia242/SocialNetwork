@@ -44,6 +44,18 @@
     -fx-background-radius: 5;
 }
 
+.button3
+{
+    -fx-background-color:   #76D7C4;
+    -fx-background-radius: 5;
+    -fx-text-fill: black ;
+    -fx-border-radius: 5;
+}
+.button3:hover{
+    -fx-background-color:   #7F7F7F;
+    -fx-text-fill: black;
+    -fx-background-radius: 5;
+}
 .table-view1{
     -fx-background-color: #E1E1DF;
     -fx-background-radius: 15;
