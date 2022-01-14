@@ -73,7 +73,6 @@ public class AppEventsController {
     @FXML
     private TextField fieldPasswordSignUp;
 
-
     public void setRootService(RootService rootService) {
          this. rootService =rootService;
     }

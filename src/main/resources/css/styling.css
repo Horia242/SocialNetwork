@@ -11,9 +11,28 @@
 {
     -fx-background-color:linear-gradient(to bottom left, #EEEBD6,#B5F2EC)
 }
+
 .linear-gradEvent{
-    -fx-background-color: linear-gradient(to bottom left,  #C3E9F2,  #FAF6D4 );//#E3AEE3#F2C4D5
+    -fx-background-color: linear-gradient(to bottom left,  #C3E9F2,  #FAF6D4 );
 }
+.linear-grad4
+{
+    -fx-background-color:linear-gradient(to bottom left, #E1E1DF,#B5F2EC)
+}
+
+.button_nou {
+    -fx-background-color: #B5F2EC;
+}
+
+.button_nou:hover {
+    background-color: #3e8e41
+}
+
+.button_nou:pressed {
+    background-color: #3e8e41
+}
+
+
 .text-title
 {
     -fx-background-radius: 20;
