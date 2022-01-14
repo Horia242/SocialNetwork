@@ -33,7 +33,6 @@ import ro.ubbcluj.map.model.*;
 import ro.ubbcluj.map.myException.InsufficientDataToExecuteTaskException;
 import ro.ubbcluj.map.myException.RepoError;
 import ro.ubbcluj.map.repository.paging.PageRequest;
-import ro.ubbcluj.map.utils.events.Event;
 import ro.ubbcluj.map.utils.events.EventType;
 import ro.ubbcluj.map.utils.events.NetworkServiceTask;
 import ro.ubbcluj.map.utils.observer.Observer;
@@ -202,6 +201,10 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private ImageView imgGoBackEventsInfo;
     @FXML
     private Pane panePlanEvent;
+    @FXML
+    private DatePicker datePickerEventsInfo;
+    @FXML
+    private VBox vboxEvents;
     private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
 
         @Override
@@ -240,6 +243,10 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
 
         System.out.println(datePickerEvents.getChronology().dateNow());
            datePickerEvents.setDayCellFactory(dayCellFactory);
+           datePickerEventsInfo.setDayCellFactory(dayCellFactory);
+           datePickerEventsInfo.setOnAction(event -> {
+               displayEventsInAGivenDate(datePickerEventsInfo.getValue());
+           });
         Platform.runLater(new Runnable() {
 
             @Override
@@ -975,6 +982,57 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     public void saveEvent(){
         if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null)
             rootService.getNetworkServicePag().saveEvent(new EventDTO(0L,txtFieldEventDescription.getText(),datePickerEvents.getValue(),new ArrayList<>()));
+    }
+
+    private boolean userSubscribedToEvent(EventDTO event){
+        if(event.getSubscribers() == null || event.getSubscribers().size() == 0) return false;
+        return event.getSubscribers().stream().anyMatch(user -> user.getUserID().equals(loggedInUsername));
+    }
+
+    private void displayEventsInAGivenDate(LocalDate dateGiven) {
+        vboxEvents.getChildren().clear();
+        if (datePickerEventsInfo.getValue() != null) {
+            List<EventDTO> all = rootService.getNetworkServicePag().findAllInAGivenDate(dateGiven);
+            if (all != null && all.size() > 0) {
+                FXMLLoader fxmlLoaderSubscribe = new FXMLLoader();
+                fxmlLoaderSubscribe.setLocation(getClass().getResource("subscribeEventBox.fxml"));
+                FXMLLoader fxmlLoaderUnsubscribe = new FXMLLoader();
+                fxmlLoaderUnsubscribe.setLocation(getClass().getResource("unsubscribeEventBox.fxml"));
+                for (EventDTO eventDTO:all){
+                    if(userSubscribedToEvent(eventDTO))
+                    {        Pane unsubscribe = new Pane();
+                        //unsubscribe view
+                        try {
+                            unsubscribe = fxmlLoaderUnsubscribe.load();
+                            UnsubscribeController unsubscribeController = fxmlLoaderUnsubscribe.getController();
+                            unsubscribeController.initRootService(this.rootService);
+                            unsubscribeController.initLoggedInUsername(this.loggedInUsername);
+                            unsubscribeController.initEventInfos(eventDTO.getDescription(),eventDTO.getEventDate(), eventDTO.getId());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        vboxEvents.getChildren().add(unsubscribe);
+                    }
+                    else
+                    {
+                        //subscribe view
+                        Pane subscribe = new Pane();
+                        try{
+                            subscribe = fxmlLoaderSubscribe.load();
+                            SubscribeController subscribeController = fxmlLoaderSubscribe.getController();
+                            subscribeController.initRootService(this.rootService);
+                            subscribeController.initLoggedInUsername(this.loggedInUsername);
+                            subscribeController.initEventInfos(eventDTO.getDescription(),eventDTO.getEventDate(), eventDTO.getId());
+                        }catch (IOException e){
+                            e.printStackTrace();
+                        }
+                        vboxEvents.getChildren().add(subscribe);
+                    }
+
+                }
+            }
+
+        }
     }
 
 

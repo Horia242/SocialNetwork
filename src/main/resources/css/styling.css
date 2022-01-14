@@ -11,6 +11,9 @@
 {
     -fx-background-color:linear-gradient(to bottom left, #EEEBD6,#B5F2EC)
 }
+.linear-gradEvent{
+    -fx-background-color: linear-gradient(to bottom left,  #ffa5a5 , #F2C4D5  );//#E3AEE3
+}
 .text-title
 {
     -fx-background-radius: 20;

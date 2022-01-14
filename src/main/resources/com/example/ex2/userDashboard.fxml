@@ -377,6 +377,7 @@
                         </StackPane>
                      </children>
                   </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="paneEvents" prefHeight="589.0" prefWidth="768.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <Pane fx:id="panePlanEvent" prefHeight="589.0" prefWidth="754.0" style="-fx-background-color: #E1E1DF;">
@@ -414,12 +415,31 @@
                         </Pane>
                         <Pane fx:id="paneEventsDetails" layoutX="-2.0" prefHeight="589.0" prefWidth="759.0" style="-fx-background-color: #E1E1DF;">
                            <children>
+                              <Pane fx:id="paneUserMessageEvents" layoutX="328.0" layoutY="-5.0" prefHeight="595.0" prefWidth="431.0" style="-fx-background-color: #E1E1DF;">
+                                 <children>
+                                    <Label layoutX="155.0" layoutY="221.0" prefHeight="37.0" prefWidth="249.0" text="Pick a date" textFill="#989595">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="59.0" layoutY="258.0" prefHeight="40.0" prefWidth="330.0" text="Scheduled events will pop-up here" textFill="#827b7b">
+                                       <font>
+                                          <Font name="System Bold" size="19.0" />
+                                       </font>
+                                    </Label>
+                                    <ScrollPane fx:id="paneDisplayEvents" layoutX="-1.0" prefHeight="594.0" prefWidth="434.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                       <content>
+                                          <VBox fx:id="vboxEvents" prefHeight="587.0" prefWidth="420.0" />
+                                       </content>
+                                    </ScrollPane>
+                                 </children>
+                              </Pane>
                               <ImageView fitHeight="600.0" fitWidth="326.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../images/Colors2.PNG" />
                                  </image>
                               </ImageView>
-                              <DatePicker fx:id="datePickerEventsInfo" layoutX="25.0" layoutY="185.0" prefHeight="30.0" prefWidth="284.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                              <DatePicker fx:id="datePickerEventsInfo" layoutX="23.0" layoutY="113.0" prefHeight="30.0" prefWidth="284.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
                                  <styleClass>
                                     <String fx:value="date-picker1" />
                                     <String fx:value="date-picker1-popup" />
@@ -428,9 +448,9 @@
                                     <Insets />
                                  </opaqueInsets>
                               </DatePicker>
-                              <Label layoutX="60.0" layoutY="132.0" prefHeight="34.0" prefWidth="237.0" text="Check your calendar" textFill="#7d7a7a">
+                              <Label layoutX="80.0" layoutY="70.0" prefHeight="34.0" prefWidth="237.0" text="Check your calendar" textFill="#7d7a7a">
                                  <font>
-                                    <Font name="System Bold" size="21.0" />
+                                    <Font name="System Bold" size="18.0" />
                                  </font>
                               </Label>
                               <Label layoutX="49.0" layoutY="430.0" prefHeight="17.0" prefWidth="258.0" text="Want to plan something?" textFill="#888787">
@@ -447,7 +467,6 @@
                            </children></Pane>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                </children>
             </StackPane>
          </center>
