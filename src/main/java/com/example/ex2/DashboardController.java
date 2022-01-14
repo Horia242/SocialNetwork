@@ -297,7 +297,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 ,rootService.getNetworkService().getUnreadMessagesCount(loggedInUsername)
                 ,rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(loggedInUsername).size());
         requestNotifyCircle();
-
+            messageNotifyCircle();
         upcomingEventsNotifyCircle();
         upcomingEventsStartNotification();
         toolTip();
@@ -452,10 +452,10 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         Tooltip.install(circleUpcomingEventsNr, new Tooltip("You have some upcoming events"));
     }
     private void messageNotifyCircle() {
+        page.setMessageCount(rootService.getNetworkService().getUnreadMessagesCount(loggedInUsername));
         if (page.getMessageCount() > 0) {
             circleMessageNumber.setFill(Paint.valueOf("#ee0d06"));
             txtMessageCount.setText(String.valueOf(page.getMessageCount()));
-
         } else {
             circleMessageNumber.setFill(Paint.valueOf("#eaeae9"));
         }
@@ -497,26 +497,35 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
                 hboxEvent.getStyleClass().add("box1");
+                hboxPDF.getStyleClass().add("box1");
             }
             case 1 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("boxHovered");
                 hboxChat.getStyleClass().add("box1");
                 hboxEvent.getStyleClass().add("box1");
-
+                hboxPDF.getStyleClass().add("box1");
             }
             case 2 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("boxHovered");
                 hboxEvent.getStyleClass().add("box1");
+                hboxPDF.getStyleClass().add("box1");
             }
             case 3 -> {
                 hboxFriends.getStyleClass().add("box1");
                 hboxRequests.getStyleClass().add("box1");
                 hboxChat.getStyleClass().add("box1");
                 hboxEvent.getStyleClass().add("boxHovered");
-
+                hboxPDF.getStyleClass().add("box1");
+            }
+            case 4 -> {
+                hboxFriends.getStyleClass().add("box1");
+                hboxRequests.getStyleClass().add("box1");
+                hboxChat.getStyleClass().add("box1");
+                hboxEvent.getStyleClass().add("box1");
+                hboxPDF.getStyleClass().add("boxHovered");
             }
             default -> {
             }
@@ -527,6 +536,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         hboxFriends.getStyleClass().clear();
         hboxChat.getStyleClass().clear();
         hboxEvent.getStyleClass().clear();
+        hboxPDF.getStyleClass().clear();
     }
 
     private boolean composeMessageMode = false;
@@ -571,6 +581,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             if (event.getSource().equals(hboxChat)) {
                 composeMessageMode = false;
                 displayUserConversationPartners(loggedInUsername);
+                messageNotifyCircle();
                 pnlFriends.toBack();
                 stats_pane.toBack();
                 pnlFriendRequests.toBack();
@@ -606,6 +617,8 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                     paneAccountPage.toBack();
                     empty_pane.toFront();
                     stats_pane.toFront();
+                    resetStyles();
+                    resetHover(4);
                 }
                 if (event.getSource().equals(btnSendMsg)) {
                     pnlConversation.toBack();
@@ -1248,7 +1261,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                         public void update (NetworkServiceTask event){
 
                             switch (event.getEventType()) {
-                                case MESSAGE -> displayUserConversationPartners(loggedInUsername);
+                                case MESSAGE ->{ displayUserConversationPartners(loggedInUsername);messageNotifyCircle();}
                                 case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
                                 case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
                                 case EVENTS_SUBSCRIPTION -> {

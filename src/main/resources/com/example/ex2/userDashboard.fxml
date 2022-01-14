@@ -105,7 +105,7 @@
                         </Label>
                         <Pane prefHeight="35.0" prefWidth="43.0">
                            <children>
-                              <Circle fx:id="circleRequestsNumber" fill="#ff0900" layoutX="14.0" layoutY="28.0" radius="10.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fx:id="circleRequestsNumber" fill="#ff0900" layoutX="14.0" layoutY="28.0" opacity="0.65" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
                               <Label fx:id="txtFrRequestCount" layoutX="9.0" layoutY="19.0" text="0" textFill="#eaeae9">
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -121,24 +121,32 @@
                         </Pane>
                      </children>
                   </HBox>
-                  <HBox fx:id="hboxChat" layoutX="1.0" layoutY="169.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxChat" layoutX="1.0" layoutY="164.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="53.0">
                            <children>
-                              <Circle fx:id="circleMessageNumber" fill="#ff0900" opacity="0.52" radius="8.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0">
-                                 <StackPane.margin>
-                                    <Insets bottom="16.0" left="73.0" right="60.0" />
-                                 </StackPane.margin>
-                              </Circle>
                               <ImageView fx:id="imgChat" fitHeight="24.0" fitWidth="23.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../icons/icons8_chat_30px.png" />
                                  </image>
-                              </ImageView>
-                              <Label fx:id="txtMessageCount" prefHeight="20.0" prefWidth="19.0" text="0" textFill="#eaeae9">
                                  <StackPane.margin>
-                                    <Insets bottom="15.0" left="14.0" />
+                                    <Insets right="13.0" />
                                  </StackPane.margin>
+                              </ImageView>
+                           </children>
+                        </StackPane>
+                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="36.0" text="Chat">
+                           <HBox.margin>
+                              <Insets left="-1.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="47.0" prefWidth="59.0">
+                           <children>
+                              <Circle fx:id="circleMessageNumber" fill="#ff0900" layoutX="44.0" layoutY="22.0" opacity="0.67" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label fx:id="txtMessageCount" layoutX="36.0" layoutY="13.0" prefHeight="19.0" prefWidth="19.0" text=" 0" textFill="#eaeae9">
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                  </padding>
@@ -147,18 +155,13 @@
                                  </font>
                               </Label>
                            </children>
-                        </StackPane>
-                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Chat">
                            <HBox.margin>
-                              <Insets left="18.0" />
+                              <Insets left="122.0" />
                            </HBox.margin>
-                           <font>
-                              <Font size="15.0" />
-                           </font>
-                        </Label>
+                        </Pane>
                      </children>
                   </HBox>
-                  <HBox fx:id="hboxPDF" layoutY="216.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxPDF" layoutY="213.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fx:id="imgPdf" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -178,7 +181,7 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox fx:id="hboxEvent" layoutY="280.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxEvent" layoutY="257.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fx:id="imgEvent" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -198,7 +201,7 @@
                         </Label>
                         <Pane prefHeight="35.0" prefWidth="43.0">
                            <children>
-                              <Circle fx:id="circleUpcomingEventsNr" fill="#ff0900" layoutX="14.0" layoutY="22.0" radius="10.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Circle fx:id="circleUpcomingEventsNr" fill="#ff0900" layoutX="14.0" layoutY="22.0" opacity="0.61" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
                               <Label fx:id="txtUpcomingEventsCount" layoutX="9.0" layoutY="13.0" text="0" textFill="#eaeae9">
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
@@ -434,6 +437,39 @@
                         </ScrollPane>
                      </children>
                   </Pane>
+                  <Pane fx:id="stats_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #B5F2EC;">
+                     <children>
+                        <Button fx:id="pdf_generator_for_friends" layoutX="116.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="73.0" prefWidth="184.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new friends" />
+                        <Button fx:id="pdf_generator_for_messages" layoutX="435.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="72.0" prefWidth="185.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new messages" />
+                        <VBox layoutX="237.0" layoutY="81.0" prefHeight="213.0" prefWidth="250.0">
+                           <children>
+                              <Label fx:id="label_date" prefHeight="35.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="               Please select the date" />
+                              <HBox prefHeight="19.0" prefWidth="282.0" />
+                              <VBox fx:id="vbox_date" prefHeight="84.0" prefWidth="218.0">
+                                 <children>
+                                    <HBox prefHeight="27.0" prefWidth="210.0">
+                                       <children>
+                                          <Label prefHeight="28.0" prefWidth="44.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="From :" />
+                                          <DatePicker fx:id="from_date_select" prefHeight="26.0" prefWidth="207.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="26.0" prefWidth="275.0">
+                                       <children>
+                                          <Label prefHeight="26.0" prefWidth="55.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="To     : " />
+                                          <DatePicker fx:id="to_date_select" prefHeight="26.0" prefWidth="214.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <HBox prefHeight="27.0" prefWidth="222.0" />
+                              <Label prefHeight="39.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="             Please insert a username" />
+                              <HBox prefHeight="18.0" prefWidth="222.0" />
+                              <TextField fx:id="friend_email_label" prefHeight="32.0" prefWidth="250.0" promptText="Insert user" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
                   <Pane fx:id="paneEvents" prefHeight="589.0" prefWidth="768.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <Pane fx:id="panePlanEvent" prefHeight="589.0" prefWidth="754.0" style="-fx-background-color: #E1E1DF;">
@@ -470,7 +506,7 @@
                         </Pane>
                         <Pane fx:id="paneEventsDetails" layoutX="-2.0" prefHeight="589.0" prefWidth="759.0" style="-fx-background-color: #E1E1DF;">
                            <children>
-                              <ImageView fitHeight="600.0" fitWidth="326.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="585.0" fitWidth="349.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../images/Colors2.PNG" />
                                  </image>
@@ -532,40 +568,7 @@
                            </children></Pane>
                      </children>
                   </Pane>
-                  <Pane fx:id="stats_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #B5F2EC;">
-                     <children>
-                        <Button fx:id="pdf_generator_for_friends" layoutX="116.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="73.0" prefWidth="184.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new friends" />
-                        <Button fx:id="pdf_generator_for_messages" layoutX="435.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="72.0" prefWidth="185.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new messages" />
-                        <VBox layoutX="237.0" layoutY="81.0" prefHeight="213.0" prefWidth="250.0">
-                           <children>
-                              <Label fx:id="label_date" prefHeight="35.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="               Please select the date" />
-                              <HBox prefHeight="19.0" prefWidth="282.0" />
-                              <VBox fx:id="vbox_date" prefHeight="84.0" prefWidth="218.0">
-                                 <children>
-                                    <HBox prefHeight="27.0" prefWidth="210.0">
-                                       <children>
-                                          <Label prefHeight="28.0" prefWidth="44.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="From :" />
-                                          <DatePicker fx:id="from_date_select" prefHeight="26.0" prefWidth="207.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
-                                       </children>
-                                    </HBox>
-                                    <HBox prefHeight="100.0" prefWidth="200.0" />
-                                    <HBox prefHeight="26.0" prefWidth="275.0">
-                                       <children>
-                                          <Label prefHeight="26.0" prefWidth="55.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="To     : " />
-                                          <DatePicker fx:id="to_date_select" prefHeight="26.0" prefWidth="214.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
-                              <HBox prefHeight="27.0" prefWidth="222.0" />
-                              <Label prefHeight="39.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="             Please insert a username" />
-                              <HBox prefHeight="18.0" prefWidth="222.0" />
-                              <TextField fx:id="friend_email_label" prefHeight="32.0" prefWidth="250.0" promptText="Insert user" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="589.0" prefWidth="767.0" styleClass="linear-grad" stylesheets="@../../../css/styling.css">
+                  <Pane fx:id="paneAccountPage" prefHeight="589.0" prefWidth="760.0" styleClass="linear-grad" stylesheets="@../../../css/styling.css">
                      <children>
                         <ImageView fitHeight="232.0" fitWidth="292.0" layoutX="262.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
                            <image>
