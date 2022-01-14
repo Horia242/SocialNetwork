@@ -22,6 +22,8 @@ module com.example.ex2 {
     requires socialnetwork;
     requires java.sql;
 
+    requires org.apache.pdfbox;
+
     opens com.example.ex2 to javafx.fxml;
     exports com.example.ex2;
 

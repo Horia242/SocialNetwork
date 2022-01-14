@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -25,7 +27,7 @@
          <left>
             <Pane id="button_friend_request" prefHeight="761.0" prefWidth="279.0" styleClass="linear-grad2" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>
-                  <Pane prefHeight="73.0" prefWidth="281.0" styleClass="linear-grad3" stylesheets="@../../../css/styling.css">
+                  <Pane fx:id="logged_in_pane" prefHeight="73.0" prefWidth="281.0" styleClass="linear-grad3" stylesheets="@../../../css/styling.css">
                      <children>
                         <Label fx:id="labelUsername" layoutX="119.0" layoutY="20.0" prefHeight="34.0" prefWidth="154.0">
                            <font>
@@ -118,15 +120,52 @@
                   </HBox>
                   <HBox fx:id="hboxChat" layoutX="1.0" layoutY="174.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
-                        <ImageView fx:id="imgChat" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                        <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="53.0">
+                           <children>
+                              <Circle fx:id="circleMessageNumber" fill="#ff0900" radius="8.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0">
+                                 <StackPane.margin>
+                                    <Insets bottom="16.0" left="73.0" right="60.0" />
+                                 </StackPane.margin>
+                              </Circle>
+                              <ImageView fx:id="imgChat" fitHeight="24.0" fitWidth="23.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_chat_30px.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="txtMessageCount" prefHeight="20.0" prefWidth="19.0" text="0" textFill="#eaeae9">
+                                 <StackPane.margin>
+                                    <Insets bottom="15.0" left="14.0" />
+                                 </StackPane.margin>
+                                 <padding>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </StackPane>
+                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Chat">
+                           <HBox.margin>
+                              <Insets left="18.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hboxPDF" layoutY="216.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                     <children>
+                        <ImageView fx:id="imgPdf" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../icons/icons8_chat_30px.png" />
+                              <Image url="@../../../icons/stats.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="10.0" top="10.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Chat">
+                        <Label fx:id="labelPdf" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Reports">
                            <HBox.margin>
                               <Insets left="18.0" />
                            </HBox.margin>
@@ -174,7 +213,7 @@
                            <children>
                               <Pane fx:id="pnlSendMsg" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;">
                                  <children>
-                                    <Pane layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="89.0" prefWidth="404.0">
+                                    <Pane fx:id="pane_for_composed_message" layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="89.0" prefWidth="404.0">
                                        <children>
                                           <TextField fx:id="txtFieldTypeMessage1" layoutX="54.0" layoutY="18.0" onAction="#handleSendNewMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
                                           <ImageView fx:id="imgSendMessage1" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
@@ -241,7 +280,7 @@
                                           <Label fx:id="labelMessageSenderUsername" prefHeight="17.0" prefWidth="289.0" text="From:" />
                                        </children>
                                     </VBox>
-                                    <Pane layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
+                                    <Pane fx:id="pane_for_basic_messages" layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
                                        <children>
                                           <TextField fx:id="txtFieldTypeMessage" layoutX="54.0" layoutY="18.0" onAction="#handleSendMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
                                           <ImageView fx:id="imgSendMessage" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
@@ -269,40 +308,7 @@
                         </StackPane>
                      </children>
                   </Pane>
-                  <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <TableView fx:id="tabviewRequests" layoutX="17.0" layoutY="103.0" prefHeight="467.0" prefWidth="721.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tbl_nume" prefWidth="165.0" text="First name" />
-                              <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="165.0" text="Last name" />
-                              <TableColumn fx:id="tbl_data" minWidth="0.0" prefWidth="170.0" text="Status" />
-                              <TableColumn fx:id="tbl_status" minWidth="0.0" prefWidth="216.0" text="Date" />
-                           </columns>
-                        </TableView>
-                        <ImageView fx:id="btnSignOut1" fitHeight="40.0" fitWidth="30.0" layoutX="710.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_exit_30px.png" />
-                           </image>
-                        </ImageView>
-                        <HBox layoutX="17.0" layoutY="76.0" prefHeight="27.0" prefWidth="66.0">
-                           <children>
-                              <ImageView fx:id="btn_accept" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleAcceptImageView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/icons8_Done_30px.png" />
-                                 </image>
-                              </ImageView>
-                              <ImageView fx:id="btn_decline" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleDeclineImageView" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/icons8_Close_30px.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                           </children>
-                        </HBox>
-                     </children>
-                  </Pane>
+                  <Pane fx:id="empty_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
                   <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
                      <children>
                         <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
@@ -349,7 +355,86 @@
                         </ScrollPane>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
+                  <Pane fx:id="stats_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #B5F2EC;">
+                     <children>
+                        <Button fx:id="pdf_generator_for_friends" layoutX="116.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="73.0" prefWidth="184.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new friends" />
+                        <Button fx:id="pdf_generator_for_messages" layoutX="435.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="72.0" prefWidth="185.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new messages" />
+                        <VBox layoutX="237.0" layoutY="81.0" prefHeight="213.0" prefWidth="250.0">
+                           <children>
+                              <Label fx:id="label_date" prefHeight="35.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="               Please select the date" />
+                              <HBox prefHeight="19.0" prefWidth="282.0" />
+                              <VBox fx:id="vbox_date" prefHeight="84.0" prefWidth="218.0">
+                                 <children>
+                                    <HBox prefHeight="27.0" prefWidth="210.0">
+                                       <children>
+                                          <Label prefHeight="28.0" prefWidth="44.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="From :" />
+                                          <DatePicker fx:id="from_date_select" prefHeight="26.0" prefWidth="207.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="26.0" prefWidth="275.0">
+                                       <children>
+                                          <Label prefHeight="26.0" prefWidth="55.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="To     : " />
+                                          <DatePicker fx:id="to_date_select" prefHeight="26.0" prefWidth="214.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <HBox prefHeight="27.0" prefWidth="222.0" />
+                              <Label prefHeight="39.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="             Please insert a username" />
+                              <HBox prefHeight="18.0" prefWidth="222.0" />
+                              <TextField fx:id="friend_email_label" prefHeight="32.0" prefWidth="250.0" promptText="Insert user" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="pnlFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="576.0" prefWidth="752.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <TableView fx:id="tabviewRequests" layoutX="17.0" layoutY="103.0" prefHeight="467.0" prefWidth="721.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                           <columns>
+                              <TableColumn fx:id="tbl_nume" prefWidth="165.0" text="First name" />
+                              <TableColumn fx:id="tbl_prenume" minWidth="0.0" prefWidth="165.0" text="Last name" />
+                              <TableColumn fx:id="tbl_data" minWidth="0.0" prefWidth="170.0" text="Status" />
+                              <TableColumn fx:id="tbl_status" minWidth="0.0" prefWidth="216.0" text="Date" />
+                           </columns>
+                        </TableView>
+                        <ImageView fx:id="btnSignOut1" fitHeight="40.0" fitWidth="30.0" layoutX="710.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_exit_30px.png" />
+                           </image>
+                        </ImageView>
+                        <HBox layoutX="17.0" layoutY="76.0" prefHeight="27.0" prefWidth="66.0">
+                           <children>
+                              <ImageView fx:id="btn_accept" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleAcceptImageView" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_Done_30px.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="btn_decline" fitHeight="31.0" fitWidth="27.0" onMouseClicked="#handleDeclineImageView" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_Close_30px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" styleClass="linear-grad" stylesheets="@../../../css/styling.css">
+                     <children>
+                        <ImageView fitHeight="232.0" fitWidth="292.0" layoutX="262.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/global-connection.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="text_field_welcome" layoutX="288.0" layoutY="378.0" prefHeight="30.0" prefWidth="257.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children></Pane>
                </children>
             </StackPane>
          </center>

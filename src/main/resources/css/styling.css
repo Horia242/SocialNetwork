@@ -11,6 +11,23 @@
 {
     -fx-background-color:linear-gradient(to bottom left, #EEEBD6,#B5F2EC)
 }
+.linear-grad4
+{
+    -fx-background-color:linear-gradient(to bottom left, #E1E1DF,#B5F2EC)
+}
+
+.button_nou {
+    -fx-background-color: #B5F2EC;
+}
+
+.button_nou:hover {
+    background-color: #3e8e41
+}
+
+.button_nou:pressed {
+    background-color: #3e8e41
+}
+
 .text-title
 {
     -fx-background-radius: 20;

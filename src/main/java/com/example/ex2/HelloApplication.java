@@ -25,6 +25,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import java.io.IOException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 public class HelloApplication extends Application {
 
 
@@ -43,6 +49,7 @@ public class HelloApplication extends Application {
         String url = "jdbc:postgresql://localhost:5432/SocialNetworkDB";
         String username = "postgres";
         String password = "mateinfo24";
+
         setDataBaseConnection(url,username,password);
         FXMLLoader fxmlLoader = new FXMLLoader(HelloApplication.class.getResource("loginPage.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
