@@ -217,6 +217,9 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private Circle circleUpcomingEventsNr;
     @FXML
     private Label txtUpcomingEventsCount;
+    @FXML
+    private Pane paneUserMessageEvents;
+    private boolean onUpcomingEventDisplay;
 
     private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
 
@@ -253,6 +256,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         movableDashboard();
         requestNotifyCircle();
         upcomingEventsNotifyCircle();
+        upcomingEventsStartNotification();
         toolTip();
 
         System.out.println(datePickerEvents.getChronology().dateNow());
@@ -343,6 +347,33 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             }
         });
     }
+
+    private void upcomingEventsStartNotification(){
+        int upcomingNr = rootService.getNetworkServicePag().getUpcomingEventsForOneUser(new UserDto<String>(loggedInUsername,null,null)).size();
+        if(upcomingNr > 0){
+            LocatedImage img = new LocatedImage("icons/icons8_timetable_30px.png");
+            String evPluralOrSingular = "event";
+            if(upcomingNr > 1) evPluralOrSingular = "events";
+            Notifications upcomingEvents = Notifications.create()
+                    .title("Schedule notification")
+                    .text("You have " + String.valueOf(upcomingNr) + " upcoming " + evPluralOrSingular + ".")
+                    .hideAfter(Duration.INDEFINITE)
+                    .graphic(new ImageView(img))
+                    .position(Pos.CENTER)
+                    .hideCloseButton()
+                    .onAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            rootAnchorPane.setEffect(null);
+                        }
+                    });
+            BoxBlur blur = new BoxBlur(3,3,3);
+            rootAnchorPane.setEffect(blur);
+            upcomingEvents.show();
+
+        }
+    }
+
     private void upcomingEventsNotifyCircle(){
         int upcomingNr = rootService.getNetworkServicePag().getUpcomingEventsForOneUser(new UserDto<String>(loggedInUsername,null,null)).size();
         if(upcomingNr > 0){
@@ -394,9 +425,10 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private void handleOnHboxTextMessageFieldClick(){
         vboxMessagesText.setPrefHeight(vboxMessagesTextHeight);
         scrollPaneMessages.setPrefHeight(scrollPaneMessagesHeight);
-//        pnlConversation.toFront();
+        //pnlConversation.toFront();
         vboxMessagesText.toFront();
         scrollPaneMessages.toFront();
+
     }
 
 
@@ -990,18 +1022,27 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     @FXML
     public void saveEvent(){
         if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null) {
-            rootService.getNetworkServicePag().saveEvent(new EventDTO(0L, txtFieldEventDescription.getText(), datePickerEvents.getValue(), new ArrayList<>()));
-            txtFieldEventDescription.clear();
-            datePickerEvents.getEditor().clear();
-            LocatedImage img = new LocatedImage("icons/icons8_Done_30px.png");
-            Notifications succesNotif = Notifications.create()
-                    .title("Notification")
-                    .text("You successfully planned an event")
-                    .graphic(new ImageView(img))
-                    .hideAfter(Duration.seconds(6))
-                    .position(Pos.CENTER);
+            if(datePickerEvents.getValue() .compareTo(LocalDate.now()) < 0){
+                Notifications incorrectDate = Notifications.create()
+                        .title("Invalid date")
+                        .text("You shouldn't pick a day in the past")
+                        .hideAfter(Duration.seconds(4))
+                        .position(Pos.CENTER);
+                incorrectDate.show();
+            }else {
+                rootService.getNetworkServicePag().saveEvent(new EventDTO(0L, txtFieldEventDescription.getText(), datePickerEvents.getValue(), new ArrayList<>()));
+                txtFieldEventDescription.clear();
+                datePickerEvents.getEditor().clear();
+                LocatedImage img = new LocatedImage("icons/icons8_Done_30px.png");
+                Notifications succesNotif = Notifications.create()
+                        .title("Notification")
+                        .text("You successfully planned an event")
+                        .graphic(new ImageView(img))
+                        .hideAfter(Duration.seconds(6))
+                        .position(Pos.CENTER);
 
-            succesNotif.show();
+                succesNotif.show();
+            }
 
         }
     }
@@ -1064,10 +1105,18 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         List<EventDTO> all = rootService.getNetworkServicePag().getUpcomingEventsForOneUser(new UserDto<String>(loggedInUsername,null,null));
         if(all != null && all.size() > 0){
             showEvents(all,1);
+            onUpcomingEventDisplay = true;
         }
+        else{
+            vboxEvents.getChildren().clear();
+            paneDisplayEvents.toBack();
+            paneUserMessageEvents.toFront();
+        }
+
     }
 
     private void displayEventsInAGivenDate(LocalDate dateGiven) {
+        onUpcomingEventDisplay = false;
         if (datePickerEventsInfo.getValue() != null) {
             List<EventDTO> all = rootService.getNetworkServicePag().findAllInAGivenDate(dateGiven);
             if (all != null && all.size() > 0) {
@@ -1083,7 +1132,13 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             case MESSAGE -> displayUserConversationPartners(loggedInUsername);
             case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
             case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
-            case EVENTS_SUBSCRIPTION -> {displayEventsInAGivenDate(currentDatePicked);upcomingEventsNotifyCircle();}
+            case EVENTS_SUBSCRIPTION -> {if(onUpcomingEventDisplay){
+                                            displayUpcomingEvents();
+                                        }
+                                        else {
+                                            displayEventsInAGivenDate(currentDatePicked);
+                                            }
+                                         upcomingEventsNotifyCircle();}
             default -> {
             }
         }
