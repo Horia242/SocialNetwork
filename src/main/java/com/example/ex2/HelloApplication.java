@@ -56,10 +56,12 @@ public class HelloApplication extends Application {
         UserService serviceUser = new UserService(repoUser);
         MessageRepository<Long, Message> messageRepository = new MessageRepoDbo(connection);
         PagedFriendshipRequestRepository<Long, FriendshipRequest> repoFriendshipRequest = new FriendshipRequestsDboPaginated(connection);
-       // NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), repoFriendshipRequest,new ConversationDbo(connection));
+        NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), new FriendshipRequestsDbo(connection),new ConversationDbo(connection));
         NetworkServiceForPaginatedDbRepo service1 = new NetworkServiceForPaginatedDbRepo(new EventsRepoDbo(connection),serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), new MessagesValidator(), repoFriendshipRequest,new ConversationDbo(connection),new MessageService(new MessageRepoDboPaginated(connection)));
         AppEventsController c = fxmlLoader.getController();
-        c.setRootService(new RootService(service1));
+        RootService rootService = new RootService(service1);
+        rootService.setNetworkService(service);
+        c.setRootService(rootService);
         stage.show();
 
     }
