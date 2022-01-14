@@ -208,6 +208,10 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private VBox vboxEvents;
     @FXML
     private ScrollPane paneDisplayEvents;
+    @FXML
+    private Circle circleUpcomingEventsNr;
+    @FXML
+    private Label txtUpcomingEventsCount;
 
     private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
 
@@ -243,8 +247,8 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     public void init(){
         movableDashboard();
         requestNotifyCircle();
+        upcomingEventsNotifyCircle();
         toolTip();
-       // datePickerEvents.getChronology().
 
         System.out.println(datePickerEvents.getChronology().dateNow());
            datePickerEvents.setDayCellFactory(dayCellFactory);
@@ -334,6 +338,17 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             }
         });
     }
+    private void upcomingEventsNotifyCircle(){
+        int upcomingNr = rootService.getNetworkServicePag().getUpcomingEventsForOneUser(new UserDto<String>(loggedInUsername,null,null)).size();
+        if(upcomingNr > 0){
+            circleUpcomingEventsNr.setFill(Paint.valueOf("#ee0d06"));
+            txtUpcomingEventsCount.setText(String.valueOf(upcomingNr));
+        }
+        else{
+            circleUpcomingEventsNr.setFill(Paint.valueOf("#eaeae9"));
+        }
+    }
+
     private void requestNotifyCircle(){
         int requestsNumber = this.rootService.getNetworkServicePag().getNumberOfAllPendingFriendshipRequestsForOneUser(labelUsername.getText());
         if(requestsNumber > 0){
@@ -421,7 +436,6 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
 
     private boolean composeMessageMode = false;
 
-
     @FXML
     private void handleMouseEvent(MouseEvent event){
         if(event.getSource().equals(btnShowFriends) || event.getSource().equals(labelFriends)){
@@ -460,6 +474,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             resetHover(3);
             paneEvents.toFront();
             paneEventsDetails.toFront();
+            displayUpcomingEvents();
         }
         if(event.getSource().equals(imgCreateEvent)){
             panePlanEvent.toFront();
@@ -965,19 +980,6 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     }
 
 
-    @Override
-    public void update(NetworkServiceTask event) {
-
-        switch (event.getEventType()) {
-            case MESSAGE -> displayUserConversationPartners(loggedInUsername);
-            case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
-            case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
-            case EVENTS_SUBSCRIPTION -> displayEventsInAGivenDate(currentDatePicked);
-            default -> {
-            }
-        }
-    }
-
     @FXML
     public void saveEvent(){
         if(!txtFieldEventDescription.getText().isEmpty() && datePickerEvents.getValue() != null)
@@ -989,52 +991,81 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
         return event.getSubscribers().stream().anyMatch(user -> user.getUserID().equals(loggedInUsername));
     }
 
-    private void displayEventsInAGivenDate(LocalDate dateGiven) {
+    /**
+     *
+     * @param all must be a valid list of EventDTO's
+     * @param flag is 1 when you wish to display upcoming events,0 to display events within a picked date
+     */
+    private void showEvents(List<EventDTO> all,int flag) {
+        paneDisplayEvents.toFront();
         vboxEvents.getChildren().clear();
         vboxEvents.setSpacing(8L);
-        vboxEvents.getChildren().add(new Label("Upcoming events:"));
-        paneDisplayEvents.toFront();
+        if(flag == 1)vboxEvents.getChildren().add(new Label("UPCOMING EVENTS:"));
+        for(EventDTO eventDTO:all)
+        {
+        if (userSubscribedToEvent(eventDTO)) {
+            Pane unsubscribe = new Pane();
+            //unsubscribe view
+            try {
+                FXMLLoader fxmlLoaderUnsubscribe = new FXMLLoader();
+                fxmlLoaderUnsubscribe.setLocation(getClass().getResource("unsubscribeEventBox.fxml"));
+                unsubscribe = fxmlLoaderUnsubscribe.load();
+                UnsubscribeController unsubscribeController = fxmlLoaderUnsubscribe.getController();
+                unsubscribeController.initRootService(this.rootService);
+                unsubscribeController.initLoggedInUsername(this.loggedInUsername);
+                unsubscribeController.initEventInfos(eventDTO.getDescription(), eventDTO.getEventDate(), eventDTO.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            vboxEvents.getChildren().add(unsubscribe);
+        } else {
+            //subscribe view
+            Pane subscribe = new Pane();
+            try {
+                FXMLLoader fxmlLoaderSubscribe = new FXMLLoader();
+                fxmlLoaderSubscribe.setLocation(getClass().getResource("subscribeEventBox.fxml"));
+                subscribe = fxmlLoaderSubscribe.load();
+                SubscribeController subscribeController = fxmlLoaderSubscribe.getController();
+                subscribeController.initRootService(this.rootService);
+                subscribeController.initLoggedInUsername(this.loggedInUsername);
+                subscribeController.initEventInfos(eventDTO.getDescription(), eventDTO.getEventDate(), eventDTO.getId());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            vboxEvents.getChildren().add(subscribe);
+        }
+    }
+
+    }
+
+
+
+    private void displayUpcomingEvents(){
+        List<EventDTO> all = rootService.getNetworkServicePag().getUpcomingEventsForOneUser(new UserDto<String>(loggedInUsername,null,null));
+        if(all != null && all.size() > 0){
+            showEvents(all,1);
+        }
+    }
+
+    private void displayEventsInAGivenDate(LocalDate dateGiven) {
         if (datePickerEventsInfo.getValue() != null) {
             List<EventDTO> all = rootService.getNetworkServicePag().findAllInAGivenDate(dateGiven);
             if (all != null && all.size() > 0) {
-                for (EventDTO eventDTO:all){
-                    if(userSubscribedToEvent(eventDTO))
-                    {        Pane unsubscribe = new Pane();
-                        //unsubscribe view
-                        try {
-                            FXMLLoader fxmlLoaderUnsubscribe = new FXMLLoader();
-                            fxmlLoaderUnsubscribe.setLocation(getClass().getResource("unsubscribeEventBox.fxml"));
-                            unsubscribe = fxmlLoaderUnsubscribe.load();
-                            UnsubscribeController unsubscribeController = fxmlLoaderUnsubscribe.getController();
-                            unsubscribeController.initRootService(this.rootService);
-                            unsubscribeController.initLoggedInUsername(this.loggedInUsername);
-                            unsubscribeController.initEventInfos(eventDTO.getDescription(),eventDTO.getEventDate(), eventDTO.getId());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        vboxEvents.getChildren().add(unsubscribe);
-                    }
-                    else
-                    {
-                        //subscribe view
-                        Pane subscribe = new Pane();
-                        try{
-                            FXMLLoader fxmlLoaderSubscribe = new FXMLLoader();
-                            fxmlLoaderSubscribe.setLocation(getClass().getResource("subscribeEventBox.fxml"));
-                            subscribe = fxmlLoaderSubscribe.load();
-                            SubscribeController subscribeController = fxmlLoaderSubscribe.getController();
-                            subscribeController.initRootService(this.rootService);
-                            subscribeController.initLoggedInUsername(this.loggedInUsername);
-                            subscribeController.initEventInfos(eventDTO.getDescription(),eventDTO.getEventDate(), eventDTO.getId());
-                        }catch (IOException e){
-                            e.printStackTrace();
-                        }
-                        vboxEvents.getChildren().add(subscribe);
-                    }
-
-                }
+                showEvents(all,0);
             }
+        }
+    }
 
+    @Override
+    public void update(NetworkServiceTask event) {
+
+        switch (event.getEventType()) {
+            case MESSAGE -> displayUserConversationPartners(loggedInUsername);
+            case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
+            case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
+            case EVENTS_SUBSCRIPTION -> {displayEventsInAGivenDate(currentDatePicked);upcomingEventsNotifyCircle();}
+            default -> {
+            }
         }
     }
 
