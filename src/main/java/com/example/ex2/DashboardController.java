@@ -513,6 +513,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             paneEvents.toFront();
             paneEventsDetails.toFront();
             displayUpcomingEvents();
+            datePickerEventsInfo.getEditor().clear();
         }
         if(event.getSource().equals(imgCreateEvent)){
             panePlanEvent.toFront();
