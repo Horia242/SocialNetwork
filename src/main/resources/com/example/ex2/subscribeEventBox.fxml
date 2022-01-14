@@ -2,6 +2,7 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Text?>
 
@@ -12,4 +13,7 @@
       <Button fx:id="btnSubscribe" layoutX="174.0" layoutY="68.0" mnemonicParsing="false" onMouseClicked="#handleSubscribeButtonClicked" style="-fx-background-radius: 5em; -fx-background-color: #0BBB80;" text="Subscribe" textFill="#616161" />
       <Text fx:id="txtEventId" fill="#ffbebe" layoutX="12.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="id" />
    </children>
+   <effect>
+      <DropShadow />
+   </effect>
 </Pane>

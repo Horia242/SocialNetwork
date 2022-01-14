@@ -169,7 +169,8 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private Pane paneAccountPage;
     @FXML
     private Label labelForReplies;
-
+    @FXML
+    private Label labelUpcomingEventsNumber;
     @FXML
     private ScrollPane scrollPaneConversations;
     @FXML
@@ -205,6 +206,9 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private DatePicker datePickerEventsInfo;
     @FXML
     private VBox vboxEvents;
+    @FXML
+    private ScrollPane paneDisplayEvents;
+
     private Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
 
         @Override
@@ -219,7 +223,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                                 .stream().filter(eventDTO -> item.isEqual(eventDTO.getEventDate()))
                                 .findFirst();
                     if(answer.isPresent()){
-                        setStyle("-fx-background-color: #ffc0cb;");
+                        setStyle("-fx-background-color: #C3E9F2;");
                     }
                 }
             };
@@ -235,6 +239,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
     private double xOffset = 0;
     private double yOffset = 0;
     private int sendMessagePlusSignClickCount = 0;
+    private LocalDate currentDatePicked;
     public void init(){
         movableDashboard();
         requestNotifyCircle();
@@ -245,17 +250,11 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
            datePickerEvents.setDayCellFactory(dayCellFactory);
            datePickerEventsInfo.setDayCellFactory(dayCellFactory);
            datePickerEventsInfo.setOnAction(event -> {
-               displayEventsInAGivenDate(datePickerEventsInfo.getValue());
-           });
-        Platform.runLater(new Runnable() {
+               currentDatePicked = datePickerEventsInfo.getValue();
+               displayEventsInAGivenDate(currentDatePicked);
 
-            @Override
-            public void run() {
-                datePickerEvents.requestFocus();
-                datePickerEvents.getEditor().selectAll();
-               datePickerEvents.setValue(LocalDate.now());
-            }
-        });
+           });
+
         Platform.runLater(() -> {
             ScrollBar tvScrollBar = (ScrollBar) tabviewFriends.lookup(".scroll-bar:vertical");
             tvScrollBar.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -973,6 +972,7 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
             case MESSAGE -> displayUserConversationPartners(loggedInUsername);
             case FRIENDSHIP -> displayUserFriends(labelUsername.getText());
             case FriendshipRequests -> displayUserFriendsRequests(labelUsername.getText());
+            case EVENTS_SUBSCRIPTION -> displayEventsInAGivenDate(currentDatePicked);
             default -> {
             }
         }
@@ -991,18 +991,19 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
 
     private void displayEventsInAGivenDate(LocalDate dateGiven) {
         vboxEvents.getChildren().clear();
+        vboxEvents.setSpacing(8L);
+        vboxEvents.getChildren().add(new Label("Upcoming events:"));
+        paneDisplayEvents.toFront();
         if (datePickerEventsInfo.getValue() != null) {
             List<EventDTO> all = rootService.getNetworkServicePag().findAllInAGivenDate(dateGiven);
             if (all != null && all.size() > 0) {
-                FXMLLoader fxmlLoaderSubscribe = new FXMLLoader();
-                fxmlLoaderSubscribe.setLocation(getClass().getResource("subscribeEventBox.fxml"));
-                FXMLLoader fxmlLoaderUnsubscribe = new FXMLLoader();
-                fxmlLoaderUnsubscribe.setLocation(getClass().getResource("unsubscribeEventBox.fxml"));
                 for (EventDTO eventDTO:all){
                     if(userSubscribedToEvent(eventDTO))
                     {        Pane unsubscribe = new Pane();
                         //unsubscribe view
                         try {
+                            FXMLLoader fxmlLoaderUnsubscribe = new FXMLLoader();
+                            fxmlLoaderUnsubscribe.setLocation(getClass().getResource("unsubscribeEventBox.fxml"));
                             unsubscribe = fxmlLoaderUnsubscribe.load();
                             UnsubscribeController unsubscribeController = fxmlLoaderUnsubscribe.getController();
                             unsubscribeController.initRootService(this.rootService);
@@ -1018,6 +1019,8 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                         //subscribe view
                         Pane subscribe = new Pane();
                         try{
+                            FXMLLoader fxmlLoaderSubscribe = new FXMLLoader();
+                            fxmlLoaderSubscribe.setLocation(getClass().getResource("subscribeEventBox.fxml"));
                             subscribe = fxmlLoaderSubscribe.load();
                             SubscribeController subscribeController = fxmlLoaderSubscribe.getController();
                             subscribeController.initRootService(this.rootService);
