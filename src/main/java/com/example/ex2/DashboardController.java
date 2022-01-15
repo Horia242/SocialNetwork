@@ -971,14 +971,6 @@ public class DashboardController  implements Observer<NetworkServiceTask>{
                         tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
                         continueAddingRequestsWhenScrollReachesBottom();
                         pnlFriendRequests.toFront();
-
-                        tbl_nume.setCellValueFactory(new PropertyValueFactory<>("name"));
-                        tbl_prenume.setCellValueFactory(new PropertyValueFactory<>("surname"));
-                        tbl_data.setCellValueFactory(new PropertyValueFactory<>("status"));
-                        tbl_status.setCellValueFactory(new PropertyValueFactory<>("date"));
-                        for (FriendshipRequestDTO<String> friendshipRequestDTO : rootService.getNetworkService().getAllPendingFriendshipRequestForOneUser(userEmail)) {
-                            tabviewRequests.getItems().add(new FriendshipRequestForDisplayUseDTO<String>(friendshipRequestDTO.getFrom().getFirstName(), friendshipRequestDTO.getFrom().getLastName(), friendshipRequestDTO.getStatus(), friendshipRequestDTO.getDate(), friendshipRequestDTO));
-                        }
                     }
                 }
    private List<UserDto<String>> getCurrentConversationPage () {
