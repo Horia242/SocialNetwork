@@ -26,6 +26,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import java.io.IOException;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+
 public class HelloApplication extends Application {
 
 
@@ -38,6 +44,7 @@ public class HelloApplication extends Application {
             e.printStackTrace();
         }
     }
+
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -55,10 +62,12 @@ public class HelloApplication extends Application {
         UserService serviceUser = new UserService(repoUser);
         MessageRepository<Long, Message> messageRepository = new MessageRepoDbo(connection);
         PagedFriendshipRequestRepository<Long, FriendshipRequest> repoFriendshipRequest = new FriendshipRequestsDboPaginated(connection);
-       // NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), repoFriendshipRequest,new ConversationDbo(connection));
-        NetworkServiceForPaginatedDbRepo service1 = new NetworkServiceForPaginatedDbRepo(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), new MessagesValidator(), repoFriendshipRequest,new ConversationDbo(connection),new MessageService(new MessageRepoDboPaginated(connection)));
+        NetworkService service = new NetworkService(serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), messageRepository, new MessagesValidator(), new FriendshipRequestsDbo(connection),new ConversationDbo(connection));
+        NetworkServiceForPaginatedDbRepo service1 = new NetworkServiceForPaginatedDbRepo(new EventsRepoDbo(connection),serviceFriendship, new FriendshipTupleIdValidator(), serviceUser, new UserStringIdValidator(), new MessagesValidator(), repoFriendshipRequest,new ConversationDbo(connection),new MessageService(new MessageRepoDboPaginated(connection)));
         AppEventsController c = fxmlLoader.getController();
-        c.setRootService(new RootService(service1));
+        RootService rootService = new RootService(service1);
+        rootService.setNetworkService(service);
+        c.setRootService(rootService);
         stage.show();
 
     }

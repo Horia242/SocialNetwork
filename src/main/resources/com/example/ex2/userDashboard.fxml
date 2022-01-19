@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -18,14 +22,15 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
+<AnchorPane fx:id="rootAnchorPane" prefHeight="589.0" prefWidth="992.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.ex2.DashboardController">
    <children>
       <BorderPane fx:id="borderPaneDashboard" prefHeight="589.0" prefWidth="1033.0">
          <left>
             <Pane id="button_friend_request" prefHeight="761.0" prefWidth="279.0" styleClass="linear-grad2" stylesheets="@../../../css/styling.css" BorderPane.alignment="CENTER">
                <children>
-                  <Pane prefHeight="73.0" prefWidth="281.0" styleClass="linear-grad3" stylesheets="@../../../css/styling.css">
+                  <Pane fx:id="logged_in_pane" prefHeight="73.0" prefWidth="281.0" styleClass="linear-grad3" stylesheets="@../../../css/styling.css">
                      <children>
                         <Label fx:id="labelUsername" layoutX="119.0" layoutY="20.0" prefHeight="34.0" prefWidth="154.0">
                            <font>
@@ -70,15 +75,10 @@
                         </Label>
                      </children>
                   </HBox>
-                  <HBox fx:id="hboxRequests" layoutY="121.0" prefHeight="42.0" prefWidth="285.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxRequests" layoutY="116.0" prefHeight="47.0" prefWidth="285.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
                         <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="36.0">
                            <children>
-                              <Circle fx:id="circleRequestsNumber" fill="#ff0900" radius="8.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0">
-                                 <StackPane.margin>
-                                    <Insets bottom="16.0" left="73.0" right="60.0" />
-                                 </StackPane.margin>
-                              </Circle>
                               <ImageView fx:id="btnShowFriendRequests" fitHeight="22.0" fitWidth="31.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../../icons/icons8_add_user_group_man_man_30px_4.png" />
@@ -87,10 +87,26 @@
                                     <Insets left="60.0" right="60.0" top="10.0" />
                                  </StackPane.margin>
                               </ImageView>
-                              <Label fx:id="txtFrRequestCount" text="0" textFill="#eaeae9">
-                                 <StackPane.margin>
-                                    <Insets bottom="15.0" left="14.0" />
-                                 </StackPane.margin>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="2.0" />
+                           </HBox.margin>
+                        </StackPane>
+                        <Label id="friend_request_menu_label" fx:id="labelFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="129.0" text="Friendship requests">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="14.0" top="3.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets top="10.0" />
+                           </padding>
+                        </Label>
+                        <Pane prefHeight="35.0" prefWidth="43.0">
+                           <children>
+                              <Circle fx:id="circleRequestsNumber" fill="#ff0900" layoutX="14.0" layoutY="28.0" opacity="0.65" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label fx:id="txtFrRequestCount" layoutX="9.0" layoutY="19.0" text="0" textFill="#eaeae9">
                                  <padding>
                                     <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
                                  </padding>
@@ -100,33 +116,62 @@
                               </Label>
                            </children>
                            <HBox.margin>
-                              <Insets left="2.0" />
+                              <Insets left="60.0" />
                            </HBox.margin>
+                        </Pane>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hboxChat" layoutX="1.0" layoutY="164.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                     <children>
+                        <StackPane minWidth="-Infinity" prefHeight="42.0" prefWidth="53.0">
+                           <children>
+                              <ImageView fx:id="imgChat" fitHeight="24.0" fitWidth="23.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_chat_30px.png" />
+                                 </image>
+                                 <StackPane.margin>
+                                    <Insets right="13.0" />
+                                 </StackPane.margin>
+                              </ImageView>
+                           </children>
                         </StackPane>
-                        <Label id="friend_request_menu_label" fx:id="labelFriendRequests" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="135.0" text="Friendship requests">
+                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="36.0" text="Chat">
+                           <HBox.margin>
+                              <Insets left="-1.0" />
+                           </HBox.margin>
                            <font>
                               <Font size="15.0" />
                            </font>
-                           <HBox.margin>
-                              <Insets left="14.0" />
-                           </HBox.margin>
-                           <padding>
-                              <Insets top="10.0" />
-                           </padding>
                         </Label>
+                        <Pane prefHeight="47.0" prefWidth="59.0">
+                           <children>
+                              <Circle fx:id="circleMessageNumber" fill="#ff0900" layoutX="44.0" layoutY="22.0" opacity="0.67" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label fx:id="txtMessageCount" layoutX="36.0" layoutY="13.0" prefHeight="19.0" prefWidth="19.0" text=" 0" textFill="#eaeae9">
+                                 <padding>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="122.0" />
+                           </HBox.margin>
+                        </Pane>
                      </children>
                   </HBox>
-                  <HBox fx:id="hboxChat" layoutX="1.0" layoutY="174.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                  <HBox fx:id="hboxPDF" layoutY="213.0" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
                      <children>
-                        <ImageView fx:id="imgChat" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imgPdf" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../../../icons/icons8_chat_30px.png" />
+                              <Image url="@../../../icons/stats.png" />
                            </image>
                            <HBox.margin>
                               <Insets left="10.0" top="10.0" />
                            </HBox.margin>
                         </ImageView>
-                        <Label fx:id="labelChat" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Chat">
+                        <Label fx:id="labelPdf" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="203.0" text="Reports">
                            <HBox.margin>
                               <Insets left="18.0" />
                            </HBox.margin>
@@ -134,6 +179,42 @@
                               <Font size="15.0" />
                            </font>
                         </Label>
+                     </children>
+                  </HBox>
+                  <HBox fx:id="hboxEvent" layoutY="257.0" onMouseClicked="#handleMouseEvent" prefHeight="47.0" prefWidth="280.0" styleClass="box1" stylesheets="@../../../css/styling.css">
+                     <children>
+                        <ImageView fx:id="imgEvent" fitHeight="24.0" fitWidth="29.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_timetable_30px.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="10.0" top="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <Label fx:id="labelEvent" onMouseClicked="#handleMouseEvent" prefHeight="42.0" prefWidth="61.0" text="Events">
+                           <HBox.margin>
+                              <Insets left="18.0" />
+                           </HBox.margin>
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <Pane prefHeight="35.0" prefWidth="43.0">
+                           <children>
+                              <Circle fx:id="circleUpcomingEventsNr" fill="#ff0900" layoutX="14.0" layoutY="22.0" opacity="0.61" radius="11.0" stroke="#eaeae9" strokeType="INSIDE" strokeWidth="0.0" />
+                              <Label fx:id="txtUpcomingEventsCount" layoutX="9.0" layoutY="13.0" text="0" textFill="#eaeae9">
+                                 <padding>
+                                    <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                                 </padding>
+                                 <font>
+                                    <Font name="System Bold" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <HBox.margin>
+                              <Insets left="132.0" />
+                           </HBox.margin>
+                        </Pane>
                      </children>
                   </HBox>
                </children>
@@ -176,52 +257,6 @@
                         </HBox>
                      </children>
                   </Pane>
-                  <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
-                     <children>
-                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
-                           <columns>
-                              <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
-                              <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
-                              <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
-                           </columns>
-                        </TableView>
-                        <HBox layoutX="97.0" layoutY="5.0" prefHeight="48.0" prefWidth="545.0">
-                           <children>
-                              <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../../../icons/icons8_search_30px.png" />
-                                 </image>
-                                 <HBox.margin>
-                                    <Insets left="12.0" top="10.0" />
-                                 </HBox.margin>
-                              </ImageView>
-                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="496.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
-                                 <HBox.margin>
-                                    <Insets left="1.0" top="10.0" />
-                                 </HBox.margin>
-                                 <font>
-                                    <Font size="13.0" />
-                                 </font>
-                              </TextField>
-                           </children>
-                        </HBox>
-                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_delete_bin_48px.png" />
-                           </image>
-                        </ImageView>
-                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../../icons/icons8_exit_30px.png" />
-                           </image>
-                        </ImageView>
-                        <ScrollPane fx:id="scrollPaneSearch" layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
-                           <content>
-                              <VBox fx:id="vboxSearchResult" prefHeight="98.0" prefWidth="493.0" style="-fx-background-color: #E1E1DF;" />
-                           </content>
-                        </ScrollPane>
-                     </children>
-                  </Pane>
                   <Pane fx:id="pnlChat" prefHeight="200.0" prefWidth="200.0">
                      <children>
                         <Pane fx:id="pnlReceivedMessages" prefHeight="589.0" prefWidth="347.0">
@@ -254,7 +289,8 @@
                            <children>
                               <Pane fx:id="pnlSendMsg" prefHeight="582.0" prefWidth="417.0" style="-fx-background-color: #E1E1DF;">
                                  <children>
-                                    <Pane layoutX="6.0" layoutY="505.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="74.0" prefWidth="404.0">
+                                    <Pane layoutX="6.0" layoutY="505.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="74.0" prefWidth="404.0" />
+                                    <Pane fx:id="pane_for_composed_message" layoutX="6.0" layoutY="497.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="89.0" prefWidth="404.0">
                                        <children>
                                           <TextField fx:id="txtFieldTypeMessage1" layoutX="54.0" layoutY="18.0" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
                                           <ImageView fx:id="imgSendMessage1" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
@@ -324,7 +360,7 @@
                                           <Label fx:id="labelMessageSenderUsername" prefHeight="17.0" prefWidth="289.0" text="From:" />
                                        </children>
                                     </VBox>
-                                    <Pane layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
+                                    <Pane fx:id="pane_for_basic_messages" layoutX="9.0" layoutY="508.0" onMouseClicked="#handleOnHboxTextMessageFieldClick" prefHeight="73.0" prefWidth="410.0">
                                        <children>
                                           <TextField fx:id="txtFieldTypeMessage" layoutX="54.0" layoutY="18.0" onAction="#handleSendMessage" prefHeight="38.0" prefWidth="303.0" promptText="Type Message" style="-fx-background-color: #EAEAE9;" />
                                           <ImageView fx:id="imgSendMessage" fitHeight="30.0" fitWidth="30.0" layoutX="366.0" layoutY="22.0" onMouseClicked="#handleSendMessage" pickOnBounds="true" preserveRatio="true">
@@ -352,7 +388,200 @@
                         </StackPane>
                      </children>
                   </Pane>
-                  <Pane fx:id="paneAccountPage" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
+
+
+                  <Pane fx:id="empty_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;" />
+                  <Pane fx:id="pnlFriends" onMouseClicked="#handleMouseEvent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <TableView fx:id="tabviewFriends" layoutX="28.0" layoutY="146.0" prefHeight="342.0" prefWidth="698.0" styleClass="table-view1" stylesheets="@../../../css/styling.css">
+                           <columns>
+                              <TableColumn fx:id="tabcolFirstName" prefWidth="177.0" text="First name" />
+                              <TableColumn fx:id="tabcolLastName" prefWidth="201.0" text="Last name" />
+                              <TableColumn fx:id="tabcolEmail" minWidth="1.0" prefWidth="315.0" text="E-mail" />
+                           </columns>
+                        </TableView>
+                        <HBox layoutX="97.0" layoutY="5.0" prefHeight="48.0" prefWidth="545.0">
+                           <children>
+                              <ImageView fitHeight="23.0" fitWidth="22.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_search_30px.png" />
+                                 </image>
+                                 <HBox.margin>
+                                    <Insets left="12.0" top="10.0" />
+                                 </HBox.margin>
+                              </ImageView>
+                              <TextField fx:id="textFieldSearchUser" onAction="#handleSearchUser" onMouseClicked="#handleMouseEvent" prefHeight="27.0" prefWidth="496.0" promptText="Search user" style="-fx-background-color: #EAEAE9;">
+                                 <HBox.margin>
+                                    <Insets left="1.0" top="10.0" />
+                                 </HBox.margin>
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </HBox>
+                        <ImageView fx:id="imgDeleteFriend" fitHeight="29.0" fitWidth="34.0" layoutX="28.0" layoutY="117.0" onMouseClicked="#handleDeleteUser" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_delete_bin_48px.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="btnSignOut" fitHeight="40.0" fitWidth="30.0" layoutX="711.0" layoutY="14.0" onMouseClicked="#handleSignOutEvent" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/icons8_exit_30px.png" />
+                           </image>
+                        </ImageView>
+                        <ScrollPane fx:id="scrollPaneSearch" layoutX="134.0" layoutY="44.0" prefHeight="101.0" prefWidth="505.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                           <content>
+                              <VBox fx:id="vboxSearchResult" prefHeight="98.0" prefWidth="491.0" style="-fx-background-color: #E1E1DF;" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="stats_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-border-color: #B5F2EC;">
+                     <children>
+                        <Button fx:id="pdf_generator_for_friends" layoutX="116.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="73.0" prefWidth="184.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new friends" />
+                        <Button fx:id="pdf_generator_for_messages" layoutX="435.0" layoutY="378.0" mnemonicParsing="false" onMouseClicked="#handleMouseEvent" prefHeight="72.0" prefWidth="185.0" style="-fx-border-color: #B5F2EC;" text="Export PDF for new messages" />
+                        <VBox layoutX="237.0" layoutY="81.0" prefHeight="213.0" prefWidth="250.0">
+                           <children>
+                              <Label fx:id="label_date" prefHeight="35.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="               Please select the date" />
+                              <HBox prefHeight="19.0" prefWidth="282.0" />
+                              <VBox fx:id="vbox_date" prefHeight="84.0" prefWidth="218.0">
+                                 <children>
+                                    <HBox prefHeight="27.0" prefWidth="210.0">
+                                       <children>
+                                          <Label prefHeight="28.0" prefWidth="44.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="From :" />
+                                          <DatePicker fx:id="from_date_select" prefHeight="26.0" prefWidth="207.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                    <HBox prefHeight="100.0" prefWidth="200.0" />
+                                    <HBox prefHeight="26.0" prefWidth="275.0">
+                                       <children>
+                                          <Label prefHeight="26.0" prefWidth="55.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="To     : " />
+                                          <DatePicker fx:id="to_date_select" prefHeight="26.0" prefWidth="214.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <HBox prefHeight="27.0" prefWidth="222.0" />
+                              <Label prefHeight="39.0" prefWidth="250.0" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" text="             Please insert a username" />
+                              <HBox prefHeight="18.0" prefWidth="222.0" />
+                              <TextField fx:id="friend_email_label" prefHeight="32.0" prefWidth="250.0" promptText="Insert user" styleClass="linear-grad4" stylesheets="@../../../css/styling.css" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneEvents" prefHeight="589.0" prefWidth="768.0" style="-fx-background-color: #E1E1DF;">
+                     <children>
+                        <Pane fx:id="panePlanEvent" prefHeight="589.0" prefWidth="754.0" style="-fx-background-color: #E1E1DF;">
+                           <children>
+                              <Label layoutX="113.0" layoutY="89.0" prefHeight="26.0" prefWidth="236.0" text="Plan your event">
+                                 <font>
+                                    <Font name="System Bold" size="19.0" />
+                                 </font>
+                              </Label>
+                              <DatePicker fx:id="datePickerEvents" layoutX="245.0" layoutY="218.0" prefHeight="32.0" prefWidth="288.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                                 <styleClass>
+                                    <String fx:value="date-picker1" />
+                                    <String fx:value="date-picker1-popup" />
+                                 </styleClass>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </DatePicker>
+                              <Separator layoutX="199.0" layoutY="405.0" prefHeight="3.0" prefWidth="382.0" style="-fx-background-color: #F7F6DE;" />
+                              <Button layoutX="315.0" layoutY="458.0" mnemonicParsing="false" onMouseClicked="#saveEvent" prefHeight="35.0" prefWidth="124.0" styleClass="button3" stylesheets="@../../../css/styling.css" text="Save event" />
+                              <TextField fx:id="txtFieldEventDescription" layoutX="245.0" layoutY="311.0" prefHeight="32.0" prefWidth="289.0" style="-fx-background-color: #F7F6DE;">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </TextField>
+                              <Text layoutX="245.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Pick a date:" wrappingWidth="84.13671875" />
+                              <Text layoutX="245.0" layoutY="299.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Event's title:" wrappingWidth="70.13671875" />
+                              <ImageView fx:id="imgGoBackEventsInfo" fitHeight="30.0" fitWidth="30.0" layoutX="14.0" layoutY="14.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_back_30px.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </Pane>
+                        <Pane fx:id="paneEventsDetails" layoutX="-2.0" prefHeight="589.0" prefWidth="759.0" style="-fx-background-color: #E1E1DF;">
+                           <children>
+                              <ImageView fitHeight="585.0" fitWidth="349.0" layoutX="2.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../images/Colors2.PNG" />
+                                 </image>
+                              </ImageView>
+                              <DatePicker fx:id="datePickerEventsInfo" layoutX="23.0" layoutY="216.0" prefHeight="30.0" prefWidth="284.0" style="-fx-background-color: #76D7C4;" stylesheets="@../../../css/styling.css">
+                                 <styleClass>
+                                    <String fx:value="date-picker1" />
+                                    <String fx:value="date-picker1-popup" />
+                                 </styleClass>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </DatePicker>
+                              <Label layoutX="70.0" layoutY="175.0" prefHeight="34.0" prefWidth="172.0" text="Check your calendar" textFill="#806a6a">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="119.0" layoutY="481.0" prefHeight="27.0" prefWidth="196.0" text="Want to plan something?" textFill="#805757">
+                                 <font>
+                                    <Font name="System Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="242.0" layoutY="508.0" text="Click below" />
+                              <ImageView fx:id="imgCreateEvent" fitHeight="50.0" fitWidth="50.0" layoutX="259.0" layoutY="525.0" onMouseClicked="#handleMouseEvent" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../../icons/icons8_calendar_plus_50px.png" />
+                                 </image>
+                              </ImageView>
+                              <Pane fx:id="paneUserMessageEvents" layoutX="328.0" layoutY="-5.0" prefHeight="595.0" prefWidth="431.0" style="-fx-background-color: #E1E1DF;">
+                                 <children>
+                                    <ScrollPane fx:id="paneDisplayEvents" layoutX="1.0" layoutY="4.0" prefHeight="589.0" prefWidth="429.0" styleClass="scroll-pane1" stylesheets="@../../../css/styling.css">
+                                       <content>
+                                          <VBox fx:id="vboxEvents" alignment="TOP_CENTER" prefHeight="585.0" prefWidth="425.0">
+                                             <opaqueInsets>
+                                                <Insets />
+                                             </opaqueInsets></VBox>
+                                       </content>
+                                       <effect>
+                                          <DropShadow>
+                                             <color>
+                                                <Color red="0.6052631735801697" green="0.5996588468551636" blue="0.5996588468551636" />
+                                             </color>
+                                          </DropShadow>
+                                       </effect>
+                                    </ScrollPane>
+                                    <Label layoutX="155.0" layoutY="221.0" prefHeight="37.0" prefWidth="249.0" text="Pick a date" textFill="#989595">
+                                       <font>
+                                          <Font name="System Bold" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="59.0" layoutY="258.0" prefHeight="40.0" prefWidth="330.0" text="Scheduled events will pop-up here" textFill="#827b7b">
+                                       <font>
+                                          <Font name="System Bold" size="19.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </Pane>
+                           </children></Pane>
+                     </children>
+                  </Pane>
+                  <Pane fx:id="paneAccountPage" prefHeight="589.0" prefWidth="760.0" styleClass="linear-grad" stylesheets="@../../../css/styling.css">
+                     <children>
+                        <ImageView fitHeight="232.0" fitWidth="292.0" layoutX="262.0" layoutY="107.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../../../icons/global-connection.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="text_field_welcome" layoutX="288.0" layoutY="378.0" prefHeight="30.0" prefWidth="257.0" textAlignment="CENTER">
+                           <font>
+                              <Font size="20.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </Pane>
                </children>
             </StackPane>
          </center>

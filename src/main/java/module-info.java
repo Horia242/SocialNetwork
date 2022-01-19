@@ -18,16 +18,14 @@ module com.example.ex2 {
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
-
     requires socialnetwork;
     requires java.sql;
-
+    requires org.apache.pdfbox;
     opens com.example.ex2 to javafx.fxml;
     exports com.example.ex2;
-
     opens com.example.ex2.utils to javafx.base;
     exports com.example.ex2.utils;
-
     opens com.example.ex2.rootService to javafx.base;
     exports com.example.ex2.rootService;
+
 }

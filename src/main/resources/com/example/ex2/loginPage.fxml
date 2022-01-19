@@ -32,7 +32,7 @@
                         <Circle fill="#7cd014" radius="7.0" stroke="#252525" strokeType="INSIDE" />
                      </children>
                   </HBox>
-                  <Label layoutX="133.0" layoutY="246.0" prefHeight="24.0" prefWidth="110.0" text="𝒞𝑜𝓃𝓃𝑒𝒸𝓉𝑒𝒹">
+                  <Label fx:id="connected_label" layoutX="133.0" layoutY="246.0" prefHeight="24.0" prefWidth="110.0" text="𝒞𝑜𝓃𝓃𝑒𝒸𝓉𝑒𝒹">
                      <font>
                         <Font size="20.0" />
                      </font>
